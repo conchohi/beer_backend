@@ -22,6 +22,8 @@ public class UserEntity {
     private String nickname;
     private String profileImage;
     private String sns;
-
+    private String mbti;
+    private int age;
+    private String gender;
 
 }

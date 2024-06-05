@@ -22,6 +22,10 @@ public class UserDto {
     private String profileImage;
     private String sns;
     private String role;
+    private String mbti;
+    private int age;
+    private String gender;
+
     @JsonIgnore
     private MultipartFile profileFile;
 
