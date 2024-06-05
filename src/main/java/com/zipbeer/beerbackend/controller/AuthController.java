@@ -2,19 +2,14 @@ package com.zipbeer.beerbackend.controller;
 
 import com.zipbeer.beerbackend.dto.EmailCertificationDto;
 import com.zipbeer.beerbackend.dto.UserDto;
-import com.zipbeer.beerbackend.dto.request.EmailCertificationRequestDto;
-import com.zipbeer.beerbackend.dto.request.auth.CheckCertificationRequestDto;
-import com.zipbeer.beerbackend.dto.request.auth.EmailCertificationRequestDto;
-import com.zipbeer.beerbackend.dto.request.auth.IdCheckRequestDto;
-import com.zipbeer.beerbackend.dto.response.ResponseDto;
-import com.zipbeer.beerbackend.dto.response.auth.CheckCertificationResponseDto;
-import com.zipbeer.beerbackend.dto.response.auth.EmailCertificationResponseDto;
-import com.zipbeer.beerbackend.dto.response.auth.IdCheckResponseDto;
 import com.zipbeer.beerbackend.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
 
