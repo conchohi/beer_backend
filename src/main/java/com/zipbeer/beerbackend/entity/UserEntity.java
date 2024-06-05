@@ -36,4 +36,7 @@ public class UserEntity {
             , orphanRemoval = true,
             fetch = FetchType.LAZY)
     private List<FollowEntity> followList;
+
+    @OneToOne(mappedBy = "user")
+    private ChatEntity room;
 }

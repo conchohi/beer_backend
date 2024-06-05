@@ -11,8 +11,9 @@ import java.io.Serializable;
 @Getter
 @Setter
 @ToString
+@EqualsAndHashCode
 @Embeddable
 public class ChatId implements Serializable {
-    private UserEntity user;
-    private RoomEntity room;
+    private String userId;
+    private Long roomNo;
 }
