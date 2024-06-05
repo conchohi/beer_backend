@@ -1,6 +1,6 @@
 package com.zipbeer.beerbackend.config;
 
-import com.beer_back.util.LocalDateFormatter;
+import com.zipbeer.beerbackend.util.LocalDateFormatter;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;

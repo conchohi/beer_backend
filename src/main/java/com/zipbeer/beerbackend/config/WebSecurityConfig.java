@@ -1,11 +1,11 @@
 package com.zipbeer.beerbackend.config;
 
-import com.beer_back.filter.CustomLogoutFilter;
-import com.beer_back.filter.JwtAuthenticationFilter;
-import com.beer_back.filter.LoginFilter;
-import com.beer_back.handler.CustomSuccessHandler;
-import com.beer_back.provider.JWTProvider;
-import com.beer_back.service.impl.CustomOAuth2UserService;
+import com.zipbeer.beerbackend.filter.CustomLogoutFilter;
+import com.zipbeer.beerbackend.filter.JwtAuthenticationFilter;
+import com.zipbeer.beerbackend.filter.LoginFilter;
+import com.zipbeer.beerbackend.handler.CustomSuccessHandler;
+import com.zipbeer.beerbackend.provider.JWTProvider;
+import com.zipbeer.beerbackend.service.impl.CustomOAuth2UserService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

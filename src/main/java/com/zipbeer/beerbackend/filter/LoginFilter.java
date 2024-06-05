@@ -1,7 +1,7 @@
 package com.zipbeer.beerbackend.filter;
 
-import com.beer_back.provider.JWTProvider;
 import com.zipbeer.beerbackend.dto.jwt.CustomUserDetails;
+import com.zipbeer.beerbackend.provider.JWTProvider;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
