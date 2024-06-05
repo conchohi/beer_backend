@@ -1,0 +1,75 @@
+secret-key: wqrasdfwa4325weafasdewfasd
+server:
+    port: 8080
+
+spring:
+    datasource:
+        url: jdbc:mysql://localhost:3306/Beer
+        username: root
+        password: my1234
+        driver-class-name: com.mysql.cj.jdbc.Driver
+
+    jpa:
+        database-platform: org.hibernate.dialect.MySQLDialect
+        properties:
+            hibernate:
+                hibernate:
+                "[format_sql]": true            #SQL 보기 좋게 출력
+                "[user_sql_comments]": true     #SQL 생성시 주석 포함
+                "[highlight_sql]": true         #SQL 색깔
+                "[hbm2ddl.auto]": create
+        open-in-view: true
+        show-sql: true
+
+    security:
+        oauth2:
+            client:
+                registration:
+                    naver:
+                        client-name: naver
+                        client-id: Fg3oK6bo0oDxuuBIDzFJ
+                        client-secret: I9MXAbwUUJ
+                        redirect-uri: http://localhost:4040/login/oauth2/code/naver
+                        authorization-grant-type: authorization_code
+                        scope:
+                            - email
+                            - nickname
+                    kakao:
+                        client-name: kakao
+                        client-id: ac2c64c98329c7836b1366000db4ec39
+                        client-secret: 9AiVLThEKXlp7tUr995KNXVTx4vF4Ixh
+                        redirect-uri: http://localhost:4040/login/oauth2/code/kakao
+                        client-authentication-method: client_secret_post
+                        authorization-grant-type: authorization_code
+                        scope:
+                            - account_email
+                            - profile_nickname
+                provider:
+                    naver:
+                        authorization-uri: https://nid.naver.com/oauth2.0/authorize
+                        token-uri: https://nid.naver.com/oauth2.0/token
+                        user-info-uri: https://openapi.naver.com/v1/nid/me
+                        user-name-attribute: response
+                    kakao:
+                        authorization-uri: https://kauth.kakao.com/oauth/authorize
+                        token-uri: https://kauth.kakao.com/oauth/token
+                        user-info-uri: https://kapi.kakao.com/v2/user/me
+                        user-name-attribute: id
+    mail:
+        host: smtp.beer.com
+        port: 587
+        username: beer@beer.com
+        password: beer1234
+        properties:
+            mail:
+                smtp:
+                    auth: true
+                    starttls:
+                        enable: true
+    servlet:
+        multipart:
+            enabled: true
+            max-file-size: 10MB
+            max-request-size: 10MB
+
+uploadPath : upload
