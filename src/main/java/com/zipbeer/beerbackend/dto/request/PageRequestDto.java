@@ -1,4 +1,4 @@
-package com.zipbeer.beerbackend.dto;
+package com.zipbeer.beerbackend.dto.request;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -1,6 +1,6 @@
 package com.zipbeer.beerbackend.dto.response;
 
-import com.zipbeer.beerbackend.dto.PageRequestDto;
+import com.zipbeer.beerbackend.dto.request.PageRequestDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
