@@ -69,7 +69,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         // 토큰이 access인지 확인 (발급시 페이로드에 명시)
-        String category = jwtProvider.getCategory (accessToken);
+        String category = jwtProvider.getCategory(accessToken);
 
         // request header에서 access로 온 토큰이 진짜 access 인지 확인
         if (!category.equals("access")) {
