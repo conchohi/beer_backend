@@ -16,12 +16,12 @@ public class FollowEntity {
     private Long followNo;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id",referencedColumnName = "userId")
     private UserEntity user;
 
     //유저가 팔로우한 사람들 목록
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "follow_id",referencedColumnName = "userId")
     private UserEntity follow;
 
 }
