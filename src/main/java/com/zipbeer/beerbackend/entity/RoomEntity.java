@@ -31,10 +31,31 @@ public class RoomEntity {
 
     private String category;
 
-    private Integer maximumUser;
+    private int maximumUser;
 
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL
             , orphanRemoval = true,
             fetch = FetchType.LAZY)
+    @OrderBy("chatNo asc")
     private List<ChatEntity> participantList;
+
+    private int currentUserCount;
+
+    //방장의 닉네임
+    private String master;
+
+    @PostLoad
+    @PostPersist
+    @PostUpdate
+    private void getParticipantCountAndMaster() {
+        if (participantList != null) {
+            this.currentUserCount = participantList.size();
+            //List의 가장 첫번쨰 사람이 방장 => 입장한 지 오래된 순
+            this.master = participantList.get(0).getUser().getNickname();
+        } else {
+            this.currentUserCount = 0;
+            this.master = null;
+        }
+    }
+
 }
