@@ -1,7 +1,6 @@
 package com.zipbeer.beerbackend.config;
 
 import com.zipbeer.beerbackend.util.LocalDateFormatter;
-import com.zipbeer.beerbackend.util.LocalDateTimeFormatter;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -22,6 +21,5 @@ public class CustomMvcConfig implements WebMvcConfigurer {
     @Override
     public void addFormatters(FormatterRegistry registry) {
         registry.addFormatter(new LocalDateFormatter());
-        registry.addFormatter(new LocalDateTimeFormatter());
     }
 }
