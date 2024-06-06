@@ -12,9 +12,8 @@ import java.time.LocalDate;
 public class PageRequestDto {
     private int page;
     private int size;
-    private String type;
-    private String region;
+    private String category;
+    private String searchType;
     private String searchTerm;
-    private String weather;
-    private LocalDate date;
+    private String orderBy;
 }
