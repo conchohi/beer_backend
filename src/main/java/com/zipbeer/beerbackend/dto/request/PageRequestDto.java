@@ -1,19 +1,25 @@
 package com.zipbeer.beerbackend.dto.request;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.time.LocalDate;
 
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @ToString
 @Setter
 public class PageRequestDto {
-    private int page;
-    private int size;
+    @Builder.Default
+    private int page = 1;
+    @Builder.Default
+    private int size = 6;
     private String category;
-    private String searchType;
+    @Builder.Default
+    private String searchType = "방제목";
+
     private String searchTerm;
-    private String orderBy;
+    @Builder.Default
+    private String orderBy = "최신순";
 }

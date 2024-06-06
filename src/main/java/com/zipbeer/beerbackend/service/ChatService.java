@@ -38,7 +38,7 @@ public class ChatService {
             return ResponseDto.databaseError();
         }
         //방이 가득참
-        if(room.getCurrentUserCount() >= room.getMaximumUser()){
+        if(room.getParticipantCount() >= room.getMaximumUser()){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message","Room is full."));
         }
 
