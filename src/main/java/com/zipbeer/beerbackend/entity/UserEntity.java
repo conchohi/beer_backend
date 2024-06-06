@@ -37,6 +37,7 @@ public class UserEntity {
             fetch = FetchType.LAZY)
     private List<FollowEntity> followList;
 
-    @OneToOne(mappedBy = "user")
-    private ChatEntity room;
+    //chat 삭제 시 해당 속성이 null로 변경
+    @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private ChatEntity chat;
 }
