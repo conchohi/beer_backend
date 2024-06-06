@@ -2,7 +2,7 @@ package com.zipbeer.beerbackend.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -28,7 +28,7 @@ public class UserEntity {
     private int age;
     private String gender;
 
-    @CreatedDate
+    @CreationTimestamp
     private LocalDate createDate;
 
     //양방향

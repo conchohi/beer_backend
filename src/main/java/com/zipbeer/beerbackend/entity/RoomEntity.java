@@ -2,7 +2,7 @@ package com.zipbeer.beerbackend.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -26,7 +26,7 @@ public class RoomEntity {
     @Column(name = "room_pw")
     private String roomPw;
 
-    @CreatedDate
+    @CreationTimestamp
     private LocalDateTime createDate;
 
     private String category;
@@ -39,7 +39,7 @@ public class RoomEntity {
     @OrderBy("chatNo asc")
     private List<ChatEntity> participantList;
 
-    private int currentUserCount;
+    private int participantCount;
 
     //방장의 닉네임
     private String master;
@@ -48,12 +48,12 @@ public class RoomEntity {
     @PostPersist
     @PostUpdate
     private void getParticipantCountAndMaster() {
-        if (participantList != null) {
-            this.currentUserCount = participantList.size();
+        if (participantList != null && !participantList.isEmpty()) {
+            this.participantCount = participantList.size();
             //List의 가장 첫번쨰 사람이 방장 => 입장한 지 오래된 순
             this.master = participantList.get(0).getUser().getNickname();
         } else {
-            this.currentUserCount = 0;
+            this.participantCount = 0;
             this.master = null;
         }
     }
