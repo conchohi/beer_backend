@@ -4,15 +4,19 @@ import com.zipbeer.beerbackend.dto.RoomDto;
 import com.zipbeer.beerbackend.dto.UserDto;
 import com.zipbeer.beerbackend.dto.request.PageRequestDto;
 import com.zipbeer.beerbackend.dto.response.PageResponseDto;
+import com.zipbeer.beerbackend.dto.response.ResponseDto;
 import com.zipbeer.beerbackend.entity.ChatEntity;
 import com.zipbeer.beerbackend.entity.RoomEntity;
 import com.zipbeer.beerbackend.entity.UserEntity;
 import com.zipbeer.beerbackend.repository.RoomRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -66,9 +70,16 @@ public class RoomService {
 
     //참여한 방 참여자, 제목 가져옴
     @Transactional(readOnly = true)
-    public RoomDto get(Long roomNo){
-        //해당 방이 없으면 에러 처리 -> 컨트롤러에서 처리
-        RoomEntity room = roomRepository.findById(roomNo).orElseThrow();
+    public ResponseEntity<?> get(Long roomNo){
+        RoomEntity room;
+        try {
+            room = roomRepository.findById(roomNo).orElseThrow(EntityNotFoundException::new);
+        }catch (EntityNotFoundException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("존재하지 않는 방");
+        } catch (Exception e){
+            return ResponseDto.databaseError();
+        }
+
         List<ChatEntity> chatList = room.getParticipantList();
         List<UserDto> userList = new ArrayList<>();
         for (ChatEntity chatEntity : chatList) {
@@ -81,11 +92,13 @@ public class RoomService {
 
             userList.add(userDto);
         }
-        return RoomDto.builder()
+        RoomDto dto =  RoomDto.builder()
                 .title(room.getTitle())
                 .master(room.getMaster())
                 .participantList(userList)
                 .build();
+
+        return ResponseEntity.ok(dto);
     }
 
     //참가자 입장, 퇴장 시 현재 참가자 리스트 가져옴
@@ -111,6 +124,7 @@ public class RoomService {
 
     @Transactional(readOnly = true)
     public PageResponseDto<RoomDto> getList(PageRequestDto pageRequestDto){
+        System.out.println(pageRequestDto);
         String searchTerm = pageRequestDto.getSearchTerm();
         String searchType = pageRequestDto.getSearchType();
         String category = pageRequestDto.getCategory();
@@ -120,10 +134,10 @@ public class RoomService {
 
         Page<RoomEntity> roomEntityList;
 
-        if(searchType.equals("방제목")){
-            roomEntityList = roomRepository.findAllByTitle(pageable,searchTerm,category);
-        } else{ //searchType = 닉네임
+        if(StringUtils.hasText(searchType) && searchType.equals("닉네임")){
             roomEntityList = roomRepository.findAllByNickname(pageable,searchTerm,category);
+        } else{ //searchType = 방제목
+            roomEntityList = roomRepository.findAllByTitle(pageable,searchTerm,category);
         }
 
         List<RoomDto> dtoList = new ArrayList<>();
@@ -135,7 +149,7 @@ public class RoomService {
                     .title(room.getTitle())
                     .category(room.getCategory())
                     .master(room.getMaster())
-                    .currentUser(room.getCurrentUserCount())
+                    .currentUser(room.getParticipantCount())
                     .maximumUser(room.getMaximumUser())
                     .createDate(room.getCreateDate())
                     .roomPw(room.getRoomPw())
@@ -156,18 +170,21 @@ public class RoomService {
         Long generatedNo;
         do {
             generatedNo = MIN_ID + random.nextLong((MAX_ID - MIN_ID + 1));
-        } while (!roomRepository.existsByRoomNo(generatedNo));
+        } while (roomRepository.existsByRoomNo(generatedNo));
         return generatedNo;
     }
 
     private Sort sortBy(String orderBy){
         //기본적으론 최신 생성된 순
         Sort sort;
-        switch(orderBy){
-            case "오래된순" : sort = Sort.by("create_date").ascending(); break;
-            case "최다인원순" : sort = Sort.by("participant_count").descending(); break;
-            case "최저인원순" : sort = Sort.by("participant_count").ascending(); break;
-            default: sort = Sort.by("create_date").descending(); break;
+        if(orderBy.equals("오래된순")) {
+            sort = Sort.by("createDate").ascending();
+        } else if(orderBy.equals("최다인원순")) {
+            sort = Sort.by("participantCount").descending().and(Sort.by("createDate").descending());
+        } else if(orderBy.equals("최저인원순")){
+            sort = Sort.by("participantCount").ascending().and(Sort.by("createDate").descending());
+        } else {
+            sort = Sort.by("createDate").descending();
         }
         return sort;
     }
