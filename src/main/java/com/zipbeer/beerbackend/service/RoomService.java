@@ -85,10 +85,8 @@ public class RoomService {
             return ResponseDto.databaseError();
         }
 
-        List<ChatEntity> chatList = room.getParticipantList();
         List<UserDto> userList = new ArrayList<>();
-        for (ChatEntity chatEntity : chatList) {
-            UserEntity user = chatEntity.getUser();
+        for (UserEntity user : room.getUsers()) {
             //사용자의 닉네임과 프로필만 가져오기
             UserDto userDto = UserDto.builder()
                     .nickname(user.getNickname())
