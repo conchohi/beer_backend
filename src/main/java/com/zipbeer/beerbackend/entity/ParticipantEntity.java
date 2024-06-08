@@ -10,11 +10,11 @@ import lombok.*;
 @AllArgsConstructor
 @ToString
 @Entity
-@Table(name="chat_tbl")
-public class ChatEntity {
+@Table(name="participant_tbl")
+public class ParticipantEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long chatNo;
+    private Long partNo;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "room_no")

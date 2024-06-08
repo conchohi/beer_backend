@@ -1,10 +1,10 @@
 package com.zipbeer.beerbackend.service;
 
 import com.zipbeer.beerbackend.dto.response.ResponseDto;
-import com.zipbeer.beerbackend.entity.ChatEntity;
+import com.zipbeer.beerbackend.entity.ParticipantEntity;
 import com.zipbeer.beerbackend.entity.RoomEntity;
 import com.zipbeer.beerbackend.entity.UserEntity;
-import com.zipbeer.beerbackend.repository.ChatRepository;
+import com.zipbeer.beerbackend.repository.ParticipantRepository;
 import com.zipbeer.beerbackend.repository.RoomRepository;
 import com.zipbeer.beerbackend.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -19,8 +19,8 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class ChatService {
-    private final ChatRepository chatRepository;
+public class ParticipantService {
+    private final ParticipantRepository participantRepository;
     private final RoomRepository roomRepository;
     private final UserRepository userRepository;
 
@@ -42,12 +42,12 @@ public class ChatService {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message","Room is full."));
         }
 
-        ChatEntity participant = ChatEntity.builder()
+        ParticipantEntity participant = ParticipantEntity.builder()
                 .user(user)
                 .room(room)
                 .build();
 
-        chatRepository.save(participant);
+        participantRepository.save(participant);
         return ResponseDto.success();
     }
     //채팅방 퇴장
@@ -61,7 +61,7 @@ public class ChatService {
             //데이터베이스 에러
             return ResponseDto.databaseError();
         }
-        chatRepository.deleteByUserUserIdAndRoomRoomNo(userId,roomNo);
+        participantRepository.deleteByUserUserIdAndRoomRoomNo(userId,roomNo);
         return ResponseDto.success();
     }
 }

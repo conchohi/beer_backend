@@ -37,8 +37,8 @@ public class RoomEntity {
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL
             , orphanRemoval = true,
             fetch = FetchType.LAZY)
-    @OrderBy("chatNo asc")
-    private List<ChatEntity> participantList;
+    @OrderBy("partNo asc")
+    private List<ParticipantEntity> participantList;
 
     private int participantCount;
 
@@ -62,7 +62,7 @@ public class RoomEntity {
     //참여중인 사용자의 리스트 얻는 법
     public List<UserEntity> getUsers() {
         return participantList.stream()
-                .map(ChatEntity::getUser)
+                .map(ParticipantEntity::getUser)
                 .collect(Collectors.toList());
     }
 }

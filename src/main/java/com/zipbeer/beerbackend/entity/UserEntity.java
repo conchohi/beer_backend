@@ -12,7 +12,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString(exclude = {"chat","followList"})
+@ToString(exclude = {"room","followList"})
 @Entity(name="user")
 @Table(name="user_tbl")
 public class UserEntity {
@@ -39,5 +39,5 @@ public class UserEntity {
 
     //chat 삭제 시 해당 속성이 null로 변경
     @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
-    private ChatEntity chat;
+    private ParticipantEntity room;
 }

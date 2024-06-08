@@ -5,7 +5,6 @@ import com.zipbeer.beerbackend.dto.UserDto;
 import com.zipbeer.beerbackend.dto.request.PageRequestDto;
 import com.zipbeer.beerbackend.dto.response.PageResponseDto;
 import com.zipbeer.beerbackend.dto.response.ResponseDto;
-import com.zipbeer.beerbackend.entity.ChatEntity;
 import com.zipbeer.beerbackend.entity.RoomEntity;
 import com.zipbeer.beerbackend.entity.UserEntity;
 import com.zipbeer.beerbackend.repository.RoomRepository;
@@ -109,10 +108,8 @@ public class RoomService {
     public List<UserDto> getParticipantList(Long roomNo){
         //해당 방이 없으면 에러 처리 -> 컨트롤러에서 처리
         RoomEntity room = roomRepository.findById(roomNo).orElseThrow();
-        List<ChatEntity> chatList = room.getParticipantList();
         List<UserDto> userList = new ArrayList<>();
-        for (ChatEntity chatEntity : chatList) {
-            UserEntity user = chatEntity.getUser();
+        for (UserEntity user : room.getUsers()) {
             //사용자의 닉네임과 프로필만 가져오기
             UserDto userDto = UserDto.builder()
                     .nickname(user.getNickname())

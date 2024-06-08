@@ -4,10 +4,12 @@ import com.zipbeer.beerbackend.dto.RoomDto;
 import com.zipbeer.beerbackend.dto.request.PageRequestDto;
 import com.zipbeer.beerbackend.dto.response.PageResponseDto;
 import com.zipbeer.beerbackend.dto.response.ResponseDto;
+import com.zipbeer.beerbackend.service.ParticipantService;
 import com.zipbeer.beerbackend.service.RoomService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -17,6 +19,7 @@ import java.util.Map;
 @RequestMapping("/api/room")
 public class RoomController {
     private final RoomService roomService;
+    private final ParticipantService participantService;
     @GetMapping("/{roomNo}")
     public ResponseEntity<?> getRoom(@PathVariable Long roomNo){
         return roomService.get(roomNo);
@@ -48,4 +51,15 @@ public class RoomController {
         roomService.destroyRoom(roomNo);
     }
 
+    @PostMapping("/join")
+    public ResponseEntity<?> join(@RequestBody Long roomNo){
+        String id = SecurityContextHolder.getContext().getAuthentication().getName();
+        return participantService.join(id,roomNo);
+    }
+
+    @DeleteMapping("/exit")
+    public ResponseEntity<?> exit(@RequestBody Long roomNo){
+        String id = SecurityContextHolder.getContext().getAuthentication().getName();
+        return participantService.exit(id,roomNo);
+    }
 }
