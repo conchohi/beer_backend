@@ -68,6 +68,11 @@ public class RoomService {
         roomRepository.deleteById(roomNo);
     }
 
+    @Transactional(readOnly = true)
+    public boolean checkPassword(RoomDto roomDto){
+        return roomRepository.existsByRoomNoAndRoomPw(roomDto.getRoomNo(), roomDto.getRoomPw());
+    }
+
     //참여한 방 참여자, 제목 가져옴
     @Transactional(readOnly = true)
     public ResponseEntity<?> get(Long roomNo){
