@@ -12,7 +12,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
+@ToString(exclude = {"chat","followList"})
 @Entity(name="user")
 @Table(name="user_tbl")
 public class UserEntity {
