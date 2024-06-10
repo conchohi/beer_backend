@@ -28,7 +28,6 @@ public class UserEntity {
     private int age;
     private String gender;
 
-    @CreatedDate
     private LocalDate createDate;
 
     //양방향
@@ -39,4 +38,9 @@ public class UserEntity {
 
     @OneToOne(mappedBy = "user")
     private ChatEntity room;
+
+    @PrePersist
+    protected void onCreate() {
+        this.createDate = LocalDate.now();
+    }
 }

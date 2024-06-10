@@ -45,6 +45,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                     .userId(username)
                     .email(oAuthResponse.getEmail())
                     .sns(oAuthResponse.getProvider())
+                    .nickname(nickname)
                     .role("USER")
                     .build();
 

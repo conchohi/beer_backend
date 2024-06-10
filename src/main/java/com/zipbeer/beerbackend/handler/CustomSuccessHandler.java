@@ -38,7 +38,6 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         //쿠키로 전달한 것 프론트에서 "Bearer token"으로 처리해서 요청 헤더에 저장해서 넘겨야 할듯
         response.addCookie(createCookie("refresh", token));
-
         response.sendRedirect("http://localhost:3000/getAccess");
     }
 
