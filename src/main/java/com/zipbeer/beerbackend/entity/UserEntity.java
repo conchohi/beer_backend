@@ -2,7 +2,7 @@ package com.zipbeer.beerbackend.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -12,7 +12,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
+@ToString(exclude = {"room","followList"})
 @Entity(name="user")
 @Table(name="user_tbl")
 public class UserEntity {
@@ -28,7 +28,7 @@ public class UserEntity {
     private int age;
     private String gender;
 
-    @CreatedDate
+    @CreationTimestamp
     private LocalDate createDate;
 
     //양방향
@@ -36,4 +36,9 @@ public class UserEntity {
             , orphanRemoval = true,
             fetch = FetchType.LAZY)
     private List<FollowEntity> followList;
+
+    //chat 삭제 시 해당 속성이 null로 변경
+    @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private ParticipantEntity room;
+
 }

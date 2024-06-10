@@ -65,7 +65,7 @@ public class WebSecurityConfig {
                             .successHandler(customSuccessHandler);
                 })
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/", "/login", "/reissue", "/api/v1/auth/**", "/api/camp/**", "/api/weather/**", "/api/board/**", "/ws/**").permitAll()
+                        .requestMatchers("/", "/login", "/reissue", "/api/v1/auth/**","/api/room/**","/api/board/**", "/ws/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/review/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/user/**").permitAll()
                         .requestMatchers("/api/v1/user/**").hasRole("USER")
