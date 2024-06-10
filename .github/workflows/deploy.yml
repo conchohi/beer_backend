@@ -34,7 +34,8 @@ jobs:
       - name: Build Docker image
         run: |
           echo "Building Docker image"
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/beer:latest .
+          docker build -t "${{ secrets.DOCKERHUB_USERNAME }}/beer:latest" .
+
 
       - name: Push Docker image to Docker Hub
         run: |
