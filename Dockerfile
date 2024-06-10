@@ -15,7 +15,7 @@ FROM openjdk:17.0-slim
 WORKDIR /app
 
 # Copy the jar file from the build stage
-COPY --from=build /build/build/libs/trelloServer-0.0.1-SNAPSHOT.jar app.jar
+COPY --from=build /build/libs/trelloServer-0.0.1-SNAPSHOT.jar app.jar
 
 EXPOSE 8080
 
