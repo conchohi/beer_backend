@@ -40,4 +40,5 @@ public class UserEntity {
     //chat 삭제 시 해당 속성이 null로 변경
     @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
     private ParticipantEntity room;
+
 }
