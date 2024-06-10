@@ -8,6 +8,9 @@ COPY src /build/src
 COPY gradlew /build/
 COPY gradle /build/gradle
 
+# Grant execute permission for gradlew
+RUN chmod +x gradlew
+
 # Download dependencies and build the application
 RUN ./gradlew build -x test --parallel
 
