@@ -1,6 +1,5 @@
 package com.zipbeer.beerbackend.entity;
 
-import com.zipbeer.beerbackend.entity.composite.ChatId;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -11,21 +10,17 @@ import lombok.*;
 @AllArgsConstructor
 @ToString
 @Entity
-@Table(name="chat_tbl")
-public class ChatEntity {
-    @EmbeddedId
-    private ChatId chatId;
-
-    @Column
-    private int ord;
+@Table(name="participant_tbl")
+public class ParticipantEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long partNo;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("roomNo")
     @JoinColumn(name = "room_no")
     private RoomEntity room;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @MapsId("userId")
     @JoinColumn(name = "user_id")
     private UserEntity user;
 }

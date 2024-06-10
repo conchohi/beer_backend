@@ -1,4 +1,4 @@
-secret-key: wqrasdfwa4325weafasdewfasd
+secret-key: wqrasdfwa4325weafasdewfasdfaFagagAHwhHEWgqegwaqfa
 server:
     port: 8080
 
@@ -17,7 +17,7 @@ spring:
                 "[format_sql]": true            #SQL 보기 좋게 출력
                 "[user_sql_comments]": true     #SQL 생성시 주석 포함
                 "[highlight_sql]": true         #SQL 색깔
-                "[hbm2ddl.auto]": create
+                "[hbm2ddl.auto]": update
         open-in-view: true
         show-sql: true
 
