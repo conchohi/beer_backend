@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Optional;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -17,6 +19,30 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final FileUtil fileUtil;
 
+
+
+    //유저 데이터 가져오기
+    @Override
+    public Optional<UserEntity> getUserByNickname(String nickname) {
+        return userRepository.findByNickname(nickname);
+    }
+
+        //닉네임받아서 유저 수정
+    @Override
+    public Optional<UserEntity> updateUserByNickname(String nickname, UserEntity updatedUser) {
+        Optional<UserEntity> existingUser = userRepository.findByNickname(nickname);
+        if (existingUser.isPresent()) {
+            UserEntity user = existingUser.get();
+            user.setName(updatedUser.getName());
+            user.setMbti(updatedUser.getMbti());
+            user.setAge(updatedUser.getAge());
+            user.setIntro(updatedUser.getIntro());
+            user.setProfileImage(updatedUser.getProfileImage());
+            return Optional.of(userRepository.save(user));
+        }
+        return Optional.empty();
+    }
+    
     @Override
     public void modify(UserDto userDto) {
         UserEntity user = userRepository.findByUserId(userDto.getUsername());
