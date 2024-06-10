@@ -1,5 +1,6 @@
     package com.zipbeer.beerbackend.filter;
 
+    import com.fasterxml.jackson.databind.ObjectMapper;
     import com.zipbeer.beerbackend.dto.jwt.CustomUserDetails;
     import com.zipbeer.beerbackend.provider.JWTProvider;
     import jakarta.servlet.FilterChain;
@@ -16,8 +17,11 @@
     import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
     import java.io.IOException;
+    import java.io.PrintWriter;
     import java.util.Collection;
+    import java.util.HashMap;
     import java.util.Iterator;
+    import java.util.Map;
 
     public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         private final AuthenticationManager authenticationManager;
@@ -50,29 +54,29 @@
         //로그인 성공 시 수행할 작업
         @Override
         protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException, ServletException {
-            //사용자의 아이디, 비밀번호, 역할, 닉네임을 갖는 CustomUserDetails 가져옴
             CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
             String userId = authentication.getName();
-
-            //역할은 Collection 으로 저장되어있음
             Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
             Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
             GrantedAuthority auth = iterator.next();
             String role = auth.getAuthority();
-
-            //닉네임 가져오기
             String nickname = customUserDetails.getNickname();
 
-            //토큰에 아이디, 역할만 담아서 생성
-            //access : 10분, refresh : 1일
-            String access = jwtProvider.createJwt("access",userId, role, nickname,10*60*1000L);
-            String refresh = jwtProvider.createJwt("refresh",userId, role, nickname,24*60*60*1000L);
+            String access = jwtProvider.createJwt("access", userId, role, nickname, 10*60*1000L);
+            String refresh = jwtProvider.createJwt("refresh", userId, role, nickname, 24*60*60*1000L);
 
-            //클라이언트 header 에 토큰 등록 (Bearer 토큰값)
-            response.setHeader("access", access);
-            response.setHeader("nickname", nickname);
             response.addCookie(createCookie("refresh", refresh));
             response.setStatus(HttpStatus.OK.value());
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+
+            Map<String, String> responseBody = new HashMap<>();
+            responseBody.put("access", access);
+            responseBody.put("nickname", nickname);
+
+            PrintWriter out = response.getWriter();
+            out.print(new ObjectMapper().writeValueAsString(responseBody));
+            out.flush();
         }
 
 
