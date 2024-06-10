@@ -14,10 +14,14 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 
 @Component
 @RequiredArgsConstructor
@@ -89,7 +93,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String nickname = jwtProvider.getNickname(accessToken);
 
         UserDto userDto = UserDto.builder()
-                .username(username)
+                .userId(username)
                 .role(role)
                 .nickname(nickname)
                 .build();
@@ -101,4 +105,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         filterChain.doFilter(request, response);
     }
+
+
+
+
+    @Controller
+    public class LoginController {
+        @GetMapping("/login")
+        public String login() {
+            return "login";  // `login.html` 또는 `login.jsp`를 반환
+        }
+    }
+
+
 }

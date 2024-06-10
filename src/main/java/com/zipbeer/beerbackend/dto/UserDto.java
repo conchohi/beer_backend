@@ -2,6 +2,7 @@ package com.zipbeer.beerbackend.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.zipbeer.beerbackend.entity.UserEntity;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -15,7 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 public class UserDto {
     @JsonProperty("id")
-    private String username;
+    private String userId;
     private String password;
     private String nickname;
     private String email;
@@ -30,4 +31,17 @@ public class UserDto {
     private MultipartFile profileFile;
 
     private String isDelete;
+
+    public UserDto(UserEntity user) {
+        this.userId = user.getUserId();
+        this.nickname = user.getNickname();
+        this.profileImage = user.getProfileImage();
+        this.email = user.getEmail();
+        this.sns = user.getSns();
+        this.role = user.getRole();
+        this.mbti = user.getMbti();
+        this.age = user.getAge();
+        this.gender = user.getGender();
+        this.isDelete = null; // 초기화 필요시 설정
+    }
 }

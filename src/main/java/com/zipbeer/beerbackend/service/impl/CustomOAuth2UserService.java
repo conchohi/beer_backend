@@ -52,7 +52,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             userRepository.save(user);
 
             UserDto userDto = UserDto.builder()
-                    .username(username)
+                    .userId(username)
                     .nickname(user.getNickname())
                     .role("USER")
                     .build();
@@ -62,7 +62,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             existData.setEmail(oAuthResponse.getEmail());
 
             UserDto userDto = UserDto.builder()
-                    .username(existData.getUserId())
+                    .userId(existData.getUserId())
                     .nickname(existData.getNickname())
                     .role(existData.getRole())
                     .build();

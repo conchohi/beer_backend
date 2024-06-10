@@ -24,7 +24,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         if(user != null){
             //UserDetails 에 담아서 return 하면 AuthenticationManager 가 검증
             UserDto userDto = UserDto.builder()
-                    .username(user.getUserId())
+                    .userId(user.getUserId())
                     .password(user.getPassword())
                     .role(user.getRole())
                     .nickname(user.getNickname())

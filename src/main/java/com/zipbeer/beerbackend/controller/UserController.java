@@ -11,21 +11,28 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/user")
+@RequestMapping("/user")
 public class UserController {
     private final UserService userService;
     private final FileUtil fileUtil;
-
 
     @GetMapping("/{profileImage}")
     public ResponseEntity<Resource> getImage(@PathVariable("profileImage") String profileImage){
         return fileUtil.getFile(profileImage);
     }
+
     @PatchMapping("")
-    public ResponseEntity<?> modify(UserDto userDto){
+    public ResponseEntity<?> modify(@RequestBody UserDto userDto){
         String id = SecurityContextHolder.getContext().getAuthentication().getName();
-        userDto.setUsername(id);
+        userDto.setUserId(id);
         userService.modify(userDto);
         return ResponseEntity.ok(userDto);
     }
+
+    @GetMapping("/info/{userId}")
+    public ResponseEntity<UserDto> getUserInfo(@PathVariable("userId") String userId){
+        UserDto userDto = userService.getUserById(userId);
+        return ResponseEntity.ok(userDto);
+    }
 }
+

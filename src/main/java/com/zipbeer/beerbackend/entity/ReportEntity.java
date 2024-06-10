@@ -21,11 +21,11 @@ public class ReportEntity {
     private Long reportNo;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "reporter_id",referencedColumnName = "userId")
     private UserEntity Reporter;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "reported_user_id",referencedColumnName = "userId")
     private UserEntity ReportedUser;
 
     @Column

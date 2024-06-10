@@ -32,8 +32,12 @@ public class UserEntity {
     private LocalDate createDate;
 
     //양방향
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL
-            , orphanRemoval = true,
-            fetch = FetchType.LAZY)
-    private List<FollowEntity> followList;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<FollowEntity> followers;
+
+    @OneToMany(mappedBy = "follow", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<FollowEntity> followings;
+
+    @OneToOne(mappedBy = "user")
+    private ChatEntity room;
 }

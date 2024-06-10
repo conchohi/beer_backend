@@ -31,7 +31,7 @@ public class AuthServiceImpl implements AuthService {
 
     public ResponseEntity<?> join(UserDto dto) {
         try {
-            String userId = dto.getUsername();
+            String userId = dto.getUserId();
             boolean isExistId = userRepository.existsByUserId(userId);
             if (isExistId) return ResponseDto.duplicateId();
 

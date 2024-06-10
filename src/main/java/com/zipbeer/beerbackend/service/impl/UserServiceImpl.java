@@ -19,18 +19,18 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void modify(UserDto userDto) {
-        UserEntity user = userRepository.findByUserId(userDto.getUsername());
-        //기존 이미지 이름
-        String beforeProfileImage = userDto.getProfileImage();
+        UserEntity user = userRepository.findByUserId(userDto.getUserId());
+        // 기존 이미지 이름
+        String beforeProfileImage = user.getProfileImage();
         String profileImage = null;
         MultipartFile multipartFile = userDto.getProfileFile();
-        //새로운 이미지가 왔으면 저장하고 기존 이미지 삭제
+        // 새로운 이미지가 왔으면 저장하고 기존 이미지 삭제
         if(multipartFile != null) {
             profileImage = fileUtil.saveFile(multipartFile);
             fileUtil.deleteFile(beforeProfileImage);
             user.setProfileImage(profileImage);
         }
-        if(userDto.getIsDelete().equals("true")){
+        if("true".equals(userDto.getIsDelete())) {
             user.setProfileImage(null);
             fileUtil.deleteFile(beforeProfileImage);
         }
@@ -39,8 +39,16 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
-//    @Override
-//    public void delete(String userId) {
-//
-//    }
+    @Override
+    public UserDto getUserById(String userId) {
+        UserEntity user = userRepository.findById(Long.valueOf(userId))
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+        return new UserDto(user);
+    }
+}
+
+ class UserNotFoundException extends RuntimeException {
+    public UserNotFoundException(String message) {
+        super(message);
+    }
 }

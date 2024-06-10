@@ -19,4 +19,13 @@ public class ChatEntity {
     @Column
     private int ord;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @MapsId("roomNo")
+    @JoinColumn(name = "room_no")
+    private RoomEntity room;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @MapsId("userId")
+    @JoinColumn(name = "user_id")
+    private UserEntity user;
 }
