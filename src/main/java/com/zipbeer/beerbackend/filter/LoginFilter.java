@@ -70,9 +70,11 @@
 
             //클라이언트 header 에 토큰 등록 (Bearer 토큰값)
             response.setHeader("access", access);
+            response.setHeader("nickname", nickname);
             response.addCookie(createCookie("refresh", refresh));
             response.setStatus(HttpStatus.OK.value());
         }
+
 
         //로그인 실패 시
         @Override
