@@ -1,6 +1,5 @@
 package com.zipbeer.beerbackend.service.impl;
 
-
 import com.zipbeer.beerbackend.common.CertificationNumber;
 import com.zipbeer.beerbackend.dto.EmailCertificationDto;
 import com.zipbeer.beerbackend.dto.UserDto;
@@ -24,11 +23,13 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder bCryptPasswordEncoder;
     private final EmailProvider emailProvider;
     private final CertificationRepository certificationRepository;
+
     @Override
     public boolean idCheck(String id) {
         return userRepository.existsByUserId(id);
     }
 
+    @Override
     public ResponseEntity<?> join(UserDto dto) {
         try {
             String userId = dto.getUserId();
@@ -53,6 +54,7 @@ public class AuthServiceImpl implements AuthService {
         }
         return ResponseDto.success();
     }
+
     @Override
     public ResponseEntity<?> emailCertification(EmailCertificationDto dto) {
         try {

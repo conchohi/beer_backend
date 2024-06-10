@@ -31,6 +31,7 @@ public class AuthController {
         return authService.join(userDto);
     }
 
+
     @PostMapping("/email-certification")
     public ResponseEntity<?> emailCertificaton
             (@RequestBody @Valid EmailCertificationDto requestBody)

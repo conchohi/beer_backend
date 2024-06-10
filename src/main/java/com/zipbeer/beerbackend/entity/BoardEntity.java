@@ -3,8 +3,8 @@ package com.zipbeer.beerbackend.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -33,11 +33,11 @@ public class BoardEntity {
     private UserEntity writer;
 
     @Column
-    @CreatedDate
+    @CreationTimestamp
     private LocalDate regDate;
 
     @Column
-    @LastModifiedDate
+    @UpdateTimestamp
     private LocalDate modifyDate;
 
     @Column

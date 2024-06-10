@@ -2,9 +2,8 @@ package com.zipbeer.beerbackend.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
+import org.hibernate.annotations.CreationTimestamp;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -33,6 +32,6 @@ public class CommentEntity {
     private String content;
 
     @Column
-    @CreatedDate
+    @CreationTimestamp
     private LocalDateTime createDate;
 }

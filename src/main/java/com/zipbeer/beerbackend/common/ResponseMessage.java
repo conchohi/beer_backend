@@ -8,5 +8,5 @@ public interface ResponseMessage {
     String CERTIFICATION_FAIL = "Certification failed.";
     String DATABASE_ERROR = "Database error.";
     String MAIL_FAIL = "Mail send failed.";
-    String NOT_EXIST_MAIL = "Mail Not Exist";
+    String NOT_EXIST_MAIL = "Mail not exist";
 }

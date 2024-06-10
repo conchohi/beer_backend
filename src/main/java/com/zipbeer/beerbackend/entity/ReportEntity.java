@@ -2,7 +2,7 @@ package com.zipbeer.beerbackend.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -37,7 +37,7 @@ public class ReportEntity {
     @Column
     private String content;
 
-    @CreatedDate
+    @CreationTimestamp
     private LocalDateTime reportDate;
 
     @Column

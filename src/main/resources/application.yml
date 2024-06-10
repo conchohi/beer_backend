@@ -1,11 +1,11 @@
-secret-key: wqrasdfwa4325weafasdewfasd
+secret-key: eyJhbGciOiJIUzUxMiJ9eyJzdWIiOiJ1c2VyIn0I2qOfhAZMGSH1pCecUH5sV2Lg2pSWNQMPzXsMcne6NJ1SlkBoirhGAmKfTYNcRyhu6nQtRzgAd6VXyttoX9A
 server:
     port: 8080
 
 spring:
     datasource:
-        url: jdbc:mysql://localhost:3306/Beer
-        username: root
+        url: jdbc:mysql://54.180.123.253:3306/Beer
+        username: beer
         password: my1234
         driver-class-name: com.mysql.cj.jdbc.Driver
 
@@ -17,7 +17,7 @@ spring:
                 "[format_sql]": true            #SQL 보기 좋게 출력
                 "[user_sql_comments]": true     #SQL 생성시 주석 포함
                 "[highlight_sql]": true         #SQL 색깔
-                "[hbm2ddl.auto]": create
+                "[hbm2ddl.auto]": update
         open-in-view: true
         show-sql: true
 
@@ -27,18 +27,18 @@ spring:
                 registration:
                     naver:
                         client-name: naver
-                        client-id: Fg3oK6bo0oDxuuBIDzFJ
-                        client-secret: I9MXAbwUUJ
-                        redirect-uri: http://localhost:4040/login/oauth2/code/naver
+                        client-id: G9T5HJ5m7qmMrHWUI8uX
+                        client-secret: WGCj5c7gv5
+                        redirect-uri: http://localhost:8080/login/oauth2/code/naver
                         authorization-grant-type: authorization_code
                         scope:
                             - email
                             - nickname
                     kakao:
                         client-name: kakao
-                        client-id: ac2c64c98329c7836b1366000db4ec39
-                        client-secret: 9AiVLThEKXlp7tUr995KNXVTx4vF4Ixh
-                        redirect-uri: http://localhost:4040/login/oauth2/code/kakao
+                        client-id: 6dd83ec1638f5cff30942f97a8b7610a
+                        client-secret: K03c21Jeu2pctVBeKe8cQSVL24QXKr5O
+                        redirect-uri: http://localhost:8080/login/oauth2/code/kakao
                         client-authentication-method: client_secret_post
                         authorization-grant-type: authorization_code
                         scope:
