@@ -14,10 +14,9 @@ public class BoardDto {
     private Long boardNo;
     private String title;
     private String content;
-    private UserEntity writer;
+    private String writer;
     private LocalDate regDate;
     private LocalDate modifyDate;
     private int count;
-
 
 }
