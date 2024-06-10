@@ -6,9 +6,12 @@ import com.zipbeer.beerbackend.repository.UserRepository;
 import com.zipbeer.beerbackend.service.UserService;
 import com.zipbeer.beerbackend.util.FileUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @Service
 @Transactional
@@ -16,6 +19,8 @@ import org.springframework.web.multipart.MultipartFile;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final FileUtil fileUtil;
+    private final PasswordEncoder passwordEncoder;
+
 
     @Override
     public void modify(UserDto userDto) {
@@ -44,6 +49,26 @@ public class UserServiceImpl implements UserService {
         UserEntity user = userRepository.findById(Long.valueOf(userId))
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
         return new UserDto(user);
+    }
+
+    @Override
+    public void encodeExistingPasswords() {
+        List<UserEntity> users = userRepository.findAll();
+        for (UserEntity user : users) {
+            if (!passwordEncoder.matches(user.getPassword(), passwordEncoder.encode(user.getPassword()))) {
+                user.setPassword(passwordEncoder.encode(user.getPassword()));
+                userRepository.save(user);
+            }
+        }
+    }
+
+    public void saveUser(UserDto userDto) {
+        UserEntity userEntity = new UserEntity();
+        userEntity.setUserId(userDto.getUserId());
+        userEntity.setPassword(passwordEncoder.encode(userDto.getPassword())); // 비밀번호 인코딩
+        userEntity.setRole(userDto.getRole());
+        userEntity.setNickname(userDto.getNickname());
+        userRepository.save(userEntity);
     }
 }
 

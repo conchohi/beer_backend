@@ -74,7 +74,7 @@ public class WebSecurityConfig {
                 })
                 .authorizeHttpRequests(request -> request
 
-                        .requestMatchers("/", "/login", "/reissue", "/api/v1/auth/**","/api/room/**","/api/board/**", "/ws/**", "/chatroom/public/**","/messages/private/**").permitAll()
+                        .requestMatchers("/", "/login", "/reissue", "/api/v1/auth/**","/api/room/**","/api/board/**", "/ws/**", "/chatroom/public/**","/messages/private/**","/api/follow/**").permitAll()
 
                         .requestMatchers(HttpMethod.GET, "/api/review/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/user/**").permitAll()

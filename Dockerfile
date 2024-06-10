@@ -2,19 +2,20 @@
 FROM gradle:7.5.1-jdk17 AS build
 WORKDIR /build
 
-# Copy gradle and project files
+# Copy gradle files and download dependencies
 COPY build.gradle settings.gradle /build/
-COPY src /build/src
+RUN gradle build -x test --parallel --continue > /dev/null 2>&1 || true
 
-# Download dependencies and build the application
+# Build the application
+COPY . /build
 RUN gradle build -x test --parallel
 
-# Second stage: runtime
+# APP
 FROM openjdk:17.0-slim
 WORKDIR /app
 
 # Copy the jar file from the build stage
-COPY --from=build /build/build/libs/trelloServer-0.0.1-SNAPSHOT.jar app.jar
+COPY --from=build /build/build/libs/beer-backend-0.0.1-SNAPSHOT.jar app.jar
 
 EXPOSE 8080
 

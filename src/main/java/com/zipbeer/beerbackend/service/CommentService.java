@@ -55,7 +55,7 @@ public class CommentService {
 
     //등록
     public CommentDto registerComment(CommentDto commentDto) {
-        UserEntity user = userRepository.findById(commentDto.getWriterId()).get();
+        UserEntity user = userRepository.findById(Long.valueOf(commentDto.getWriterId())).get();
         BoardEntity board = boardRepository.findById(commentDto.getBoardNo()).get();
 
         CommentEntity commentEntity = CommentEntity.builder()

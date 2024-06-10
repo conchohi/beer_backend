@@ -36,19 +36,19 @@ public class FollowController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/followers")
-    public ResponseEntity<List<FollowEntity>> getFollowers() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        if (authentication == null || !authentication.isAuthenticated() || authentication.getPrincipal().equals("anonymousUser")) {
-            // 인증 정보가 없는 경우 기본 응답 처리
-            return ResponseEntity.status(403).body(null); // 또는 적절한 오류 응답 처리
-        }
-
-        String id = authentication.getName();
-        List<FollowEntity> followers = followService.getFollowers(id);
-        return ResponseEntity.ok(followers);
-    }
+//    @GetMapping("/followers")
+//    public ResponseEntity<List<FollowEntity>> getFollowers() {
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//
+//        if (authentication == null || !authentication.isAuthenticated() || authentication.getPrincipal().equals("anonymousUser")) {
+//            // 인증 정보가 없는 경우 기본 응답 처리
+//            return ResponseEntity.status(403).body(null); // 또는 적절한 오류 응답 처리
+//        }
+//
+//        String id = authentication.getName();
+//        List<FollowEntity> followers = followService.getFollowers(id);
+//        return ResponseEntity.ok(followers);
+//    }
 
     @GetMapping("/following/{userId}")
     public ResponseEntity<List<FollowEntity>> getFollowing(@PathVariable String userId) {
