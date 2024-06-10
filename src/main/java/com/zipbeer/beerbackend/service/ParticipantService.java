@@ -32,14 +32,14 @@ public class ParticipantService {
             room = roomRepository.findById(roomNo).orElseThrow(EntityNotFoundException::new);
         }catch (EntityNotFoundException e){
             //방이 존재하지 않음
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message","Not exist room."));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message","방이 존재하지 않습니다."));
         }catch (Exception e){
             //데이터베이스 에러
             return ResponseDto.databaseError();
         }
         //방이 가득참
         if(room.getParticipantCount() >= room.getMaximumUser()){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message","Room is full."));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message","인원이 가득찼습니다."));
         }
 
         ParticipantEntity participant = ParticipantEntity.builder()
@@ -52,8 +52,9 @@ public class ParticipantService {
     }
     //채팅방 퇴장
     public ResponseEntity<?> exit(String userId, Long roomNo){
+        RoomEntity room;
         try {
-            roomRepository.findById(roomNo).orElseThrow(EntityNotFoundException::new);
+            room = roomRepository.findById(roomNo).orElseThrow(EntityNotFoundException::new);
         }catch (EntityNotFoundException e){
             //방이 존재하지 않음
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message","Not exist room."));
@@ -61,7 +62,17 @@ public class ParticipantService {
             //데이터베이스 에러
             return ResponseDto.databaseError();
         }
+
+        //나가기
         participantRepository.deleteByUserUserIdAndRoomRoomNo(userId,roomNo);
+        //DB에 나간 내용 기록
+        participantRepository.flush();
+
+        //만약 나간 후 방이 비면 해당 방 삭제
+        if(roomRepository.isEmptyRoom(roomNo)){
+            roomRepository.delete(room);
+        }
+
         return ResponseDto.success();
     }
 }

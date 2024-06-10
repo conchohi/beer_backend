@@ -21,8 +21,13 @@ public class RoomController {
     private final RoomService roomService;
     private final ParticipantService participantService;
     @GetMapping("/{roomNo}")
-    public ResponseEntity<?> getRoom(@PathVariable Long roomNo){
+    public ResponseEntity<?> getRoom(@PathVariable(name = "roomNo") Long roomNo){
         return roomService.get(roomNo);
+    }
+
+    @GetMapping("/{roomNo}/participant")
+    public ResponseEntity<?> getParticipantList(@PathVariable(name = "roomNo") Long roomNo){
+        return roomService.getParticipantList(roomNo);
     }
 
     @GetMapping("/list")
@@ -41,25 +46,27 @@ public class RoomController {
         }
     }
 
-    @PostMapping("")
+    @PostMapping
     public Long createRoom(@RequestBody RoomDto roomDto){
         return roomService.createRoom(roomDto);
     }
 
     @DeleteMapping("/{roomNo}")
-    public void destroyRoom(@PathVariable Long roomNo){
+    public void destroyRoom(@PathVariable(name = "roomNo") Long roomNo){
         roomService.destroyRoom(roomNo);
     }
 
-    @PostMapping("/join")
-    public ResponseEntity<?> join(@RequestBody Long roomNo){
+    @PostMapping("/join/{roomNo}")
+    public ResponseEntity<?> join(@PathVariable(name = "roomNo") Long roomNo){
         String id = SecurityContextHolder.getContext().getAuthentication().getName();
         return participantService.join(id,roomNo);
+//        return participantService.join("abc123", roomNo);
     }
 
-    @DeleteMapping("/exit")
-    public ResponseEntity<?> exit(@RequestBody Long roomNo){
+    @DeleteMapping("/exit/{roomNo}")
+    public ResponseEntity<?> exit(@PathVariable(name = "roomNo") Long roomNo){
         String id = SecurityContextHolder.getContext().getAuthentication().getName();
         return participantService.exit(id,roomNo);
+//        return participantService.exit("abc123",roomNo);
     }
 }

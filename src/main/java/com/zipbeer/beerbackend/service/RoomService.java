@@ -97,6 +97,7 @@ public class RoomService {
         RoomDto dto =  RoomDto.builder()
                 .title(room.getTitle())
                 .master(room.getMaster())
+                .maximumUser(room.getMaximumUser())
                 .participantList(userList)
                 .build();
 
@@ -105,9 +106,16 @@ public class RoomService {
 
     //참가자 입장, 퇴장 시 현재 참가자 리스트 가져옴
     @Transactional(readOnly = true)
-    public List<UserDto> getParticipantList(Long roomNo){
+    public ResponseEntity<?> getParticipantList(Long roomNo){
+        RoomEntity room;
         //해당 방이 없으면 에러 처리 -> 컨트롤러에서 처리
-        RoomEntity room = roomRepository.findById(roomNo).orElseThrow();
+        try {
+            room = roomRepository.findById(roomNo).orElseThrow(EntityNotFoundException::new);
+        }catch (EntityNotFoundException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("존재하지 않는 방");
+        } catch (Exception e){
+            return ResponseDto.databaseError();
+        }
         List<UserDto> userList = new ArrayList<>();
         for (UserEntity user : room.getUsers()) {
             //사용자의 닉네임과 프로필만 가져오기
@@ -119,7 +127,7 @@ public class RoomService {
             userList.add(userDto);
         }
 
-        return userList;
+        return ResponseEntity.ok(userList);
     }
 
     @Transactional(readOnly = true)
