@@ -2,10 +2,11 @@ package com.zipbeer.beerbackend.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Getter
@@ -13,7 +14,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
+@ToString(exclude = "participantList")
 @Entity
 @Table(name="room_tbl")
 public class RoomEntity {
@@ -26,15 +27,42 @@ public class RoomEntity {
     @Column(name = "room_pw")
     private String roomPw;
 
-    @CreatedDate
+    @CreationTimestamp
     private LocalDateTime createDate;
 
     private String category;
 
-    private Integer maximumUser;
+    private int maximumUser;
 
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL
             , orphanRemoval = true,
             fetch = FetchType.LAZY)
-    private List<ChatEntity> participantList;
+    @OrderBy("partNo asc")
+    private List<ParticipantEntity> participantList;
+
+    private int participantCount;
+
+    //방장의 닉네임
+    private String master;
+
+    @PostLoad
+    @PostPersist
+    @PostUpdate
+    private void getParticipantCountAndMaster() {
+        if (participantList != null && !participantList.isEmpty()) {
+            this.participantCount = participantList.size();
+            //List의 가장 첫번쨰 사람이 방장 => 입장한 지 오래된 순
+            this.master = participantList.get(0).getUser().getNickname();
+        } else {
+            this.participantCount = 0;
+            this.master = null;
+        }
+    }
+
+    //참여중인 사용자의 리스트 얻는 법
+    public List<UserEntity> getUsers() {
+        return participantList.stream()
+                .map(ParticipantEntity::getUser)
+                .collect(Collectors.toList());
+    }
 }

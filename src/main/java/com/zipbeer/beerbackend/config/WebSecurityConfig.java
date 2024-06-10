@@ -32,6 +32,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collections;
 
 
@@ -70,7 +71,7 @@ public class WebSecurityConfig {
                             .successHandler(customSuccessHandler);
                 })
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/", "/login", "/reissue", "/api/v1/auth/**", "/api/camp/**", "/api/weather/**", "/api/notice/**", "/ws/**").permitAll()
+                        .requestMatchers("/", "/login", "/reissue", "/api/v1/auth/**","/api/room/**","/api/board/**", "/ws/**", "/chatroom/public/**","/messages/private/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/review/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/user/**").permitAll()
                         .requestMatchers("/api/v1/user/**").hasRole("USER")
@@ -93,9 +94,7 @@ public class WebSecurityConfig {
         corsConfiguration.setAllowCredentials(true);
         corsConfiguration.setAllowedHeaders(Collections.singletonList("*"));
         corsConfiguration.setMaxAge(3600L);
-        corsConfiguration.setExposedHeaders(Collections.singletonList("Set-Cookie"));
-        corsConfiguration.setExposedHeaders(Collections.singletonList("Authorization"));
-        corsConfiguration.setExposedHeaders(Collections.singletonList("access"));
+        corsConfiguration.setExposedHeaders(Arrays.asList("Set-Cookie", "Authorization", "access")); // 수정된 부분
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", corsConfiguration);
@@ -103,11 +102,4 @@ public class WebSecurityConfig {
         return source;
     }
 
-    // Define the FailedAuthenticationEntryPoint class
-    public class FailedAuthenticationEntryPoint implements org.springframework.security.web.AuthenticationEntryPoint {
-        @Override
-        public void commence(HttpServletRequest request, HttpServletResponse response, org.springframework.security.core.AuthenticationException authException) throws IOException, ServletException {
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
-        }
-    }
 }
