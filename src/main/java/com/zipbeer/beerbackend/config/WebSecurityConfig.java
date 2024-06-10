@@ -6,9 +6,6 @@ import com.zipbeer.beerbackend.filter.LoginFilter;
 import com.zipbeer.beerbackend.handler.CustomSuccessHandler;
 import com.zipbeer.beerbackend.provider.JWTProvider;
 import com.zipbeer.beerbackend.service.impl.CustomOAuth2UserService;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Bean;
@@ -31,7 +28,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 
