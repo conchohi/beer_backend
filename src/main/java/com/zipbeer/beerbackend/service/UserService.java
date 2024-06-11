@@ -8,9 +8,11 @@ import java.util.Optional;
 
 public interface UserService {
     UserDto getUserById(String id);
-    Optional<UserDto> getUserByNickname(String nickname);
     Optional<UserDto> updateUserByNickname(String nickname, UserDto userDto);
     void modify(UserDto userDto);
+    UserDto getUserByNickname(String nickname);
+    public void modify(UserDto userDto);
+    //    public void delete(String userId);
     boolean isIdAvailable(String userid);
     boolean isNicknameAvailable(String nickname);
     Optional<UserDto> updateNickname(String userId, String newNickname); // New method to update nickname

@@ -22,51 +22,10 @@ public class UserController {
     private final FileUtil fileUtil;
     private final JWTProvider jwtProvider;
 
-    @GetMapping("/nickname/{nickname}")
-    public ResponseEntity<UserDto> getUserByNickname(@PathVariable String nickname) {
-        Optional<UserDto> userDto = userService.getUserByNickname(nickname);
-        return userDto.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
-    }
+    @GetMapping("/info/{nickname}")
+    public ResponseEntity<UserDto> getUserByNickname(@PathVariable("nickname") String nickname) {
+        return ResponseEntity.ok(userService.getUserByNickname(nickname));
 
-    @GetMapping("/token/nickname")
-    public ResponseEntity<Map<String, String>> getNicknameByToken(@RequestHeader("Authorization") String token) {
-        String nickname = jwtProvider.getNickname(token.replace("Bearer ", ""));
-        return ResponseEntity.ok(Map.of("nickname", nickname));
-    }
-
-    @GetMapping("/token/user")
-    public ResponseEntity<UserDto> getUserByToken(@RequestHeader("Authorization") String token) {
-        String nickname = jwtProvider.getNickname(token.replace("Bearer ", ""));
-        UserDto userDto = userService.getUserByNickname(nickname).orElse(null);
-        if (userDto == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(userDto);
-    }
-
-    @PutMapping(value = "/update/{nickname}", consumes = "multipart/form-data")
-    public ResponseEntity<UserDto> updateUserByNickname(
-            @PathVariable String nickname,
-            @RequestPart("userDto") UserDto userDto,
-            @RequestPart(value = "profileFile", required = false) MultipartFile profileFile) {
-        userDto.setProfileFile(profileFile);
-        Optional<UserDto> updatedUser = userService.updateUserByNickname(nickname, userDto);
-        return updatedUser.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
-    }
-
-    @PutMapping("/update-nickname")
-    public ResponseEntity<UserDto> updateNickname(@RequestBody Map<String, String> request) {
-        String userId = SecurityContextHolder.getContext().getAuthentication().getName();
-        String newNickname = request.get("nickname");
-        Optional<UserDto> updatedUser = userService.updateNickname(userId, newNickname);
-        return updatedUser.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
-    }
-
-    @PostMapping("/upload-profile")
-    public ResponseEntity<UserDto> uploadProfileImage(@RequestParam("file") MultipartFile file) {
-        String userId = SecurityContextHolder.getContext().getAuthentication().getName();
-        Optional<UserDto> updatedUser = userService.updateUserProfile(userId, file);
-        return updatedUser.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping("/{profileImage}")
@@ -82,9 +41,10 @@ public class UserController {
         return ResponseEntity.ok(userDto);
     }
 
-    @GetMapping("/info/{userId}")
-    public ResponseEntity<UserDto> getUserInfo(@PathVariable("userId") String userId) {
-        UserDto userDto = userService.getUserById(userId);
+    @GetMapping("")
+    public ResponseEntity<UserDto> getUserInfo(){
+        String id = SecurityContextHolder.getContext().getAuthentication().getName();
+        UserDto userDto = userService.getUserById(id);
         return ResponseEntity.ok(userDto);
     }
 
