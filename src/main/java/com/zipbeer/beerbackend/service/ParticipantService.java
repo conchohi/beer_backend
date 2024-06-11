@@ -50,6 +50,7 @@ public class ParticipantService {
         participantRepository.save(participant);
         return ResponseDto.success();
     }
+
     //채팅방 퇴장
     public ResponseEntity<?> exit(String userId, Long roomNo){
         RoomEntity room;
@@ -63,14 +64,12 @@ public class ParticipantService {
             return ResponseDto.databaseError();
         }
 
-        //나가기
-        participantRepository.deleteByUserUserIdAndRoomRoomNo(userId,roomNo);
-        //DB에 나간 내용 기록
-        participantRepository.flush();
-
-        //만약 나간 후 방이 비면 해당 방 삭제
-        if(roomRepository.isEmptyRoom(roomNo)){
+        //만약 내가 나간 후 방이 비면 해당 방 삭제
+        if(roomRepository.isEmptyRoomWhenExit(roomNo)){
             roomRepository.delete(room);
+        //방이 비지 않으면 방 나가기
+        } else{
+            participantRepository.deleteByUserUserIdAndRoomRoomNo(userId,roomNo);
         }
 
         return ResponseDto.success();

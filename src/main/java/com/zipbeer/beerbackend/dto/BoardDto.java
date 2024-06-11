@@ -1,8 +1,8 @@
 package com.zipbeer.beerbackend.dto;
 
-import com.zipbeer.beerbackend.entity.UserEntity;
 import lombok.*;
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Setter
@@ -11,13 +11,15 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @ToString
 public class BoardDto {
+
     private Long boardNo;
     private String title;
     private String content;
-    private UserEntity writer;
+    private String writer;
     private LocalDate regDate;
     private LocalDate modifyDate;
     private int count;
 
+    private List<CommentDto> commentList;
 
 }

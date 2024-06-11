@@ -38,12 +38,7 @@ public class RoomController {
 
     @PostMapping("/checkPw")
     public ResponseEntity<?> checkPassword(@RequestBody RoomDto roomDto){
-        boolean checkPassword = roomService.checkPassword(roomDto);
-        if (checkPassword) {
-            return ResponseDto.success();
-        } else{
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message","비밀번호가 일치하지 않습니다"));
-        }
+        return roomService.checkPassword(roomDto);
     }
 
     @PostMapping

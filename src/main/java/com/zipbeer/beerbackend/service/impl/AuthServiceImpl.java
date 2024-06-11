@@ -111,5 +111,46 @@ public class AuthServiceImpl implements AuthService {
         } catch (Exception e) {
             return ResponseDto.databaseError();
         }
+
     }
-}
+
+
+        @Override
+        public ResponseEntity<?> sendPasswordResetCode(String userId, String email) {
+            try {
+                UserEntity user = userRepository.findByUserIdAndEmail(userId, email).orElse(null);
+                if (user == null) {
+                    return ResponseDto.notExistUser();
+                }
+
+                String certificationNumber = CertificationNumber.getCertificationNumber();
+                boolean isSuccessed = emailProvider.sendCertificationMail(email, certificationNumber);
+                if (!isSuccessed) return ResponseDto.mailFail();
+
+                CertificationEntity certificationEntity = new CertificationEntity(userId, email, certificationNumber);
+                certificationRepository.save(certificationEntity);
+
+                return ResponseDto.success();
+            } catch (Exception exception) {
+                return ResponseDto.databaseError();
+            }
+        }
+
+        @Override
+        public ResponseEntity<?> updatePassword(String userId, String email, String newPassword) {
+            try {
+                UserEntity user = userRepository.findByUserIdAndEmail(userId, email).orElse(null);
+                if (user == null) {
+                    return ResponseDto.notExistUser();
+                }
+
+                user.setPassword(bCryptPasswordEncoder.encode(newPassword));
+                userRepository.save(user);
+
+                return ResponseDto.success();
+            } catch (Exception exception) {
+                return ResponseDto.databaseError();
+            }
+        }
+    }
+
