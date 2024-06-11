@@ -15,21 +15,14 @@ import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/user")
+@RequestMapping("/api/user")
 public class UserController {
     private final UserService userService;
     private final FileUtil fileUtil;
 
-    @GetMapping("/nickname/{nickname}")
-    public ResponseEntity<UserEntity> getUserByNickname(@PathVariable String nickname) {
-        Optional<UserEntity> userEntity = userService.getUserByNickname(nickname);
-        return userEntity.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
-    }
-
-    @PutMapping("/update/{nickname}")
-    public ResponseEntity<UserEntity> updateUserByNickname(@PathVariable String nickname, @RequestBody UserEntity user) {
-        Optional<UserEntity> updatedUser = userService.updateUserByNickname(nickname, user);
-        return updatedUser.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    @GetMapping("/info/{nickname}")
+    public ResponseEntity<UserDto> getUserByNickname(@PathVariable("nickname") String nickname) {
+        return ResponseEntity.ok(userService.getUserByNickname(nickname));
     }
     @GetMapping("/{profileImage}")
     public ResponseEntity<Resource> getImage(@PathVariable("profileImage") String profileImage){
@@ -44,9 +37,10 @@ public class UserController {
         return ResponseEntity.ok(userDto);
     }
 
-    @GetMapping("/info/{userId}")
-    public ResponseEntity<UserDto> getUserInfo(@PathVariable("userId") String userId){
-        UserDto userDto = userService.getUserById(userId);
+    @GetMapping("")
+    public ResponseEntity<UserDto> getUserInfo(){
+        String id = SecurityContextHolder.getContext().getAuthentication().getName();
+        UserDto userDto = userService.getUserById(id);
         return ResponseEntity.ok(userDto);
     }
     @PostMapping("/id-check")
