@@ -1,20 +1,21 @@
 package com.zipbeer.beerbackend.service;
 
 import com.zipbeer.beerbackend.dto.BoardDto;
+import com.zipbeer.beerbackend.dto.CommentDto;
 import com.zipbeer.beerbackend.entity.BoardEntity;
+import com.zipbeer.beerbackend.entity.CommentEntity;
 import com.zipbeer.beerbackend.entity.UserEntity;
 import com.zipbeer.beerbackend.repository.BoardRepository;
 import com.zipbeer.beerbackend.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+
 
 @Service
 @RequiredArgsConstructor
@@ -53,7 +54,7 @@ public class BoardService {
     }
 
     //수정
-    public BoardDto updateBoard(Long id, BoardEntity board) {
+    public BoardDto updateBoard(Long id, BoardDto board) {
         BoardEntity getBoard = boardRepository.findById(id).orElseThrow();
 
         //제목, 내용, 수정일자
@@ -75,6 +76,19 @@ public class BoardService {
 
     //Entity를 Dto로 변환하는 메소드
     private BoardDto entityToDto(BoardEntity boardEntity) {
+        List<CommentDto> commentDtos = new ArrayList<>();
+        if (boardEntity.getCommentEntityList() != null) {
+            for (CommentEntity commentEntity : boardEntity.getCommentEntityList()) {
+                CommentDto commentDto = CommentDto.builder()
+                        .commentNo(commentEntity.getCommentNo())
+                        .writerId(commentEntity.getWriter().getUserId())
+                        .content(commentEntity.getContent())
+                        .createDate(commentEntity.getCreateDate())
+                        .build();
+                commentDtos.add(commentDto);
+            }
+        }
+
         BoardDto boardDto = BoardDto.builder()
                 .boardNo(boardEntity.getBoardNo())
                 .title(boardEntity.getTitle())
@@ -83,6 +97,7 @@ public class BoardService {
                 .regDate(boardEntity.getRegDate())
                 .modifyDate(boardEntity.getModifyDate())
                 .count(boardEntity.getCount())
+                .commentList(commentDtos)
                 .build();
 
         return boardDto;

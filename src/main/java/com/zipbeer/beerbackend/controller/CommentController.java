@@ -2,18 +2,19 @@ package com.zipbeer.beerbackend.controller;
 
 import com.zipbeer.beerbackend.dto.CommentDto;
 import com.zipbeer.beerbackend.service.CommentService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@RequiredArgsConstructor
 @RestController
-@RequestMapping
+@RequestMapping("/api/comment")
 public class CommentController {
 
-    @Autowired
-    private CommentService commentService;
+    private final CommentService commentService;
 
 
     // 댓글 작성
@@ -23,7 +24,7 @@ public class CommentController {
     }
 
     // 전체 댓글 조회
-//    @GetMapping
+//    @GetMapping("")
 //    public List<CommentDto> getAllComments() {
 //        return commentService.getAllComments();
 //    }
@@ -35,9 +36,9 @@ public class CommentController {
     }
 
     // 댓글 삭제
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteComment(@PathVariable Long id) {
-        commentService.deleteComment(id);
+    @DeleteMapping("/{commentNo}")
+    public ResponseEntity<?> deleteComment(@PathVariable Long commentNo) {
+        commentService.deleteComment(commentNo);
         return ResponseEntity.noContent().build();
     }
 
