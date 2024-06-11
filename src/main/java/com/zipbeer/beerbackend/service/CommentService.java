@@ -55,14 +55,13 @@ public class CommentService {
 
     //등록
     public CommentDto registerComment(CommentDto commentDto) {
-        UserEntity user = userRepository.findById(commentDto.getWriterId()).get();
-        BoardEntity board = boardRepository.findById(commentDto.getBoardNo()).get();
+        UserEntity user = userRepository.findById(commentDto.getWriterId()).orElseThrow();
+        BoardEntity board = boardRepository.findById(commentDto.getBoardNo()).orElseThrow();
 
         CommentEntity commentEntity = CommentEntity.builder()
                 .writer(user)
                 .board(board)
                 .content(commentDto.getContent())
-                .createDate(commentDto.getCreateDate())
                 .build();
 
         CommentEntity saveComment = commentRepository.save(commentEntity);
@@ -80,7 +79,8 @@ public class CommentService {
     private CommentDto entityToDto(CommentEntity commentEntity) {
         return CommentDto.builder()
                 .commentNo(commentEntity.getCommentNo())
-                .writerId(commentEntity.getWriter().getUserId())
+                .nickname(commentEntity.getWriter().getNickname())
+                .profileImage(commentEntity.getWriter().getProfileImage())
                 .boardNo(commentEntity.getBoard().getBoardNo())
                 .content(commentEntity.getContent())
                 .createDate(commentEntity.getCreateDate())

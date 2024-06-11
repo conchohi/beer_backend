@@ -33,7 +33,7 @@ public class BoardController {
     }
 
     @PutMapping("/{id}")
-    public BoardDto updateBoard(@PathVariable Long id, @RequestBody BoardEntity board) {
+    public BoardDto updateBoard(@PathVariable Long id, @RequestBody BoardDto board) {
         return boardService.updateBoard(id, board);
     }
 
@@ -42,8 +42,6 @@ public class BoardController {
         boardService.deleteBoard(id);
         return ResponseEntity.noContent().build();
     }
-
-
 
 
 }
