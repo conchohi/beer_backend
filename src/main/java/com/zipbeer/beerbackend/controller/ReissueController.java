@@ -55,7 +55,7 @@ public class ReissueController {
         //response
         response.setHeader("access", newAccess);
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.ok(nickname);
     }
 
 }
