@@ -9,7 +9,7 @@ import java.util.Optional;
 public interface UserService {
 
     UserDto getUserById(String id);
-    Optional<UserEntity> getUserByNickname(String nickname);
+    UserDto getUserByNickname(String nickname);
     Optional<UserEntity> updateUserByNickname(String nickname, UserEntity updatedUser);
     public void modify(UserDto userDto);
     //    public void delete(String userId);

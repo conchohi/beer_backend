@@ -6,6 +6,7 @@ import com.zipbeer.beerbackend.repository.UserRepository;
 import com.zipbeer.beerbackend.service.UserService;
 import com.zipbeer.beerbackend.util.FileUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,8 +40,22 @@ public class UserServiceImpl implements UserService {
 
     //유저 데이터 가져오기
     @Override
-    public Optional<UserEntity> getUserByNickname(String nickname) {
-        return userRepository.findByNickname(nickname);
+    public UserDto getUserByNickname(String nickname) {
+        UserEntity user = userRepository.findByNickname(nickname).orElseThrow();
+        int followerCount = user.getFollowers().size();
+        int followingCount = user.getFollowings().size();
+        UserDto userDto = UserDto.builder()
+                .userId(user.getUserId())
+                .nickname(user.getNickname())
+                .age(user.getAge())
+                .mbti(user.getMbti())
+                .gender(user.getGender())
+                .profileImage(user.getProfileImage())
+                .intro(user.getIntro())
+                .followerCount(followerCount)
+                .followerCount(followingCount)
+                .build();
+        return userDto;
     }
 
         //닉네임받아서 유저 수정

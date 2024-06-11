@@ -22,11 +22,11 @@ public class ReportEntity {
 
     @ManyToOne
     @JoinColumn(name = "reporter_id",referencedColumnName = "userId")
-    private UserEntity Reporter;
+    private UserEntity reporter;
 
     @ManyToOne
     @JoinColumn(name = "reported_user_id",referencedColumnName = "userId")
-    private UserEntity ReportedUser;
+    private UserEntity reportedUser;
 
     @Column
     private String reason;
