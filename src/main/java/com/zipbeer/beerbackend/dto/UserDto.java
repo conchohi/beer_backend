@@ -24,6 +24,9 @@ public class UserDto {
     private String sns;
     private String role;
     private String mbti;
+
+    @Builder.Default
+    private String intro = "안녕하세요";
     private int age;
     private String gender;
 
@@ -42,6 +45,7 @@ public class UserDto {
         this.mbti = user.getMbti();
         this.age = user.getAge();
         this.gender = user.getGender();
+        this.intro = user.getIntro();
         this.isDelete = null; // 초기화 필요시 설정
     }
 }

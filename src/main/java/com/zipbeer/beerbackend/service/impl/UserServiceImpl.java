@@ -23,7 +23,19 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
 
 
+    @Override
+    public UserDto getUserById(String id) {
+        UserEntity user = userRepository.findByUserId(id);
+        UserDto userDto = UserDto.builder()
+                .age(user.getAge())
+                .mbti(user.getMbti())
+                .profileImage(user.getProfileImage())
+                .nickname(user.getNickname())
+                .gender(user.getGender())
+                .build();
 
+        return userDto;
+    }
 
     //유저 데이터 가져오기
     @Override
