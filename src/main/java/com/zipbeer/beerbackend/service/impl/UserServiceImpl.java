@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -33,7 +34,6 @@ public class UserServiceImpl implements UserService {
         Optional<UserEntity> existingUser = userRepository.findByNickname(nickname);
         if (existingUser.isPresent()) {
             UserEntity user = existingUser.get();
-            user.setName(updatedUser.getName());
             user.setMbti(updatedUser.getMbti());
             user.setAge(updatedUser.getAge());
             user.setIntro(updatedUser.getIntro());
@@ -63,6 +63,23 @@ public class UserServiceImpl implements UserService {
 
         user.setNickname(userDto.getNickname());
         userRepository.save(user);
+    }
+
+    public boolean isIdAvailable(String userid) {
+        return !userRepository.existsByUserId(userid);
+    }
+
+    public boolean isNicknameAvailable(String nickname) {
+        return !userRepository.existsByNickname(nickname);
+    }
+
+    @Override
+    public List<String> getUserIdsByEmail(String email) {
+        return userRepository.findUserIdsByEmail(email);
+    }
+    @Override
+    public boolean emailExists(String email) {
+        return userRepository.existsByEmail(email);
     }
 
 //    @Override

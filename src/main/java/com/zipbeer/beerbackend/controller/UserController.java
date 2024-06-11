@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -40,6 +41,20 @@ public class UserController {
         userDto.setUsername(id);
         userService.modify(userDto);
         return ResponseEntity.ok(userDto);
+    }
+
+    @PostMapping("/id-check")
+    public ResponseEntity<Map<String, String>> checkIdAvailability(@RequestBody Map<String, String> request) {
+        String id = request.get("id");
+        boolean isAvailable = userService.isIdAvailable(id);
+        return ResponseEntity.ok(Map.of("message", isAvailable ? "Success." : "ID is already taken."));
+    }
+
+    @PostMapping("/nickname-check")
+    public ResponseEntity<Map<String, String>> checkNicknameAvailability(@RequestBody Map<String, String> request) {
+        String nickname = request.get("nickname");
+        boolean isAvailable = userService.isNicknameAvailable(nickname);
+        return ResponseEntity.ok(Map.of("message", isAvailable ? "Success." : "Nickname is already taken."));
     }
 
 }
