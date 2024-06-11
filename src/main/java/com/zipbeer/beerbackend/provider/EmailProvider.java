@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 public class EmailProvider {
     private final JavaMailSender javaMailSender;
 
-    private final String SUBJECT = "[Mo_Dak 서비스] 회원가입 인증메일입니다.";
+    private final String SUBJECT = "[우리집 비어] 인증번호 입니다.";
 
     public boolean sendCertificationMail(String email, String certificationNumber) {
         try {
@@ -32,10 +32,10 @@ public class EmailProvider {
         return true;
     }
 
-    private String getCertificationMessage (String certificationNumber) {
+    private String getCertificationMessage(String certificationNumber) {
         String certificationMessage = "";
-        certificationMessage += "<h1 style='text-align : center;'>[Mo_Dak 서비스] 인증메일</h1>";
-        certificationMessage += "<h3 style='text-align : center;'>인증코드 : <strong style='font-size : 32px; letter-spacing : 8px;'>"+ certificationNumber + "</strong></h3>";
+        certificationMessage += "<h1 style='text-align: center;'>[우리집 비어] 인증 번호 입니다.</h1>";
+        certificationMessage += "<h3 style='text-align: center;'><strong style='font-size: 32px; letter-spacing: 8px; color: pink;'>" + certificationNumber + "</strong></h3>";
         return certificationMessage;
     }
 }

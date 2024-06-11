@@ -43,5 +43,8 @@ public class ResponseDto {
         ResponseDto responseBody = new ResponseDto(ResponseMessage.MAIL_FAIL);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseBody);
     }
+    public static ResponseEntity<?> notExistUser() {
+        return new ResponseEntity<>("User does not exist", HttpStatus.NOT_FOUND);
+    }
 
 }
