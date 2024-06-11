@@ -22,6 +22,7 @@ import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 @Service
@@ -68,8 +69,21 @@ public class RoomService {
     }
 
     @Transactional(readOnly = true)
-    public boolean checkPassword(RoomDto roomDto){
-        return roomRepository.existsByRoomNoAndRoomPw(roomDto.getRoomNo(), roomDto.getRoomPw());
+    public ResponseEntity<?> checkPassword(RoomDto roomDto){
+        try {
+            roomRepository.findById(roomDto.getRoomNo()).orElseThrow(EntityNotFoundException::new);
+        }catch (EntityNotFoundException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message","방이 존재하지 않습니다."));
+        } catch (Exception e){
+            return ResponseDto.databaseError();
+        }
+
+        boolean checkPassword =  roomRepository.existsByRoomNoAndRoomPw(roomDto.getRoomNo(), roomDto.getRoomPw());
+        if (checkPassword) {
+            return ResponseDto.success();
+        } else{
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message","비밀번호가 일치하지 않습니다"));
+        }
     }
 
     //참여한 방 참여자, 제목 가져옴
@@ -79,7 +93,7 @@ public class RoomService {
         try {
             room = roomRepository.findById(roomNo).orElseThrow(EntityNotFoundException::new);
         }catch (EntityNotFoundException e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("존재하지 않는 방");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message","방이 존재하지 않습니다."));
         } catch (Exception e){
             return ResponseDto.databaseError();
         }
@@ -112,7 +126,7 @@ public class RoomService {
         try {
             room = roomRepository.findById(roomNo).orElseThrow(EntityNotFoundException::new);
         }catch (EntityNotFoundException e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("존재하지 않는 방");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message","방이 존재하지 않습니다."));
         } catch (Exception e){
             return ResponseDto.databaseError();
         }
