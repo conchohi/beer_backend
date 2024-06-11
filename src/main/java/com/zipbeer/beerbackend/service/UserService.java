@@ -11,7 +11,6 @@ public interface UserService {
     Optional<UserDto> updateUserByNickname(String nickname, UserDto userDto);
     void modify(UserDto userDto);
     UserDto getUserByNickname(String nickname);
-    public void modify(UserDto userDto);
     //    public void delete(String userId);
     boolean isIdAvailable(String userid);
     boolean isNicknameAvailable(String nickname);
