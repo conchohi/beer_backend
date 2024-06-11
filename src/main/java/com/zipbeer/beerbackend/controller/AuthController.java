@@ -51,6 +51,10 @@ public class AuthController {
     public ResponseEntity<?> sendCertificationEmail(@RequestBody String email) {
         return authService.findIdByEmail(email);
     }
+
+
+
+
 }
 
     

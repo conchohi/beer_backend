@@ -15,7 +15,7 @@ import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/user")
+@RequestMapping("/user")
 public class UserController {
     private final UserService userService;
     private final FileUtil fileUtil;
@@ -35,14 +35,20 @@ public class UserController {
     public ResponseEntity<Resource> getImage(@PathVariable("profileImage") String profileImage){
         return fileUtil.getFile(profileImage);
     }
+
     @PatchMapping("")
-    public ResponseEntity<?> modify(UserDto userDto){
+    public ResponseEntity<?> modify(@RequestBody UserDto userDto){
         String id = SecurityContextHolder.getContext().getAuthentication().getName();
-        userDto.setUsername(id);
+        userDto.setUserId(id);
         userService.modify(userDto);
         return ResponseEntity.ok(userDto);
     }
 
+    @GetMapping("/info/{userId}")
+    public ResponseEntity<UserDto> getUserInfo(@PathVariable("userId") String userId){
+        UserDto userDto = userService.getUserById(userId);
+        return ResponseEntity.ok(userDto);
+    }
     @PostMapping("/id-check")
     public ResponseEntity<Map<String, String>> checkIdAvailability(@RequestBody Map<String, String> request) {
         String id = request.get("id");
@@ -57,4 +63,6 @@ public class UserController {
         return ResponseEntity.ok(Map.of("message", isAvailable ? "Success." : "Nickname is already taken."));
     }
 
+
 }
+

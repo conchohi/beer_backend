@@ -1,6 +1,5 @@
 package com.zipbeer.beerbackend.service.impl;
 
-
 import com.zipbeer.beerbackend.dto.UserDto;
 import com.zipbeer.beerbackend.dto.jwt.CustomUserDetails;
 import com.zipbeer.beerbackend.entity.UserEntity;
@@ -21,16 +20,17 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         UserEntity user = userRepository.findByUserId(username);
-        if(user != null){
-            //UserDetails 에 담아서 return 하면 AuthenticationManager 가 검증
-            UserDto userDto = UserDto.builder()
-                    .username(user.getUserId())
-                    .password(user.getPassword())
-                    .role(user.getRole())
-                    .nickname(user.getNickname())
-                    .build();
-            return new CustomUserDetails(userDto);
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found with username: " + username);
         }
-        return null;
+
+        UserDto userDto = UserDto.builder()
+                .userId(user.getUserId())
+                .password(user.getPassword())
+                .role(user.getRole())
+                .nickname(user.getNickname())
+                .build();
+
+        return new CustomUserDetails(userDto);
     }
 }

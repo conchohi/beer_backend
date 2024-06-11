@@ -6,8 +6,8 @@ import com.zipbeer.beerbackend.entity.UserEntity;
 import java.util.List;
 import java.util.Optional;
 
-
 public interface UserService {
+
 
     Optional<UserEntity> getUserByNickname(String nickname);
     Optional<UserEntity> updateUserByNickname(String nickname, UserEntity updatedUser);

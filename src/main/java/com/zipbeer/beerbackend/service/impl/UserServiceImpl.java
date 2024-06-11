@@ -6,6 +6,7 @@ import com.zipbeer.beerbackend.repository.UserRepository;
 import com.zipbeer.beerbackend.service.UserService;
 import com.zipbeer.beerbackend.util.FileUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,6 +20,8 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final FileUtil fileUtil;
+    private final PasswordEncoder passwordEncoder;
+
 
 
 
@@ -45,18 +48,18 @@ public class UserServiceImpl implements UserService {
     
     @Override
     public void modify(UserDto userDto) {
-        UserEntity user = userRepository.findByUserId(userDto.getUsername());
-        //기존 이미지 이름
-        String beforeProfileImage = userDto.getProfileImage();
+        UserEntity user = userRepository.findByUserId(userDto.getUserId());
+        // 기존 이미지 이름
+        String beforeProfileImage = user.getProfileImage();
         String profileImage = null;
         MultipartFile multipartFile = userDto.getProfileFile();
-        //새로운 이미지가 왔으면 저장하고 기존 이미지 삭제
+        // 새로운 이미지가 왔으면 저장하고 기존 이미지 삭제
         if(multipartFile != null) {
             profileImage = fileUtil.saveFile(multipartFile);
             fileUtil.deleteFile(beforeProfileImage);
             user.setProfileImage(profileImage);
         }
-        if(userDto.getIsDelete().equals("true")){
+        if("true".equals(userDto.getIsDelete())) {
             user.setProfileImage(null);
             fileUtil.deleteFile(beforeProfileImage);
         }
@@ -64,6 +67,7 @@ public class UserServiceImpl implements UserService {
         user.setNickname(userDto.getNickname());
         userRepository.save(user);
     }
+
 
     public boolean isIdAvailable(String userid) {
         return !userRepository.existsByUserId(userid);
