@@ -12,16 +12,15 @@ public interface UserRepository extends JpaRepository<UserEntity, String> {
     UserEntity findByUserId(String userId);
     UserEntity findByEmail(String email);
 
-
     Optional<UserEntity> findByNickname(String nickname);
     boolean existsByNickname(String nickname);
     boolean existsByEmail(String email); // Add this method
-    @Query("SELECT u.userId FROM user u WHERE u.email = :email")
-    List<String> findUserIdsByEmail(String email);
 
+    @Query("SELECT u.userId FROM UserEntity u WHERE u.email = :email")
+    List<String> findUserIdsByEmail(String email);
 
     Optional<UserEntity> findByUserIdAndEmail(String userId, String email);
 
-
-
+    @Query("SELECT u FROM UserEntity u WHERE lower(u.nickname) LIKE lower(concat('%', :nickname, '%'))")
+    List<UserEntity> findByNicknameContainingIgnoreCase(String nickname);
 }
