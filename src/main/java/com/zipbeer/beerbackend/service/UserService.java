@@ -18,4 +18,5 @@ public interface UserService {
     List<String> getUserIdsByEmail(String email);
     boolean emailExists(String email);
     Optional<UserDto> updateUserProfile(String userId, MultipartFile profileFile);
+    List<UserDto> searchUsersByNickname(String nickname);
 }
