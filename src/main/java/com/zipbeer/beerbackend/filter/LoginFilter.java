@@ -30,6 +30,7 @@
         public LoginFilter(AuthenticationManager authenticationManager, JWTProvider jwtProvider) {
             this.authenticationManager = authenticationManager;
             this.jwtProvider = jwtProvider;
+            setFilterProcessesUrl("/api/login");
         }
 
         @Override
