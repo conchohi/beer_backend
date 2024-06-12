@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 //import org.springframework.security.core.Authentication;
 //import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,6 +29,8 @@ public class FollowController {
 
     @PostMapping("/follow")
     public ResponseEntity<FollowEntity> followUser(@RequestBody FollowDto followDto) {
+        String id = SecurityContextHolder.getContext().getAuthentication().getName();
+        followDto.setUserId(id);
         FollowEntity followEntity = followService.followUser(followDto);
         return ResponseEntity.ok(followEntity);
     }
