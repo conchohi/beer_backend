@@ -20,13 +20,14 @@ public class ChatController {
     @MessageMapping("/chat.addUser/{roomNo}")
     @SendTo("/topic/{roomNo}")
     public ChatMessage addUser(@PathVariable String roomNo, @Payload ChatMessage chatMessage, SimpMessageHeaderAccessor headerAccessor) {
-        headerAccessor.getSessionAttributes().put("username", chatMessage.getSender());
+        headerAccessor.getSessionAttributes().put("sender", chatMessage.getSender());
         return chatMessage;
     }
 
     @MessageMapping("/chat.leaveUser/{roomNo}")
     @SendTo("/topic/{roomNo}")
     public ChatMessage leaveUser(@PathVariable String roomNo, @Payload ChatMessage chatMessage, SimpMessageHeaderAccessor headerAccessor) {
+        headerAccessor.getSessionAttributes().remove("sender", chatMessage.getSender());
         return chatMessage;
     }
 }
