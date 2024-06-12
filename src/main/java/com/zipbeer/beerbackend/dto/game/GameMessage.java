@@ -12,4 +12,5 @@ import java.util.List;
 public class GameMessage {
     private String player;
     private List<Integer> numbers;
+    private List<String> players; // Add this to hold the list of players for start game
 }
