@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/v1/auth")
+@RequestMapping("/api/auth")
 public class EmailVerificationController {
 
     @Autowired
@@ -22,13 +22,15 @@ public class EmailVerificationController {
     @Autowired
     private AuthService authService;
 
+
+    // 아이디 찾기,회원가입 인증 번호 전송
     @PostMapping("/email-verify")
     public ResponseEntity<String> sendVerificationEmail(@RequestBody Map<String, String> request) {
         String email = request.get("email");
         emailService.sendVerificationEmail(email);
         return ResponseEntity.ok("Verification email sent.");
     }
-
+    //아이디 찾기,회원가입 인증 번호 체크
     @PostMapping("/email-verify-check")
     public ResponseEntity<String> verifyEmailCode(@RequestBody Map<String, String> request) {
         String email = request.get("email");
@@ -59,19 +61,19 @@ public class EmailVerificationController {
         }
     }
 
-
+//비밀번호 찾기 인증번호 전송
     @PostMapping("/send-password-reset-code")
     public ResponseEntity<?> sendPasswordResetCode(@RequestBody Map<String, String> request) {
         String userId = request.get("userId");
         String email = request.get("email");
         return authService.sendPasswordResetCode(userId, email);
     }
-
+//비밀번호 찾기 인증번호 체크
     @PostMapping("/verify-reset-code")
     public ResponseEntity<?> verifyResetCode(@RequestBody EmailCertificationDto dto) {
         return authService.checkCertification(dto);
     }
-
+// 새로운 패스워드 변경
     @PostMapping("/update-password")
     public ResponseEntity<?> updatePassword(@RequestBody Map<String, String> request) {
         String userId = request.get("userId");
