@@ -41,6 +41,8 @@ public class BoardService {
     //조회
     public BoardDto getBoardById(Long id) {
         BoardEntity board = boardRepository.findById(id).orElseThrow();
+        //조회수 증가
+        board.setCount(board.getCount()+1);
 
         return entityToDto(board);
     }
@@ -81,7 +83,8 @@ public class BoardService {
             for (CommentEntity commentEntity : boardEntity.getCommentEntityList()) {
                 CommentDto commentDto = CommentDto.builder()
                         .commentNo(commentEntity.getCommentNo())
-                        .writerId(commentEntity.getWriter().getUserId())
+                        .nickname(commentEntity.getWriter().getNickname())
+                        .profileImage(commentEntity.getWriter().getProfileImage())
                         .content(commentEntity.getContent())
                         .createDate(commentEntity.getCreateDate())
                         .build();

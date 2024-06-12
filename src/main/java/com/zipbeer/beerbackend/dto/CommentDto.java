@@ -1,5 +1,6 @@
 package com.zipbeer.beerbackend.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import java.time.LocalDateTime;
 
@@ -17,6 +18,7 @@ public class CommentDto {
     private String profileImage;
     private Long boardNo;
     private String content;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createDate;
 
 }

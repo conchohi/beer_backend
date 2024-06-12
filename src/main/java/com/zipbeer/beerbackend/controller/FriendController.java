@@ -74,7 +74,7 @@ public class FriendController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<UserDto>> searchUsers(@RequestParam String nickname) {
+    public ResponseEntity<List<UserDto>> searchUsers(@RequestParam("nickname") String nickname) {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
 
         // 현재 사용자와 이미 친구인 사람들의 목록 가져오기
