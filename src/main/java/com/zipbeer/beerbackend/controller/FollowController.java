@@ -4,8 +4,10 @@ import com.zipbeer.beerbackend.dto.FollowDto;
 import com.zipbeer.beerbackend.entity.FollowEntity;
 import com.zipbeer.beerbackend.service.FollowService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
+//import org.springframework.security.core.Authentication;
+//import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +18,8 @@ import java.util.List;
 @RequestMapping("/api/follow")
 public class FollowController {
 
-    private final FollowService followService;
+    @Autowired
+    private FollowService followService;
 
     @GetMapping("/test")
     public ResponseEntity<String> test() {
@@ -25,19 +28,21 @@ public class FollowController {
 
 
     @PostMapping("/follow")
-    public ResponseEntity<FollowEntity> followUser(@RequestBody FollowDto followDTO) {
-        FollowEntity followEntity = followService.followUser(followDTO);
+    public ResponseEntity<FollowEntity> followUser(@RequestBody FollowDto followDto) {
+        String id = SecurityContextHolder.getContext().getAuthentication().getName();
+        followDto.setUserId(id);
+        FollowEntity followEntity = followService.followUser(followDto);
         return ResponseEntity.ok(followEntity);
     }
 
     @PostMapping("/unfollow")
-    public ResponseEntity<Void> unfollowUser(@RequestBody FollowDto followDTO) {
-        followService.unfollowUser(followDTO);
+    public ResponseEntity<Void> unfollowUser(@RequestBody FollowDto followDto) {
+        followService.unfollowUser(followDto);
         return ResponseEntity.ok().build();
     }
 
-//    @GetMapping("/followers")
-//    public ResponseEntity<List<FollowEntity>> getFollowers() {
+    @GetMapping("/followers/{userId}")
+    public ResponseEntity<List<FollowDto>> getFollowers(@PathVariable String userId) {
 //        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 //
 //        if (authentication == null || !authentication.isAuthenticated() || authentication.getPrincipal().equals("anonymousUser")) {
@@ -46,22 +51,23 @@ public class FollowController {
 //        }
 //
 //        String id = authentication.getName();
-//        List<FollowEntity> followers = followService.getFollowers(id);
-//        return ResponseEntity.ok(followers);
-//    }
+
+        List<FollowDto> followers = followService.getFollowers(userId);
+        return ResponseEntity.ok(followers);
+    }
 
     @GetMapping("/following/{userId}")
-    public ResponseEntity<List<FollowEntity>> getFollowing(@PathVariable String userId) {
-        List<FollowEntity> following = followService.getFollowing(userId);
+    public ResponseEntity<List<FollowDto>> getFollowing(@PathVariable String userId) {
+        List<FollowDto> following = followService.getFollowing(userId);
         return ResponseEntity.ok(following);
     }
+}
+@ControllerAdvice
+class GlobalExceptionHandler {
 
-    @ControllerAdvice
-    class GlobalExceptionHandler {
-
-        @ExceptionHandler(Exception.class)
-        public ResponseEntity<String> handleException(Exception e) {
-            return ResponseEntity.status(500).body(e.getMessage());
-        }
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleException(Exception e) {
+        return ResponseEntity.status(500).body(e.getMessage());
     }
 }
+
