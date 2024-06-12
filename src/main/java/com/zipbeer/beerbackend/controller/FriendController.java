@@ -62,10 +62,9 @@ public class FriendController {
     @GetMapping("/requests")
     public ResponseEntity<List<UserDto>> getFriendRequests() {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
-        List<UserDto> friendRequests = friendService.getFriendRequests(userId);
+        List<UserDto> friendRequests = friendService.getReceivedFriendRequests(userId);
         return ResponseEntity.ok(friendRequests);
     }
-
 
     @GetMapping("/rooms")
     public ResponseEntity<List<RoomDto>> getFriendsRooms() {
@@ -73,12 +72,25 @@ public class FriendController {
         List<RoomDto> rooms = friendService.getFriendsRooms(userId);
         return ResponseEntity.ok(rooms);
     }
+
     @GetMapping("/search")
     public ResponseEntity<List<UserDto>> searchUsers(@RequestParam String nickname) {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
 
         // 현재 사용자와 이미 친구인 사람들의 목록 가져오기
         List<UserDto> excludedUsers = friendService.getFriends(userId);
+
+        // 현재 사용자 정보 추가
+        UserDto currentUser = userService.getUserById(userId);
+        excludedUsers.add(currentUser);
+
+        // 친구 요청 보낸 사람들의 목록 가져오기
+        List<UserDto> sentRequests = friendService.getSentFriendRequests(userId);
+        excludedUsers.addAll(sentRequests);
+
+        // 친구 요청 받은 사람들의 목록 가져오기
+        List<UserDto> receivedRequests = friendService.getReceivedFriendRequests(userId);
+        excludedUsers.addAll(receivedRequests);
 
         // 사용자 검색
         List<UserDto> users = userService.searchUsersByNickname(nickname);

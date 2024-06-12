@@ -116,9 +116,17 @@ public class FriendServiceImpl implements FriendService {
         return friendList;
     }
 
-    // 친구 요청 목록 가져오기
+    // 친구 요청 목록 가져오기 (보낸 요청)
     @Override
-    public List<UserDto> getFriendRequests(String userId) {
+    public List<UserDto> getSentFriendRequests(String userId) {
+        UserEntity user = userRepository.findByUserId(userId);
+        List<FriendEntity> requests = friendRepository.findByUserAndAccepted(user, false);
+        return requests.stream().map(f -> new UserDto(f.getFriend())).collect(Collectors.toList());
+    }
+
+    // 친구 요청 목록 가져오기 (받은 요청)
+    @Override
+    public List<UserDto> getReceivedFriendRequests(String userId) {
         UserEntity user = userRepository.findByUserId(userId);
         List<FriendEntity> requests = friendRepository.findByFriendAndAccepted(user, false);
         return requests.stream().map(f -> new UserDto(f.getUser())).collect(Collectors.toList());
@@ -135,6 +143,8 @@ public class FriendServiceImpl implements FriendService {
                 friendRepository.existsByUserAndFriendAndAccepted(friend, user, true);
     }
 
+
+    // 친구의 방 목록 가져오기
     @Override
     public List<RoomDto> getFriendsRooms(String userId) {
         UserEntity user = userRepository.findByUserId(userId);

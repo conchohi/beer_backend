@@ -7,6 +7,7 @@ import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -55,5 +56,18 @@ public class UserDto {
         this.gender = user.getGender();
         this.intro = user.getIntro();
         this.isDelete = null; // 초기화 필요시 설정
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserDto userDto = (UserDto) o;
+        return Objects.equals(userId, userDto.userId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(userId);
     }
 }

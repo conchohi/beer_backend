@@ -88,6 +88,11 @@ public class UserServiceImpl implements UserService {
             fileUtil.deleteFile(beforeProfileImage);
         }
         user.setNickname(userDto.getNickname());
+        user.setEmail(userDto.getEmail());
+        user.setMbti(userDto.getMbti());
+        user.setAge(userDto.getAge());
+        user.setGender(userDto.getGender());
+        user.setIntro(userDto.getIntro());
         userRepository.save(user);
     }
 
