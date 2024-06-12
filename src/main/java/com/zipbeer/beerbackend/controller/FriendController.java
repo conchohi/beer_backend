@@ -102,4 +102,5 @@ public class FriendController {
 
         return ResponseEntity.ok(users);
     }
+
 }

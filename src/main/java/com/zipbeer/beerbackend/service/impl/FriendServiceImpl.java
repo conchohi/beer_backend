@@ -143,6 +143,7 @@ public class FriendServiceImpl implements FriendService {
                 friendRepository.existsByUserAndFriendAndAccepted(friend, user, true);
     }
 
+
     // 친구의 방 목록 가져오기
     @Override
     public List<RoomDto> getFriendsRooms(String userId) {
@@ -165,5 +166,4 @@ public class FriendServiceImpl implements FriendService {
                 .map(participant -> new RoomDto(participant.getRoom()))
                 .collect(Collectors.toList());
     }
-
 }
