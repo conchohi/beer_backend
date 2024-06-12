@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -30,7 +31,6 @@ public class UserServiceImpl implements UserService {
                 .orElse(null);
     }
 
-
     public UserDto getUserByNickname(String nickname) {
         UserEntity user = userRepository.findByNickname(nickname).orElseThrow();
         int followerCount = user.getFollowers().size();
@@ -44,7 +44,7 @@ public class UserServiceImpl implements UserService {
                 .profileImage(user.getProfileImage())
                 .intro(user.getIntro())
                 .followerCount(followerCount)
-                .followerCount(followingCount)
+                .followingCount(followingCount)
                 .build();
         return userDto;
     }
@@ -88,6 +88,11 @@ public class UserServiceImpl implements UserService {
             fileUtil.deleteFile(beforeProfileImage);
         }
         user.setNickname(userDto.getNickname());
+        user.setEmail(userDto.getEmail());
+        user.setMbti(userDto.getMbti());
+        user.setAge(userDto.getAge());
+        user.setGender(userDto.getGender());
+        user.setIntro(userDto.getIntro());
         userRepository.save(user);
     }
 
@@ -144,4 +149,25 @@ public class UserServiceImpl implements UserService {
     private Optional<UserEntity> wrapUserEntity(UserEntity userEntity) {
         return Optional.ofNullable(userEntity);
     }
+
+
+
+
+    @Override
+    public List<UserDto> searchUsersByNickname(String nickname) {
+        List<UserEntity> users = userRepository.findByNicknameContainingIgnoreCase(nickname);
+        return users.stream().map(UserDto::new).collect(Collectors.toList());
+    }
+
+
+
+
+
+
+
+
+
+
+
+
 }

@@ -11,7 +11,6 @@ public interface UserService {
     Optional<UserDto> updateUserByNickname(String nickname, UserDto userDto);
     void modify(UserDto userDto);
     UserDto getUserByNickname(String nickname);
-    public void modify(UserDto userDto);
     //    public void delete(String userId);
     boolean isIdAvailable(String userid);
     boolean isNicknameAvailable(String nickname);
@@ -19,4 +18,5 @@ public interface UserService {
     List<String> getUserIdsByEmail(String email);
     boolean emailExists(String email);
     Optional<UserDto> updateUserProfile(String userId, MultipartFile profileFile);
+    List<UserDto> searchUsersByNickname(String nickname);
 }
