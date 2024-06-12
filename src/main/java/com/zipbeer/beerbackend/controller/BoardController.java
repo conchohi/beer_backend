@@ -6,6 +6,7 @@ import com.zipbeer.beerbackend.entity.BoardEntity;
 import com.zipbeer.beerbackend.service.BoardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,6 +30,8 @@ public class BoardController {
 
     @PostMapping
     public BoardDto registerBoard(@RequestBody BoardDto board) {
+        String id = SecurityContextHolder.getContext().getAuthentication().getName();
+        board.setWriter(id);
         return boardService.registerBoard(board);
     }
 

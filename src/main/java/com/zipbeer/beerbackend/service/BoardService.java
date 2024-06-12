@@ -10,6 +10,7 @@ import com.zipbeer.beerbackend.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -26,7 +27,7 @@ public class BoardService {
 
     //전체조회
     public List<BoardDto> getAllBoards() {
-        List<BoardEntity> boards = boardRepository.findAll();
+        List<BoardEntity> boards = boardRepository.findAll(Sort.by("boardNo").descending());
 
         List<BoardDto> boardDtos= new ArrayList<>();
 

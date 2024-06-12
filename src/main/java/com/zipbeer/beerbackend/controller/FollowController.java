@@ -21,12 +21,6 @@ public class FollowController {
     @Autowired
     private FollowService followService;
 
-    @GetMapping("/test")
-    public ResponseEntity<String> test() {
-        return ResponseEntity.ok("Authenticated");
-    }
-
-
     @PostMapping("/follow")
     public ResponseEntity<FollowEntity> followUser(@RequestBody FollowDto followDto) {
         String id = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -62,12 +56,3 @@ public class FollowController {
         return ResponseEntity.ok(following);
     }
 }
-@ControllerAdvice
-class GlobalExceptionHandler {
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handleException(Exception e) {
-        return ResponseEntity.status(500).body(e.getMessage());
-    }
-}
-

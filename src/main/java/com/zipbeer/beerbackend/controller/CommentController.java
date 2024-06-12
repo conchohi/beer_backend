@@ -5,6 +5,7 @@ import com.zipbeer.beerbackend.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,6 +20,8 @@ public class CommentController {
     // 댓글 작성
     @PostMapping("")
     public CommentDto registerComment(@RequestBody CommentDto commentDto) {
+        String id = SecurityContextHolder.getContext().getAuthentication().getName();
+        commentDto.setWriterId(id);
         return commentService.registerComment(commentDto);
     }
 
