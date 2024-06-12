@@ -1,10 +1,12 @@
 package com.zipbeer.beerbackend.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.zipbeer.beerbackend.entity.RoomEntity;
 import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -17,14 +19,24 @@ public class RoomDto {
     private String title;
     private String roomPw;
     private String category;
-    //참가자 수
     private int currentUser;
-    //최대 인원 수
     private int maximumUser;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createDate;
     private List<UserDto> participantList;
-
-    //방장의 닉네임
     private String master;
+
+    public RoomDto(RoomEntity roomEntity) {
+        this.roomNo = roomEntity.getRoomNo();
+        this.title = roomEntity.getTitle();
+        this.roomPw = roomEntity.getRoomPw();
+        this.category = roomEntity.getCategory();
+        this.currentUser = roomEntity.getParticipantCount();
+        this.maximumUser = roomEntity.getMaximumUser();
+        this.createDate = roomEntity.getCreateDate();
+        this.participantList = roomEntity.getParticipantList().stream()
+                .map(participant -> new UserDto(participant.getUser()))
+                .collect(Collectors.toList());
+        this.master = roomEntity.getMaster();
+    }
 }

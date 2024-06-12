@@ -13,7 +13,7 @@ class RoomRepositoryTest {
 
     @Test
     void isEmptyRoom() {
-        System.out.println(roomRepository.isEmptyRoom(11790L));
-        System.out.println(roomRepository.isEmptyRoom(11118L));
+        System.out.println(roomRepository.isEmptyRoomWhenExit(11790L));
+        System.out.println(roomRepository.isEmptyRoomWhenExit(11118L));
     }
 }
