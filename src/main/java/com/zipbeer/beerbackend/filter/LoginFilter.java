@@ -92,7 +92,7 @@
         private Cookie createCookie(String key, String value) {
             Cookie cookie = new Cookie(key, value);
             cookie.setMaxAge(24*60*60);
-            cookie.setSecure(true);
+//            cookie.setSecure(true);
             //보일 위치 - 전역
             cookie.setPath("/");
             //HttpOnly 를 해두면 프론트에서 js로 쿠키를 사용할 수 없음
