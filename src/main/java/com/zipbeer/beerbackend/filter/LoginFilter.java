@@ -70,13 +70,16 @@
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
 
+            response.setHeader("access", access);
+
+            // 닉네임을 바디에 포함
             Map<String, String> responseBody = new HashMap<>();
-            responseBody.put("access", access);
             responseBody.put("nickname", nickname);
 
             PrintWriter out = response.getWriter();
             out.print(new ObjectMapper().writeValueAsString(responseBody));
             out.flush();
+
         }
 
 
