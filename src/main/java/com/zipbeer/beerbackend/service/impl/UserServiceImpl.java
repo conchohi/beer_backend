@@ -6,7 +6,6 @@ import com.zipbeer.beerbackend.repository.UserRepository;
 import com.zipbeer.beerbackend.service.UserService;
 import com.zipbeer.beerbackend.util.FileUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,7 +49,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void modify(UserDto userDto) {
+    public UserDto modify(UserDto userDto) {
         UserEntity user = wrapUserEntity(userRepository.findByUserId(userDto.getUserId()))
                 .orElseThrow(() -> new RuntimeException("User not found"));
         String beforeProfileImage = user.getProfileImage();
@@ -60,6 +59,7 @@ public class UserServiceImpl implements UserService {
             profileImage = fileUtil.saveFile(multipartFile);
             fileUtil.deleteFile(beforeProfileImage);
             user.setProfileImage(profileImage);
+            userDto.setProfileImage(profileImage);
         }
         if ("true".equals(userDto.getIsDelete())) {
             user.setProfileImage(null);
@@ -72,6 +72,7 @@ public class UserServiceImpl implements UserService {
         user.setGender(userDto.getGender());
         user.setIntro(userDto.getIntro());
         userRepository.save(user);
+        return userDto;
     }
 
     @Override

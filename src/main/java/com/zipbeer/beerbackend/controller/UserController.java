@@ -41,8 +41,8 @@ public class UserController {
     public ResponseEntity<?> modify(@ModelAttribute UserDto userDto) {
         String id = SecurityContextHolder.getContext().getAuthentication().getName();
         userDto.setUserId(id);
-        userService.modify(userDto);
-        return ResponseEntity.ok(userDto);
+        UserDto result = userService.modify(userDto);
+        return ResponseEntity.ok(result);
     }
 
     // 유저 정보 가져오기
