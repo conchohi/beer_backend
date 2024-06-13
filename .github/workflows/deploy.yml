@@ -34,8 +34,8 @@ jobs:
       - name: Build Docker image
         run: |
           echo "Building Docker image"
-          TAG=$(date + %s)
-          docker build -t "${{ secrets.DOCKERHUB_USERNAME }}/beer_back:${TAG}".
+          TAG=$(date +%s)
+          docker build -t "${{ secrets.DOCKERHUB_USERNAME }}/beer_back:${TAG}" .
           echo "TAG=${TAG}" >> $GITHUB_ENV
 
       - name: Push Docker image to Docker Hub
@@ -43,17 +43,16 @@ jobs:
           TAG : ${{env.TAG}}
         run: |
           echo "Pushing Docker image to Docker Hub"
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/beer_back:${TAG}
-
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/beer_back:${{ env.TAG }}
       - name: Deploy on EC2
         run: |
           echo "Deploying on EC2"
           ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_HOST }} << 'EOF'
-            cd /beer
-            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/beer_back:${TAG}
-            docker stop beer_back || true
-            docker rm beer_back || true
-            docker run -d --name beer_back -p 8080:8080 ${{ secrets.DOCKERHUB_USERNAME }}/beer_back:${TAG}
+          cd /beer
+          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/beer_back:${{ env.TAG }}
+          docker stop beer_back || true
+          docker rm beer_back || true
+          docker run -d --name beer_back -p 8080:8080 ${{ secrets.DOCKERHUB_USERNAME }}/beer_back:${{ env.TAG }}
           EOF
         env:
           EC2_USER: ubuntu
