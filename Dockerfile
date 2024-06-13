@@ -16,6 +16,7 @@ WORKDIR /app
 
 # Copy the jar file from the build stage
 COPY --from=build /build/build/libs/beer-backend-0.0.1-SNAPSHOT.jar app.jar
+COPY upload /app/upload
 
 EXPOSE 8080
 
