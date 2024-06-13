@@ -180,7 +180,16 @@ public class FriendServiceImpl implements FriendService {
                 .toList();
 
         return participantEntities.stream()
-                .map(participant -> new RoomDto(participant.getRoom()))
+                .map(participant -> {
+                    RoomDto roomDto = new RoomDto(participant.getRoom());
+                    UserDto friendDto = new UserDto(participant.getUser());
+                    roomDto.setMaster(friendDto.getNickname()); // 친구의 닉네임 설정
+                    roomDto.setParticipantList(List.of(friendDto)); // 친구의 이미지 포함 설정
+                    roomDto.setCurrentUser(participant.getRoom().getParticipantCount());
+                    roomDto.setMaximumUser(participant.getRoom().getMaximumUser());
+                    return roomDto;
+                })
                 .collect(Collectors.toList());
     }
+
 }
