@@ -24,8 +24,7 @@ public class FriendController {
     public ResponseEntity<?> sendFriendRequest(@RequestBody Map<String, String> request) {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
         String friendNickname = request.get("nickname");
-        friendService.sendFriendRequest(userId, friendNickname);
-        return ResponseEntity.ok().build();
+        return friendService.sendFriendRequest(userId, friendNickname);
     }
 
     @PostMapping("/accept")

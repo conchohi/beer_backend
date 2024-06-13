@@ -2,11 +2,12 @@ package com.zipbeer.beerbackend.service;
 
 import com.zipbeer.beerbackend.dto.UserDto;
 import com.zipbeer.beerbackend.dto.RoomDto;  // 추가: 방 정보를 반환하기 위한 DTO
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
 public interface FriendService {
-    void sendFriendRequest(String userId, String friendNickname); // 친구 요청 보내기
+    ResponseEntity<?> sendFriendRequest(String userId, String friendNickname); // 친구 요청 보내기
     void acceptFriendRequest(String userId, String friendNickname); // 친구 요청 수락하기
     void declineFriendRequest(String userId, String friendNickname); // 친구 요청 거절하기
     void deleteFriend(String userId, String friendNickname); // 친구 삭제하기
