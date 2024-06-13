@@ -2,6 +2,7 @@ package com.zipbeer.beerbackend.service.impl;
 
 import com.zipbeer.beerbackend.dto.RoomDto;
 import com.zipbeer.beerbackend.dto.UserDto;
+import com.zipbeer.beerbackend.dto.response.ResponseDto;
 import com.zipbeer.beerbackend.entity.FriendEntity;
 import com.zipbeer.beerbackend.entity.ParticipantEntity;
 import com.zipbeer.beerbackend.entity.UserEntity;
@@ -9,7 +10,10 @@ import com.zipbeer.beerbackend.repository.FriendRepository;
 import com.zipbeer.beerbackend.repository.ParticipantRepository;
 import com.zipbeer.beerbackend.repository.UserRepository;
 import com.zipbeer.beerbackend.service.FriendService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,13 +32,25 @@ public class FriendServiceImpl implements FriendService {
 
     // 친구 요청 보내기
     @Override
-    public void sendFriendRequest(String userId, String friendNickname) {
+    public ResponseEntity<?> sendFriendRequest(String userId, String friendNickname) {
         UserEntity user = userRepository.findByUserId(userId);
-        UserEntity friend = userRepository.findByNickname(friendNickname).orElseThrow(() -> new RuntimeException("User not found"));
+        UserEntity friend;
+        try {
+            friend = userRepository.findByNickname(friendNickname).orElseThrow(EntityNotFoundException::new);
+        } catch (EntityNotFoundException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("해당 유저가 존재하지 않습니다.");
+        }
 
+        if(user.equals(friend)){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("자기 자신은 \n 친구 추가할 수 없습니다.");
+        }
         // 이미 친구인지 확인
         if (isFriend(userId, friendNickname)) {
-            throw new RuntimeException("Already friends");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("이미 등록된 친구입니다.");
+        }
+        //이미 친구를 요청함
+        if (friendRepository.existsByUserAndFriend(user, friend)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("이미 친구 요청을 보냈습니다.");
         }
 
         // 친구 요청 생성
@@ -46,6 +62,7 @@ public class FriendServiceImpl implements FriendService {
 
         // 친구 요청 저장
         friendRepository.save(friendRequest);
+        return ResponseDto.success();
     }
 
     // 친구 요청 수락하기
@@ -156,14 +173,23 @@ public class FriendServiceImpl implements FriendService {
                 .collect(Collectors.toList());
         friendUsers.addAll(acceptedFriends.stream()
                 .map(FriendEntity::getUser)
-                .collect(Collectors.toList()));
+                .toList());
 
         List<ParticipantEntity> participantEntities = friendUsers.stream()
                 .flatMap(friend -> participantRepository.findByUser(friend).stream())
-                .collect(Collectors.toList());
+                .toList();
 
         return participantEntities.stream()
-                .map(participant -> new RoomDto(participant.getRoom()))
+                .map(participant -> {
+                    RoomDto roomDto = new RoomDto(participant.getRoom());
+                    UserDto friendDto = new UserDto(participant.getUser());
+                    roomDto.setMaster(friendDto.getNickname()); // 친구의 닉네임 설정
+                    roomDto.setParticipantList(List.of(friendDto)); // 친구의 이미지 포함 설정
+                    roomDto.setCurrentUser(participant.getRoom().getParticipantCount());
+                    roomDto.setMaximumUser(participant.getRoom().getMaximumUser());
+                    return roomDto;
+                })
                 .collect(Collectors.toList());
     }
+
 }

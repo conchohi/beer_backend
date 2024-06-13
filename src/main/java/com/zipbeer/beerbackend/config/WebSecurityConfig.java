@@ -73,11 +73,9 @@ public class WebSecurityConfig {
                             .successHandler(customSuccessHandler);
                 })
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/", "/login", "/reissue","/api/room/**","/api/board/**", "/ws/**", "/chatroom/public/*","/game/**","/topic/**", "/api/auth/**", "/api/user/**","/api/follow/**","api/friend/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/review/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/user/**").permitAll()
-                        .requestMatchers("/api/v1/user/**").hasRole("USER")
-                        .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/", "/api/login", "/api/reissue", "/ws/**","/game/**","/topic/**", "/api/auth/**", "/api/user/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/board/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/room/list").permitAll()
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(new FailedAuthenticationEntryPoint()))
