@@ -15,7 +15,7 @@ public class CustomMvcConfig implements WebMvcConfigurer {
                 .allowedMethods("*")
                 .exposedHeaders("Set-Cookie","Content-Type")
                 .allowCredentials(true)
-                .allowedOrigins("https://js1.jsflux.co.kr/");
+                .allowedOrigins("https://js1.jsflux.co.kr");
     }
 
     @Override
