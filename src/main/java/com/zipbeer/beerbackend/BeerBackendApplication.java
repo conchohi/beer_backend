@@ -11,9 +11,4 @@ public class BeerBackendApplication {
     public static void main(String[] args) {
         SpringApplication.run(BeerBackendApplication.class, args);
     }
-    @PostConstruct
-    public void init() {
-        // timezone 설정
-        TimeZone.setDefault(TimeZone.getTimeZone("KST"));
-    }
 }
