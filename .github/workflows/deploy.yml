@@ -38,10 +38,11 @@ jobs:
           echo "TAG=${TAG}" >> $GITHUB_ENV
 
       - name: Push Docker image to Docker Hub
+        env:
+          TAG : ${{env.TAG}}
         run: |
           echo "Pushing Docker image to Docker Hub"
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/beer_back:${{ env.TAG }}
-
       - name: Deploy on EC2
         env:
           EC2_HOST: ${{ secrets.EC2_HOST }}
@@ -49,10 +50,20 @@ jobs:
           TAG: ${{ env.TAG }}
         run: |
           echo "Deploying on EC2"
-          ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_HOST }} << EOF
-            cd /beer
-            docker pull ${DOCKERHUB_USERNAME}/beer_back:${TAG}
-            docker stop beer || true
-            docker rm beer || true
-            docker run -d --name beer -p 8080:8080 ${DOCKERHUB_USERNAME}/beer_back:${TAG}
+          ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_HOST }} << 'EOF'
+          cd /beer
+          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/beer_back:${{ env.TAG }}
+          docker stop beer_back || true
+          docker rm beer_back || true
+          docker run -d --name beer_back -p 8080:8080 ${{ secrets.DOCKERHUB_USERNAME }}/beer_back:${{ env.TAG }}
           EOF
+        env:
+          EC2_USER: ubuntu
+          EC2_HOST: ${{ secrets.EC2_HOST }}
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          TAG : ${{env.TAG}}
+#          NAVER_OAUTH_CLIENT_ID: ${{ secrets.NAVER_OAUTH_CLIENT_ID }}
+#          NAVER_OAUTH_CLIENT_SECRET: ${{ secrets.NAVER_OAUTH_CLIENT_SECRET }}
+#          KAKAO_OAUTH_CLIENT_ID: ${{ secrets.KAKAO_OAUTH_CLIENT_ID }}
+#          KAKAO_OAUTH_CLIENT_SECRET: ${{ secrets.KAKAO_OAUTH_CLIENT_SECRET }}
+
