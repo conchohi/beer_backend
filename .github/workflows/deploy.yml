@@ -47,7 +47,6 @@ jobs:
         env:
           EC2_HOST: ${{ secrets.EC2_HOST }}
           DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-          TAG: ${{ env.TAG }}
         run: |
           echo "Deploying on EC2"
           ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_HOST }} << 'EOF'
