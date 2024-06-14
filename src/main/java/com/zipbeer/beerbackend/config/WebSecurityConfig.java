@@ -76,6 +76,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/", "/api/login", "/api/reissue", "/ws/**", "/chatroom/public/*","/game/**","/topic/**", "/api/auth/**", "/api/user/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/board/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/room/list").permitAll()
+                        .requestMatchers("/api/oauth2/authorization/**").permitAll() // OAuth2 경로 허용
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(new FailedAuthenticationEntryPoint()))
