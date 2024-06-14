@@ -22,6 +22,8 @@ public class GameState {
     private String winner;
     private String message;
     private String liar;
+    private LiarTopic liarTopic;
+    private String bomb;
     private Map<String, Integer> votes = new HashMap<>();
     private int timeLeft; // 타이머 필드 추가
     private List<String> moves = new ArrayList<>();
