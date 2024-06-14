@@ -16,11 +16,9 @@ public class GameMessage {
     private String guess; // 정답 맞추기 시 사용
     private String voteFor; // 투표 시 사용
     private String content; // 주제 전달 시 사용
-    private String a;
     // 주제 전달을 위한 생성자 추가
-    public GameMessage(String player, String content, String a) {
+    public GameMessage(String player, String content) {
         this.player = player;
         this.content = content;
-        this.a = a;
     }
 }

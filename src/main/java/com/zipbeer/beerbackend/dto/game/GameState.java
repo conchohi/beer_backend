@@ -17,11 +17,16 @@ public class GameState {
     private String currentTurn;
     private String previousTurn; // 이전 출제자 추적
     private String topic;
+    private LiarTopic liarTopic;
     private Map<String, Integer> scores = new HashMap<>();
     private boolean isGameOver;
     private String winner;
     private String message;
     private String liar;
+    private String voteFor;
+    private String bomb;
+    private int leftTime;
+
     private Map<String, Integer> votes = new HashMap<>();
     private List<String> moves = new ArrayList<>();
     private String losingPlayer = "";
