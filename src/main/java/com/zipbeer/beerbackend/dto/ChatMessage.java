@@ -14,8 +14,8 @@ public class ChatMessage {
     public enum MessageType {
         CHAT,
         JOIN,
-        LEAVE
-    }
 
-    // getters and setters
-}
+        LEAVE,
+        GAME
+    }}
+
