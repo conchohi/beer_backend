@@ -74,3 +74,4 @@ jobs:
             -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
             ${{ secrets.DOCKERHUB_USERNAME }}/beer_back:${{ env.TAG }}
           EOF
+
