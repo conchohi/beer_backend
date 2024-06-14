@@ -220,8 +220,7 @@ public class GameController {
 
     private String generateTopic(String gameType, String roomNo) {
         String[] catchMindTopics = {"원숭이", "기린", "사과", "김", "배", "수박", "참외", "제비", "소방차", "캐리어", "비","돼지","사슴","키보드","사건","경찰","댄서","고드름","케이크","마늘","나비","잠자리"};
-        String[] characterTopics = {"김세정", "김지원", "설현", "수지", "아이유", "윤소희", "조이", "진세연", "채수빈", "카리나", "크리스탈", "해리"};
-        String[] shoutInSilenceTopics = {"원숭이", "기린", "사과", "김", "배", "수박", "참외", "제비", "소방차", "캐리어", "비", "돼지", "사슴", "키보드", "사건", "경찰", "댄서", "고드름", "케이크", "마늘", "나비", "잠자리"};
+        String[] characterTopics = {"김세정", "설현", "수지", "아이유", "윤소희", "조이", "진세연", "채수빈", "카리나", "크리스탈", "혜리","고마츠나나","고윤정","김태리","다현","로제","류준열","박서준","사쿠라","신민아","아이린","안유진","윤아","은하","이진욱","장원영","전지현","차은우","카즈하","한지민"};String[] shoutInSilenceTopics = {"원숭이", "기린", "사과", "김", "배", "수박", "참외", "제비", "소방차", "캐리어", "비", "돼지", "사슴", "키보드", "사건", "경찰", "댄서", "고드름", "케이크", "마늘", "나비", "잠자리"};
 //        String[] liarGameTopics = {"해변", "도서관", "영화관", "공원", "놀이공원", "카페", "서점", "박물관", "식당", "학교"};
 
         String[] topics;
@@ -249,5 +248,21 @@ public class GameController {
         } while (usedTopics.contains(topic));
         usedTopics.add(topic);
         return topic;
+    }
+    //베스킨라빈스
+    @MessageMapping("/startBaskinRobbins31/{roomNo}")
+    @SendTo("/topic/game/{roomNo}")
+    public GameState startBaskinRobbins31Game(@DestinationVariable String roomNo, GameMessage gameMessage) {
+        GameState gameState = new GameState(gameMessage.getPlayers());
+        gameRooms.put(roomNo, gameState);
+        return gameState;
+    }
+    @MessageMapping("/move/{roomNo}")
+    public void processMove(@DestinationVariable String roomNo, GameMessage gameMessage) {
+        GameState gameState = gameRooms.get(roomNo);
+        if (gameState != null) {
+            gameState.processMove(gameMessage);
+            messagingTemplate.convertAndSend("/topic/game/" + roomNo, gameState);
+        }
     }
 }
