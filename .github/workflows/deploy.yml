@@ -57,11 +57,6 @@ jobs:
           docker rm beer_back || true
           docker run -d --name beer_back -p 8080:8080 ${{ secrets.DOCKERHUB_USERNAME }}/beer_back:${{ env.TAG }}
           EOF
-        env:
-          EC2_USER: ubuntu
-          EC2_HOST: ${{ secrets.EC2_HOST }}
-          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-          TAG : ${{env.TAG}}
 #          NAVER_OAUTH_CLIENT_ID: ${{ secrets.NAVER_OAUTH_CLIENT_ID }}
 #          NAVER_OAUTH_CLIENT_SECRET: ${{ secrets.NAVER_OAUTH_CLIENT_SECRET }}
 #          KAKAO_OAUTH_CLIENT_ID: ${{ secrets.KAKAO_OAUTH_CLIENT_ID }}
