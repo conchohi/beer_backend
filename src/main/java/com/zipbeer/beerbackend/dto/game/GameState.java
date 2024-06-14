@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,19 +16,13 @@ public class GameState {
     private String currentTurn;
     private String previousTurn; // 이전 출제자 추적
     private String topic;
-    private LiarTopic liarTopic;
     private Map<String, Integer> scores = new HashMap<>();
     private boolean isGameOver;
     private String winner;
     private String message;
     private String liar;
-    private String voteFor;
-    private String bomb;
-    private int leftTime;
-
     private Map<String, Integer> votes = new HashMap<>();
-    private List<String> moves = new ArrayList<>();
-    private String losingPlayer = "";
+    private int timeLeft; // 타이머 필드 추가
 
     public GameState(List<String> players) {
         this.players = players;
@@ -37,11 +30,7 @@ public class GameState {
             scores.put(player, 0);
             votes.put(player, 0);
         }
-        if (!players.isEmpty()) {
-            this.currentTurn = players.get(0);
-        } else {
-            this.currentTurn = null;
-        }
+        this.timeLeft = 180; // 초기 타이머 설정
     }
 
     public void updateScore(String player) {
@@ -66,18 +55,11 @@ public class GameState {
         liar = "";
         message = "";
         votes.clear();
+        timeLeft = 180; // 타이머 초기화
         for (String player : players) {
             scores.put(player, 0);
             votes.put(player, 0);
         }
-        moves.clear();
-        losingPlayer = "";
-        if (!players.isEmpty()) {
-            currentTurn = players.get(0);
-        } else {
-            currentTurn = null;
-        }
-
     }
 
     public void resetScores() {
@@ -90,17 +72,4 @@ public class GameState {
     public void endGame() {
         isGameOver = true;
     }
-    public void processMove(GameMessage gameMessage) {
-        moves.add(gameMessage.getPlayer() + ": " + gameMessage.getNumbers());
-        int lastNumber = gameMessage.getNumbers().get(gameMessage.getNumbers().size() - 1);
-        if (lastNumber >= 31) {
-            losingPlayer = gameMessage.getPlayer();
-        } else {
-            int currentIndex = players.indexOf(currentTurn);
-            currentTurn = players.get((currentIndex + 1) % players.size());
-        }
-    }
-
-
-
 }
