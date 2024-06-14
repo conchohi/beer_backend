@@ -250,4 +250,20 @@ public class GameController {
         usedTopics.add(topic);
         return topic;
     }
+    //베스킨라빈스
+    @MessageMapping("/startBaskinRobbins31/{roomNo}")
+    @SendTo("/topic/game/{roomNo}")
+    public GameState startBaskinRobbins31Game(@DestinationVariable String roomNo, GameMessage gameMessage) {
+        GameState gameState = new GameState(gameMessage.getPlayers());
+        gameRooms.put(roomNo, gameState);
+        return gameState;
+    }
+    @MessageMapping("/move/{roomNo}")
+    public void processMove(@DestinationVariable String roomNo, GameMessage gameMessage) {
+        GameState gameState = gameRooms.get(roomNo);
+        if (gameState != null) {
+            gameState.processMove(gameMessage);
+            messagingTemplate.convertAndSend("/topic/game/" + roomNo, gameState);
+        }
+    }
 }
