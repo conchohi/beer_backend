@@ -2,13 +2,19 @@ version: '3.8'
 
 services:
   app:
-    image: Beer:latest
+    image: ${DOCKERHUB_USERNAME}/beer_back:latest
     container_name: Beer_app
     environment:
       - NAVER_OAUTH_CLIENT_ID=${NAVER_OAUTH_CLIENT_ID}
       - NAVER_OAUTH_CLIENT_SECRET=${NAVER_OAUTH_CLIENT_SECRET}
       - KAKAO_OAUTH_CLIENT_ID=${KAKAO_OAUTH_CLIENT_ID}
       - KAKAO_OAUTH_CLIENT_SECRET=${KAKAO_OAUTH_CLIENT_SECRET}
+      - GOOGLE_OAUTH_CLIENT_ID=${GOOGLE_OAUTH_CLIENT_ID}
+      - GOOGLE_OAUTH_CLIENT_SECRET=${GOOGLE_OAUTH_CLIENT_SECRET}
+      - GOOGLE_MAIL_PASSWORD=${GOOGLE_MAIL_PASSWORD}
+      - JWT_SECRET=${JWT_SECRET}
+      - DB_NAME=${DB_NAME}
+      - DB_PASSWORD=${DB_PASSWORD}
     ports:
       - "8080:8080"
     volumes:
