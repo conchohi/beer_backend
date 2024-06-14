@@ -38,6 +38,7 @@ public class GameController {
         return gameState;
     }
 
+
     @MessageMapping("/startCharacterGame/{roomNo}")
     @SendTo("/topic/game/{roomNo}")
     public GameState startCharacterGame(@DestinationVariable String roomNo, GameMessage gameMessage) {
@@ -77,22 +78,27 @@ public class GameController {
         // 각 플레이어에게 주제 전달
         for (String player : gameState.getPlayers()) {
             String playerTopic = player.equals(liar) ? "" : topic;
-            messagingTemplate.convertAndSend("/topic/game/" + roomNo + "/topic", new GameMessage(player, playerTopic, null));
+            messagingTemplate.convertAndSend("/topic/game/" + roomNo + "/topic", new GameMessage(player, playerTopic));
         }
 
         return gameState;
     }
-
-    @MessageMapping("/reset/{roomNo}")
+    @MessageMapping("/startShoutInSilence/{roomNo}")
     @SendTo("/topic/game/{roomNo}")
-    public GameState resetGame(@DestinationVariable String roomNo) {
+    public GameState startShoutInSilence(@DestinationVariable String roomNo, GameMessage gameMessage) {
         GameState gameState = gameRooms.get(roomNo);
-        if (gameState != null) {
+        if (gameState == null) {
+            gameState = new GameState(gameMessage.getPlayers());
+            gameRooms.put(roomNo, gameState);
+        } else {
             gameState.reset();
             usedTopicsMap.remove(roomNo); // 게임 재시작 시 사용된 주제 초기화
         }
+        gameState.setCurrentTurn(gameMessage.getPlayers().get(random.nextInt(gameMessage.getPlayers().size())));
+        gameState.setTopic(generateTopic("shoutInSilence", roomNo));
         return gameState;
     }
+
 
     @MessageMapping("/passShoutInSilence/{roomNo}")
     public void passTurnShoutInSilence(@DestinationVariable String roomNo, GameMessage gameMessage) {
@@ -106,13 +112,15 @@ public class GameController {
             }
             gameState.setCurrentTurn(nextTurn);
             gameState.setTopic(generateTopic("shoutInSilence", roomNo));
+            gameState.setTimeLeft(180); // 타이머 초기화
             messagingTemplate.convertAndSend("/topic/game/" + roomNo, gameState);
         }
     }
 
-    @MessageMapping("/guess/{roomNo}")
+
+    @MessageMapping("/guessShoutInSilence/{roomNo}")
     @SendTo("/topic/game/{roomNo}")
-    public GameState processGuess(@DestinationVariable String roomNo, GameMessage gameMessage) {
+    public GameState processGuessShoutInSilence(@DestinationVariable String roomNo, GameMessage gameMessage) {
         GameState gameState = gameRooms.get(roomNo);
         if (gameState != null && gameState.getTopic().equalsIgnoreCase(gameMessage.getGuess())) {
             gameState.updateScore(gameMessage.getPlayer()); // 정답 맞춘 사람 점수 증가
@@ -121,14 +129,32 @@ public class GameController {
                 gameState.endGame();
                 gameState.resetScores(); // 점수 초기화
             } else {
-                gameState.setTopic(generateTopic("catchMind", roomNo));
+                gameState.setTopic(generateTopic("shoutInSilence", roomNo));
                 gameState.setCurrentTurn(gameState.getPlayers().get(random.nextInt(gameState.getPlayers().size()))); // 새로운 출제자 랜덤 선택
+                gameState.setTimeLeft(180); // 정답 맞추면 타이머 초기화
             }
             messagingTemplate.convertAndSend("/topic/game/" + roomNo + "/correct", gameMessage.getPlayer());
             messagingTemplate.convertAndSend("/topic/game/" + roomNo, gameState);
         }
         return gameState;
     }
+
+
+    @MessageMapping("/reset/{roomNo}")
+    @SendTo("/topic/game/{roomNo}")
+    public GameState resetGame(@DestinationVariable String roomNo) {
+        GameState gameState = gameRooms.get(roomNo);
+        if (gameState != null) {
+            gameState.reset();
+            usedTopicsMap.remove(roomNo); // 게임 재시작 시 사용된 주제 초기화
+        }
+        return gameState;
+    }
+
+
+
+
+
 
     @MessageMapping("/guessCharacter/{roomNo}")
     @SendTo("/topic/game/{roomNo}")
@@ -204,9 +230,9 @@ public class GameController {
             case "character":
                 topics = characterTopics;
                 break;
-//            case "shoutInSilence":
-//                topics = shoutInSilenceTopics;
-//                break;
+            case "shoutInSilence":
+                topics = shoutInSilenceTopics;
+                break;
 //            case "liarGame":
 //                topics = liarGameTopics;
 //                break;

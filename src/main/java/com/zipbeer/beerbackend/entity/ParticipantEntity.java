@@ -24,4 +24,5 @@ public class ParticipantEntity {
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
+
 }

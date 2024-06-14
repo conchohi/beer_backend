@@ -22,6 +22,7 @@ public class GameState {
     private String message;
     private String liar;
     private Map<String, Integer> votes = new HashMap<>();
+    private int timeLeft; // 타이머 필드 추가
 
     public GameState(List<String> players) {
         this.players = players;
@@ -29,6 +30,7 @@ public class GameState {
             scores.put(player, 0);
             votes.put(player, 0);
         }
+        this.timeLeft = 180; // 초기 타이머 설정
     }
 
     public void updateScore(String player) {
@@ -53,6 +55,7 @@ public class GameState {
         liar = "";
         message = "";
         votes.clear();
+        timeLeft = 180; // 타이머 초기화
         for (String player : players) {
             scores.put(player, 0);
             votes.put(player, 0);

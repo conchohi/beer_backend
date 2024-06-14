@@ -7,6 +7,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -21,6 +22,8 @@ import java.util.Iterator;
 public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     private final JWTProvider jwtProvider;
 
+    @Value("${server_ip}")
+    private String serverip;
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         CustomOAuth2User customOAuth2User = (CustomOAuth2User) authentication.getPrincipal();
@@ -38,7 +41,8 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         //쿠키로 전달한 것 프론트에서 "Bearer token"으로 처리해서 요청 헤더에 저장해서 넘겨야 할듯
         response.addCookie(createCookie("refresh", token));
-        response.sendRedirect("https://js1.jsflux.co.kr/getAccess");
+        response.sendRedirect(serverip + "/getAccess");
+
     }
 
     private Cookie createCookie(String key, String value) {
