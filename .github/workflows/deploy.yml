@@ -21,11 +21,10 @@ jobs:
       - name: Set up environment variables
         run: |
           echo "Setting up environment variables"
-
-      #          echo "NAVER_OAUTH_CLIENT_ID=${{ secrets.NAVER_OAUTH_CLIENT_ID }}" >> $GITHUB_ENV
-      #          echo "NAVER_OAUTH_CLIENT_SECRET=${{ secrets.NAVER_OAUTH_CLIENT_SECRET }}" >> $GITHUB_ENV
-      #          echo "KAKAO_OAUTH_CLIENT_ID=${{ secrets.KAKAO_OAUTH_CLIENT_ID }}" >> $GITHUB_ENV
-      #          echo "KAKAO_OAUTH_CLIENT_SECRET=${{ secrets.KAKAO_OAUTH_CLIENT_SECRET }}" >> $GITHUB_ENV
+          # echo "NAVER_OAUTH_CLIENT_ID=${{ secrets.NAVER_OAUTH_CLIENT_ID }}" >> $GITHUB_ENV
+          # echo "NAVER_OAUTH_CLIENT_SECRET=${{ secrets.NAVER_OAUTH_CLIENT_SECRET }}" >> $GITHUB_ENV
+          # echo "KAKAO_OAUTH_CLIENT_ID=${{ secrets.KAKAO_OAUTH_CLIENT_ID }}" >> $GITHUB_ENV
+          # echo "KAKAO_OAUTH_CLIENT_SECRET=${{ secrets.KAKAO_OAUTH_CLIENT_SECRET }}" >> $GITHUB_ENV
 
       - name: Log in to Docker Hub
         run: |
@@ -45,6 +44,10 @@ jobs:
           echo "Pushing Docker image to Docker Hub"
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/beer_back:${{ env.TAG }}
       - name: Deploy on EC2
+        env:
+          EC2_HOST: ${{ secrets.EC2_HOST }}
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          TAG: ${{ env.TAG }}
         run: |
           echo "Deploying on EC2"
           ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_HOST }} << 'EOF'
