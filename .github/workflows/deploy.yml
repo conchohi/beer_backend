@@ -21,11 +21,10 @@ jobs:
       - name: Set up environment variables
         run: |
           echo "Setting up environment variables"
-
-#          echo "NAVER_OAUTH_CLIENT_ID=${{ secrets.NAVER_OAUTH_CLIENT_ID }}" >> $GITHUB_ENV
-#          echo "NAVER_OAUTH_CLIENT_SECRET=${{ secrets.NAVER_OAUTH_CLIENT_SECRET }}" >> $GITHUB_ENV
-#          echo "KAKAO_OAUTH_CLIENT_ID=${{ secrets.KAKAO_OAUTH_CLIENT_ID }}" >> $GITHUB_ENV
-#          echo "KAKAO_OAUTH_CLIENT_SECRET=${{ secrets.KAKAO_OAUTH_CLIENT_SECRET }}" >> $GITHUB_ENV
+          # echo "NAVER_OAUTH_CLIENT_ID=${{ secrets.NAVER_OAUTH_CLIENT_ID }}" >> $GITHUB_ENV
+          # echo "NAVER_OAUTH_CLIENT_SECRET=${{ secrets.NAVER_OAUTH_CLIENT_SECRET }}" >> $GITHUB_ENV
+          # echo "KAKAO_OAUTH_CLIENT_ID=${{ secrets.KAKAO_OAUTH_CLIENT_ID }}" >> $GITHUB_ENV
+          # echo "KAKAO_OAUTH_CLIENT_SECRET=${{ secrets.KAKAO_OAUTH_CLIENT_SECRET }}" >> $GITHUB_ENV
 
       - name: Log in to Docker Hub
         run: |
@@ -34,30 +33,26 @@ jobs:
       - name: Build Docker image
         run: |
           echo "Building Docker image"
-          docker build -t "${{ secrets.DOCKERHUB_USERNAME }}/beer:latest" .
-
+          TAG=$(date +%s)
+          docker build -t "${{ secrets.DOCKERHUB_USERNAME }}/beer_back:${TAG}" .
+          echo "TAG=${TAG}" >> $GITHUB_ENV
 
       - name: Push Docker image to Docker Hub
         run: |
           echo "Pushing Docker image to Docker Hub"
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/beer:latest
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/beer_back:${{ env.TAG }}
 
       - name: Deploy on EC2
-        run: |
-          echo "Deploying on EC2"
-          ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_HOST }} << 'EOF'
-            cd /beer
-            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/beer:latest
-            docker stop beer || true
-            docker rm beer || true
-            docker run -d --name beer -p 8080:8080 ${{ secrets.DOCKERHUB_USERNAME }}/beer:latest
-          EOF
         env:
-          EC2_USER: ubuntu
           EC2_HOST: ${{ secrets.EC2_HOST }}
           DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-#          NAVER_OAUTH_CLIENT_ID: ${{ secrets.NAVER_OAUTH_CLIENT_ID }}
-#          NAVER_OAUTH_CLIENT_SECRET: ${{ secrets.NAVER_OAUTH_CLIENT_SECRET }}
-#          KAKAO_OAUTH_CLIENT_ID: ${{ secrets.KAKAO_OAUTH_CLIENT_ID }}
-#          KAKAO_OAUTH_CLIENT_SECRET: ${{ secrets.KAKAO_OAUTH_CLIENT_SECRET }}
-
+          TAG: ${{ env.TAG }}
+        run: |
+          echo "Deploying on EC2"
+          ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_HOST }} << EOF
+            cd /beer
+            docker pull ${DOCKERHUB_USERNAME}/beer_back:${TAG}
+            docker stop beer || true
+            docker rm beer || true
+            docker run -d --name beer -p 8080:8080 ${DOCKERHUB_USERNAME}/beer_back:${TAG}
+          EOF
