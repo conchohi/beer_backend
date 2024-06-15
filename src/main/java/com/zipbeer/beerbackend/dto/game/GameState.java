@@ -13,6 +13,7 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GameState {
+    private String currentGame;
     private List<String> players;
     private String currentTurn;
     private String previousTurn; // 이전 출제자 추적

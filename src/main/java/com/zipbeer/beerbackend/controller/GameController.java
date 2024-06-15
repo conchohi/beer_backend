@@ -29,7 +29,10 @@ public class GameController {
         GameState gameState = gameRooms.get(roomNo);
         if (gameState == null) {
             gameState = new GameState(gameMessage.getPlayers());
+            gameState.setCurrentGame("catchMind");
             gameRooms.put(roomNo, gameState);
+        } else if(gameState.getCurrentGame().equals("catchMind")) {
+            return gameState;
         } else {
             gameState.reset();
             usedTopicsMap.remove(roomNo); // 게임 재시작 시 사용된 주제 초기화
@@ -46,7 +49,10 @@ public class GameController {
         GameState gameState = gameRooms.get(roomNo);
         if (gameState == null) {
             gameState = new GameState(gameMessage.getPlayers());
+            gameState.setCurrentGame("character");
             gameRooms.put(roomNo, gameState);
+        } else if(gameState.getCurrentGame().equals("character")) {
+            return gameState;
         } else {
             gameState.reset();
             usedTopicsMap.remove(roomNo); // 게임 재시작 시 사용된 주제 초기화
@@ -62,10 +68,12 @@ public class GameController {
         GameState gameState = gameRooms.get(roomNo);
         if (gameState == null) {
             gameState = new GameState(gameMessage.getPlayers());
+            gameState.setCurrentGame("liar");
             gameRooms.put(roomNo, gameState);
+        } else if(gameState.getCurrentGame().equals("liar")) {
+            return gameState;
         } else {
             gameState.reset();
-            usedTopicsMap.remove(roomNo); // 게임 재시작 시 사용된 주제 초기화
         }
 
         // 라이어 설정
@@ -92,6 +100,7 @@ public class GameController {
         GameState gameState = gameRooms.get(roomNo);
         gameState.endGame();
         gameState.setMessage(gameState.getMostVoted());
+        gameRooms.remove(roomNo);
         return gameState;
     }
     @MessageMapping("/voteLiarGame/{roomNo}")
@@ -106,7 +115,10 @@ public class GameController {
         GameState gameState = gameRooms.get(roomNo);
         if (gameState == null) {
             gameState = new GameState(gameMessage.getPlayers());
+            gameState.setCurrentGame("bomb");
             gameRooms.put(roomNo, gameState);
+        } else if(gameState.getCurrentGame().equals("bomb")) {
+            return gameState;
         } else {
             gameState.reset();
         }
@@ -121,7 +133,7 @@ public class GameController {
     public GameState sendBomb(@DestinationVariable String roomNo, GameMessage gameMessage) {
         GameState gameState = gameRooms.get(roomNo);
         String bomb = gameMessage.getPlayer();
-        // 폭탄 시작 설정
+        //전송한 폭탄
         gameState.setBomb(bomb);
 
         return gameState;
@@ -132,7 +144,10 @@ public class GameController {
         GameState gameState = gameRooms.get(roomNo);
         if (gameState == null) {
             gameState = new GameState(gameMessage.getPlayers());
+            gameState.setCurrentGame("shoutInSilence");
             gameRooms.put(roomNo, gameState);
+        } else if(gameState.getCurrentGame().equals("shoutInSilence")) {
+            return gameState;
         } else {
             gameState.reset();
             usedTopicsMap.remove(roomNo); // 게임 재시작 시 사용된 주제 초기화
@@ -242,6 +257,11 @@ public class GameController {
     @MessageMapping("/draw/{roomNo}")
     public void receiveDrawing(@DestinationVariable String roomNo, String drawingData) {
         messagingTemplate.convertAndSend("/topic/game/" + roomNo + "/drawing", drawingData);
+    }
+
+    @MessageMapping("/erase/{roomNo}")
+    public void eraseDrawing(@DestinationVariable String roomNo) {
+        messagingTemplate.convertAndSend("/topic/game/" + roomNo + "/erase", "clear");
     }
 
 
