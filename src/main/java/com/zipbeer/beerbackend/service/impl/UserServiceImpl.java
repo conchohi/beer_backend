@@ -60,6 +60,8 @@ public class UserServiceImpl implements UserService {
             fileUtil.deleteFile(beforeProfileImage);
             user.setProfileImage(profileImage);
             userDto.setProfileImage(profileImage);
+        } else{
+            userDto.setProfileImage(beforeProfileImage);
         }
         if ("true".equals(userDto.getIsDelete())) {
             user.setProfileImage(null);
