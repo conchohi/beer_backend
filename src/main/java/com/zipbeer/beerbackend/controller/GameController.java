@@ -45,7 +45,8 @@ public class GameController {
         } else if(gameState.getCurrentGame().equals("catchMind")) {
             return gameState;
         } else {
-            gameState.reset();
+            gameState = new GameState(gameMessage.getPlayers());
+            gameRooms.put(roomNo, gameState);
             usedTopicsMap.remove(roomNo); // 게임 재시작 시 사용된 주제 초기화
         }
         gameState.setCurrentGame("catchMind");
@@ -65,7 +66,8 @@ public class GameController {
         } else if(gameState.getCurrentGame().equals("character")) {
             return gameState;
         } else {
-            gameState.reset();
+            gameState = new GameState(gameMessage.getPlayers());
+            gameRooms.put(roomNo, gameState);
             usedTopicsMap.remove(roomNo); // 게임 재시작 시 사용된 주제 초기화
         }
         gameState.setCurrentGame("character");
@@ -92,7 +94,8 @@ public class GameController {
             }
             return gameState;
         } else {
-            gameState.reset();
+            gameState = new GameState(gameMessage.getPlayers());
+            gameRooms.put(roomNo, gameState);
         }
         gameState.setCurrentGame("liar");
         //끝나는 시간 현재시간에 5분 뒤
@@ -143,7 +146,8 @@ public class GameController {
             gameState.setTimeLeft(timeLeft);
             return gameState;
         } else {
-            gameState.reset();
+            gameState = new GameState(gameMessage.getPlayers());
+            gameRooms.put(roomNo, gameState);
         }
         gameState.setCurrentGame("bomb");
         endTime.put(roomNo, LocalDateTime.now().plusSeconds(random.nextInt(25)+5));
@@ -175,7 +179,8 @@ public class GameController {
         } else if(gameState.getCurrentGame().equals("shoutInSilence")) {
             return gameState;
         } else {
-            gameState.reset();
+            gameState = new GameState(gameMessage.getPlayers());
+            gameRooms.put(roomNo, gameState);
             usedTopicsMap.remove(roomNo); // 게임 재시작 시 사용된 주제 초기화
         }
         gameState.setCurrentGame("shoutInSilence");
@@ -308,7 +313,8 @@ public class GameController {
         } else if(gameState.getCurrentGame().equals("chosung")) {
             return gameState;
         } else {
-            gameState.reset();
+            gameState = new GameState(gameMessage.getPlayers());
+            gameRooms.put(roomNo, gameState);
             usedTopicsMap.remove(roomNo);
         }
         gameState.setCurrentGame("chosung");
