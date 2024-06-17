@@ -12,7 +12,6 @@ spring:
     username: beer
     password: my1234
     driver-class-name: com.mysql.cj.jdbc.Driver
-
   jpa:
     database-platform: org.hibernate.dialect.MySQLDialect
     properties:
@@ -92,4 +91,6 @@ spring:
       max-file-size: 10MB
       max-request-size: 10MB
 
+
 uploadPath : upload
+
