@@ -1,10 +1,11 @@
+secret-key: ${JWT_SECRET}
+server_ip: https://js1.jsflux.co.kr
+work_api_key: 0696CD0E737BF6F7578668C552022C42
+api_certkey_no: 6651
 
-   secret-key: ${JWT_SECRET}
-   server_ip: https://js1.jsflux.co.kr
-   server:
-       port: 8080
-
-   spring:
+server:
+    port: 8080
+    spring:
        datasource:
            url: jdbc:mysql://54.180.123.253:3306/Beer
            username: beer
@@ -91,5 +92,4 @@
                max-request-size: 10MB
 
    uploadPath : upload
-
 

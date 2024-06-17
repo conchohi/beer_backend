@@ -55,13 +55,11 @@ public class RoomController {
     public ResponseEntity<?> join(@PathVariable(name = "roomNo") Long roomNo){
         String id = SecurityContextHolder.getContext().getAuthentication().getName();
         return participantService.join(id,roomNo);
-//        return participantService.join("abc123", roomNo);
     }
 
     @DeleteMapping("/exit/{roomNo}")
     public ResponseEntity<?> exit(@PathVariable(name = "roomNo") Long roomNo){
         String id = SecurityContextHolder.getContext().getAuthentication().getName();
         return participantService.exit(id,roomNo);
-//        return participantService.exit("abc123",roomNo);
     }
 }
