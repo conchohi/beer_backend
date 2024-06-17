@@ -1,5 +1,8 @@
 secret-key: eyJhbGciOiJIUzUxMiJ9eyJzdWIiOiJ1c2VyIn0I2qOfhAZMGSH1pCecUH5sV2Lg2pSWNQMPzXsMcne6NJ1SlkBoirhGAmKfTYNcRyhu6nQtRzgAd6VXyttoX9A
 server_ip: http://localhost:3000
+work_api_key: 35AA75DF81AC4E5BD3FA8715D20A1FE6
+api_certkey_no: 6653
+
 server:
     port: 8080
 

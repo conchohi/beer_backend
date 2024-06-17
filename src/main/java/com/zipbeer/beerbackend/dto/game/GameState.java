@@ -13,22 +13,26 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GameState {
-    private List<String> players;
-    private String currentTurn;
+    private List<String> players; // 게임 참가자 목록
+    private String currentTurn; // 현재 턴인 플레이어
     private String previousTurn; // 이전 출제자 추적
-    private String topic;
-    private Map<String, Integer> scores = new HashMap<>();
-    private boolean isGameOver;
-    private String winner;
-    private String message;
-    private String liar;
-    private LiarTopic liarTopic;
-    private String bomb;
-    private Map<String, Integer> votes = new HashMap<>();
-    private int timeLeft; // 타이머 필드 추가
-    private List<String> moves = new ArrayList<>();
-    private String losingPlayer = "";
+    private String topic; // 현재 주제
+    private Map<String, Integer> scores = new HashMap<>(); // 플레이어별 점수
+    private List<String> lastCorrectPlayers = new ArrayList<>(); // 마지막으로 정답을 맞춘 플레이어들
+    private boolean isGameOver; // 게임 종료 여부
+    private String winner; // 승자
+    private String message; // 메시지
+    private String liar; // 라이어
+    private LiarTopic liarTopic; // 라이어의 주제
+    private String bomb; // 폭탄
+    private Map<String, Integer> votes = new HashMap<>(); // 플레이어별 투표 수
+    private int timeLeft; // 남은 시간 (초)
+    private List<String> moves = new ArrayList<>(); // 이동 기록
+    private String losingPlayer = ""; // 패배한 플레이어
+    private List<String> guessedWords = new ArrayList<>(); // 추측한 단어 목록
+    private String Loser = ""; // 패배한 플레이어
 
+    // 생성자: 플레이어 목록을 받아 초기화
     public GameState(List<String> players) {
         this.players = players;
         for (String player : players) {
@@ -43,18 +47,27 @@ public class GameState {
         this.timeLeft = 180; // 초기 타이머 설정
     }
 
+    // 점수 업데이트: 기본 +1
     public void updateScore(String player) {
-        scores.put(player, scores.get(player) + 1);
+        scores.put(player, scores.getOrDefault(player, 0) + 1);
     }
 
+    // 점수 업데이트: 주어진 값 만큼
+    public void updateScore(String player, int value) {
+        scores.put(player, scores.getOrDefault(player, 0) + value);
+    }
+
+    // 투표 추가
     public void addVote(String player) {
         votes.put(player, votes.getOrDefault(player, 0) + 1);
     }
 
+    // 가장 많은 투표를 받은 플레이어 반환
     public String getMostVoted() {
         return votes.entrySet().stream().max(Map.Entry.comparingByValue()).get().getKey();
     }
 
+    // 게임 상태 초기화
     public void reset() {
         currentTurn = players.get(0);
         previousTurn = null;
@@ -72,14 +85,15 @@ public class GameState {
         }
         moves.clear();
         losingPlayer = "";
+        lastCorrectPlayers.clear();
         if (!players.isEmpty()) {
             currentTurn = players.get(0);
         } else {
             currentTurn = null;
         }
-
     }
 
+    // 점수 초기화
     public void resetScores() {
         scores.clear();
         for (String player : players) {
@@ -87,9 +101,12 @@ public class GameState {
         }
     }
 
+    // 게임 종료 설정
     public void endGame() {
         isGameOver = true;
     }
+
+    // 이동 처리
     public void processMove(GameMessage gameMessage) {
         moves.add(gameMessage.getPlayer() + ": " + gameMessage.getNumbers());
         int lastNumber = gameMessage.getNumbers().get(gameMessage.getNumbers().size() - 1);
@@ -99,5 +116,26 @@ public class GameState {
             int currentIndex = players.indexOf(currentTurn);
             currentTurn = players.get((currentIndex + 1) % players.size());
         }
+    }
+
+    // 추측한 단어 추가
+    public void addGuessedWord(String word) {
+        guessedWords.add(word);
+    }
+
+    // 특정 단어가 추측된 단어 목록에 있는지 확인
+    public boolean isWordGuessed(String word) {
+        return guessedWords.contains(word);
+    }
+
+    // 패배한 플레이어 목록 반환
+    public List<String> getLosingPlayers() {
+        List<String> losingPlayers = new ArrayList<>();
+        for (Map.Entry<String, Integer> entry : scores.entrySet()) {
+            if (entry.getValue() <= -5) {
+                losingPlayers.add(entry.getKey());
+            }
+        }
+        return losingPlayers;
     }
 }
