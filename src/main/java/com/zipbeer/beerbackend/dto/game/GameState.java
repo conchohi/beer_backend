@@ -13,6 +13,7 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GameState {
+    private String currentGame;
     private List<String> players; // 게임 참가자 목록
     private String currentTurn; // 현재 턴인 플레이어
     private String previousTurn; // 이전 출제자 추적
@@ -38,7 +39,7 @@ public class GameState {
     private String[] choices = new String[2]; // 선택지 배열 초기화
     private List<String> completedPlayers = new ArrayList<>(); // 완료된 플레이어 목록 추가
     private List<String> balanceGameVotes = new ArrayList<>();  // 밸런스 게임용 votes 목록
-
+  
     // 생성자: 플레이어 목록을 받아 초기화
     public GameState(List<String> players) {
         this.players = players;

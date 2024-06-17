@@ -12,6 +12,8 @@ import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -20,6 +22,7 @@ public class GameController {
 
     private final SimpMessagingTemplate messagingTemplate;
     private final Map<String, GameState> gameRooms = new HashMap<>();
+    private final Map<String, LocalDateTime> endTime = new HashMap<>();
     private final Map<String, Set<String>> usedTopicsMap = new HashMap<>();
     private final Random random = new Random();
 
@@ -41,10 +44,13 @@ public class GameController {
         if (gameState == null) {
             gameState = new GameState(gameMessage.getPlayers());
             gameRooms.put(roomNo, gameState);
+        } else if(gameState.getCurrentGame().equals("catchMind")) {
+            return gameState;
         } else {
             gameState.reset();
             usedTopicsMap.remove(roomNo); // 게임 재시작 시 사용된 주제 초기화
         }
+        gameState.setCurrentGame("catchMind");
         gameState.setCurrentTurn(gameMessage.getPlayers().get(random.nextInt(gameMessage.getPlayers().size())));
         gameState.setTopic(generateTopic("catchMind", roomNo));
         return gameState;
@@ -58,10 +64,13 @@ public class GameController {
         if (gameState == null) {
             gameState = new GameState(gameMessage.getPlayers());
             gameRooms.put(roomNo, gameState);
+        } else if(gameState.getCurrentGame().equals("character")) {
+            return gameState;
         } else {
             gameState.reset();
             usedTopicsMap.remove(roomNo); // 게임 재시작 시 사용된 주제 초기화
         }
+        gameState.setCurrentGame("character");
         gameState.setCurrentTurn(gameMessage.getPlayers().get(random.nextInt(gameMessage.getPlayers().size())));
         gameState.setTopic(generateTopic("character", roomNo));
         return gameState;
@@ -74,11 +83,22 @@ public class GameController {
         if (gameState == null) {
             gameState = new GameState(gameMessage.getPlayers());
             gameRooms.put(roomNo, gameState);
+        } else if(gameState.getCurrentGame().equals("liar")) {
+            long timeLeft = Duration.between(LocalDateTime.now(),endTime.get(roomNo)).toSeconds();
+            gameState.setTimeLeft(timeLeft);
+            LiarTopic topic = gameState.getLiarTopic();
+            for (String player : gameState.getPlayers()) {
+                //라이어는 주제만, 플레이어는 주제 + 단어
+                String playerTopic  = player.equals(gameState.getLiar()) ? topic.getSubject() : topic.toString();
+                messagingTemplate.convertAndSend("/topic/game/" + roomNo + "/topic", new GameMessage(player, playerTopic));
+            }
+            return gameState;
         } else {
             gameState.reset();
-            usedTopicsMap.remove(roomNo); // 게임 재시작 시 사용된 주제 초기화
         }
-
+        gameState.setCurrentGame("liar");
+        //끝나는 시간 현재시간에 5분 뒤
+        endTime.put(roomNo, LocalDateTime.now().plusSeconds(300L));
         // 라이어 설정
         String liar = gameState.getPlayers().get(random.nextInt(gameState.getPlayers().size()));
         gameState.setLiar(liar);
@@ -93,7 +113,8 @@ public class GameController {
             String playerTopic  = player.equals(liar) ? topic.getSubject() : topic.toString();
             messagingTemplate.convertAndSend("/topic/game/" + roomNo + "/topic", new GameMessage(player, playerTopic));
         }
-
+        long timeLeft = Duration.between(LocalDateTime.now(),endTime.get(roomNo)).toSeconds();
+        gameState.setTimeLeft(timeLeft);
         return gameState;
     }
 
@@ -103,6 +124,7 @@ public class GameController {
         GameState gameState = gameRooms.get(roomNo);
         gameState.endGame();
         gameState.setMessage(gameState.getMostVoted());
+        gameRooms.remove(roomNo);
         return gameState;
     }
     @MessageMapping("/voteLiarGame/{roomNo}")
@@ -118,13 +140,21 @@ public class GameController {
         if (gameState == null) {
             gameState = new GameState(gameMessage.getPlayers());
             gameRooms.put(roomNo, gameState);
+        } else if(gameState.getCurrentGame().equals("bomb")) {
+            long timeLeft = Duration.between(LocalDateTime.now(),endTime.get(roomNo)).toSeconds();
+            gameState.setTimeLeft(timeLeft);
+            return gameState;
         } else {
             gameState.reset();
         }
+        gameState.setCurrentGame("bomb");
+        endTime.put(roomNo, LocalDateTime.now().plusSeconds(random.nextInt(20)+40));
         // 폭탄 시작 설정
         String bomb = gameState.getPlayers().get(random.nextInt(gameState.getPlayers().size()));
         gameState.setBomb(bomb);
-        gameState.setTimeLeft(random.nextInt(60) + 120);
+
+        long timeLeft = Duration.between( LocalDateTime.now(),endTime.get(roomNo)).toSeconds();
+        gameState.setTimeLeft(timeLeft);
         return gameState;
     }
     @MessageMapping("/sendBomb/{roomNo}")
@@ -132,7 +162,7 @@ public class GameController {
     public GameState sendBomb(@DestinationVariable String roomNo, GameMessage gameMessage) {
         GameState gameState = gameRooms.get(roomNo);
         String bomb = gameMessage.getPlayer();
-        // 폭탄 시작 설정
+        //전송한 폭탄
         gameState.setBomb(bomb);
 
         return gameState;
@@ -144,10 +174,13 @@ public class GameController {
         if (gameState == null) {
             gameState = new GameState(gameMessage.getPlayers());
             gameRooms.put(roomNo, gameState);
+        } else if(gameState.getCurrentGame().equals("shoutInSilence")) {
+            return gameState;
         } else {
             gameState.reset();
             usedTopicsMap.remove(roomNo); // 게임 재시작 시 사용된 주제 초기화
         }
+        gameState.setCurrentGame("shoutInSilence");
         gameState.setCurrentTurn(gameMessage.getPlayers().get(random.nextInt(gameMessage.getPlayers().size())));
         gameState.setTopic(generateTopic("shoutInSilence", roomNo));
         return gameState;
@@ -253,6 +286,11 @@ public class GameController {
     @MessageMapping("/draw/{roomNo}")
     public void receiveDrawing(@DestinationVariable String roomNo, String drawingData) {
         messagingTemplate.convertAndSend("/topic/game/" + roomNo + "/drawing", drawingData);
+    }
+
+    @MessageMapping("/erase/{roomNo}")
+    public void eraseDrawing(@DestinationVariable String roomNo) {
+        messagingTemplate.convertAndSend("/topic/game/" + roomNo + "/erase", "clear");
     }
 
 
@@ -371,7 +409,6 @@ public class GameController {
         String[] catchMindTopics = {"원숭이", "기린", "사과", "김", "배", "수박", "참외", "제비", "소방차", "캐리어", "비","돼지","사슴","키보드","사건","경찰","댄서","고드름","케이크","마늘","나비","잠자리"};
         String[] characterTopics = {"김세정", "설현", "수지", "아이유", "윤소희", "조이", "진세연", "채수빈", "카리나", "크리스탈", "혜리","고마츠나나","고윤정","김태리","다현","로제","류준열","박서준","사쿠라","신민아","아이린","안유진","윤아","은하","이진욱","장원영","전지현","차은우","카즈하","한지민"};
         String[] shoutInSilenceTopics = {"원숭이", "코끼리", "펭귄", "고양이", "강아지", "토끼", "기린", "수영", "농구", "오토바이", "비행기", "가위", "겨울왕국", "마라톤", "매트릭스", "비", "돼지","댄서","낚시","헐크","라면","타이타닉"};
-//        String[] shoutInSilenceTopics = {"해변", "도서관", "영화관", "공원", "놀이공원", "카페", "서점", "박물관", "식당", "학교"};
 
         String[] topics;
 
