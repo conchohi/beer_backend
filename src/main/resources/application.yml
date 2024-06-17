@@ -1,7 +1,8 @@
-secret-key: eyJhbGciOiJIUzUxMiJ9eyJzdWIiOiJ1c2VyIn0I2qOfhAZMGSH1pCecUH5sV2Lg2pSWNQMPzXsMcne6NJ1SlkBoirhGAmKfTYNcRyhu6nQtRzgAd6VXyttoX9A
-server_ip: http://localhost:3000
-work_api_key: 35AA75DF81AC4E5BD3FA8715D20A1FE6
-api_certkey_no: 6653
+
+secret-key: ${JWT_SECRET}
+server_ip: https://js1.jsflux.co.kr
+work_api_key: 0696CD0E737BF6F7578668C552022C42
+api_certkey_no: 6651
 
 server:
     port: 8080
@@ -18,7 +19,7 @@ spring:
         properties:
             hibernate:
                 jdbc:
-                  time_zone: Asia/Seoul
+                    time_zone: Asia/Seoul
                 hibernate:
                 "[format_sql]": true            #SQL 보기 좋게 출력
                 "[user_sql_comments]": true     #SQL 생성시 주석 포함
@@ -31,20 +32,29 @@ spring:
         oauth2:
             client:
                 registration:
+                    google:
+                        client-name: google
+                        client-id: ${GOOGLE_OAUTH_CLIENT_ID}
+                        client-secret: ${GOOGLE_OAUTH_CLIENT_SECRET}
+                        redirect-uri: https://js1.jsflux.co.kr/login/oauth2/code/google
+                        authorization-grant-type: authorization_code
+                        scope:
+                            - profile
+                            - email
                     naver:
                         client-name: naver
-                        client-id: G9T5HJ5m7qmMrHWUI8uX
-                        client-secret: WGCj5c7gv5
-                        redirect-uri: http://localhost:8080/login/oauth2/code/naver
+                        client-id: ${NAVER_OAUTH_CLIENT_ID}
+                        client-secret: ${NAVER_OAUTH_CLIENT_SECRET}
+                        redirect-uri: https://js1.jsflux.co.kr/login/oauth2/code/naver
                         authorization-grant-type: authorization_code
                         scope:
                             - email
                             - nickname
                     kakao:
                         client-name: kakao
-                        client-id: 6dd83ec1638f5cff30942f97a8b7610a
-                        client-secret: K03c21Jeu2pctVBeKe8cQSVL24QXKr5O
-                        redirect-uri: http://localhost:8080/login/oauth2/code/kakao
+                        client-id: ${KAKAO_OAUTH_CLIENT_ID}
+                        client-secret: ${KAKAO_OAUTH_CLIENT_SECRET}
+                        redirect-uri: https://js1.jsflux.co.kr/login/oauth2/code/kakao
                         client-authentication-method: client_secret_post
                         authorization-grant-type: authorization_code
                         scope:
@@ -65,7 +75,7 @@ spring:
         host: smtp.gmail.com
         port: 587
         username: MyHomesBeer@gmail.com
-        password: ichyxgwlatuqfnbf
+        password: ${GOOGLE_MAIL_PASSWORD}
         properties:
             mail:
                 smtp:
@@ -84,3 +94,4 @@ spring:
             max-request-size: 10MB
 
 uploadPath : upload
+
