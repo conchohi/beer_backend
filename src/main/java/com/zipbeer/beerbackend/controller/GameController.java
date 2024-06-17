@@ -310,53 +310,65 @@ public class GameController {
         if (gameState == null) {
             gameState = new GameState(gameMessage.getPlayers());
             gameRooms.put(roomNo, gameState);
-        } else if(gameState.getCurrentGame().equals("chosung")) {
+        } else if (gameState.getCurrentGame().equals("chosung")) {
             return gameState;
         } else {
             gameState = new GameState(gameMessage.getPlayers());
             gameRooms.put(roomNo, gameState);
-            usedTopicsMap.remove(roomNo);
         }
         gameState.setCurrentGame("chosung");
         gameState.getGuessedWords().clear(); // guessedWords 초기화
         gameState.setCurrentTurn(gameMessage.getPlayers().get(random.nextInt(gameMessage.getPlayers().size())));
         gameState.setTopic(generateChosung());
+        gameState.setTimeLeft(20); // 주제가 바뀔 때 타이머 초기화
         return gameState;
     }
 
     @MessageMapping("/guessChosung/{roomNo}")
-    @SendTo("/topic/game/{roomNo}")
-    public GameState processGuessChosung(@DestinationVariable String roomNo, GameMessage gameMessage) {
+    public void processGuessChosung(@DestinationVariable String roomNo, GameMessage gameMessage) {
         GameState gameState = gameRooms.get(roomNo);
         String guess = gameMessage.getGuess();
-        if (gameState != null && !gameState.isWordGuessed(guess)) {
+        String player = gameMessage.getPlayer();
+
+        if (gameState != null) {
+            if (gameState.getLastCorrectPlayers().contains(player)) {
+                messagingTemplate.convertAndSendToUser(player, "/queue/errors", new GameMessage(player, "이미 통과하셨습니다."));
+                return;
+            }
+
+            if (gameState.isWordGuessed(guess)) {
+                messagingTemplate.convertAndSendToUser(player, "/queue/errors", new GameMessage(player, "이미 제출한 정답입니다."));
+                return;
+            }
+
             gameState.addGuessedWord(guess);
-            gameState.getLastCorrectPlayers().add(gameMessage.getPlayer());
+            gameState.getLastCorrectPlayers().add(player);
 
             if (gameState.getLastCorrectPlayers().size() == gameState.getPlayers().size()) {
                 String lastPlayer = gameState.getLastCorrectPlayers().get(gameState.getLastCorrectPlayers().size() - 1);
                 gameState.updateScore(lastPlayer, -1);
 
+                messagingTemplate.convertAndSend("/topic/game/" + roomNo + "/correct", lastPlayer + "님이 '" + guess + "' 단어로 통과했습니다.");
+                messagingTemplate.convertAndSend("/topic/game/" + roomNo + "/minusScore", lastPlayer + "님이 -1점 받았습니다.");
+
                 if (gameState.getScores().get(lastPlayer) <= -5) {
                     gameState.setLoser(lastPlayer);
                     gameState.endGame();
-                    gameState.resetScores(); // 점수 초기화 추가
-                    gameState.setLoser(null); // 패배자 초기화
+                    gameState.resetScores();
                     messagingTemplate.convertAndSend("/topic/game/" + roomNo, gameState);
                 } else {
                     gameState.setTopic(generateChosung());
                     gameState.setCurrentTurn(gameState.getPlayers().get(random.nextInt(gameState.getPlayers().size())));
                     gameState.getLastCorrectPlayers().clear();
-                    gameState.getGuessedWords().clear(); // guessedWords 초기화
+                    gameState.getGuessedWords().clear();
+                    gameState.setTimeLeft(20); // 주제가 바뀔 때 타이머 초기화
+                    messagingTemplate.convertAndSend("/topic/game/" + roomNo, gameState);
                 }
-                messagingTemplate.convertAndSend("/topic/game/" + roomNo + "/minusScore", lastPlayer);
+            } else {
+                messagingTemplate.convertAndSend("/topic/game/" + roomNo + "/correct", player + "님이 '" + guess + "' 단어로 통과했습니다.");
             }
-
-            // Correct message with the guessed word
-            messagingTemplate.convertAndSend("/topic/game/" + roomNo + "/correct", gameMessage.getPlayer() + "님이 '" + guess + "' 단어로 통과했습니다.");
             messagingTemplate.convertAndSend("/topic/game/" + roomNo, gameState);
         }
-        return gameState;
     }
 
     @MessageMapping("/timeoutChosung/{roomNo}")
@@ -366,22 +378,27 @@ public class GameController {
         if (gameState != null) {
             List<String> playersNotGuessed = new ArrayList<>(gameState.getPlayers());
             playersNotGuessed.removeAll(gameState.getLastCorrectPlayers());
-            playersNotGuessed.forEach(player -> gameState.updateScore(player, -1));
-            gameState.getLastCorrectPlayers().clear();
 
-            messagingTemplate.convertAndSend("/topic/game/" + roomNo + "/timeout", playersNotGuessed);
-            if (gameState.getPlayers().stream().anyMatch(player -> gameState.getScores().get(player) <= -5)) {
-                String losingPlayers = gameState.getPlayers().stream()
-                        .filter(player -> gameState.getScores().get(player) <= -5)
-                        .collect(Collectors.joining(", "));
-                gameState.setLoser(losingPlayers);
-                gameState.endGame();
-                gameState.resetScores(); // 점수 초기화j
-                messagingTemplate.convertAndSend("/topic/game/" + roomNo, gameState);
-            } else {
-                gameState.setTopic(generateChosung());
-                gameState.setCurrentTurn(gameState.getPlayers().get(random.nextInt(gameState.getPlayers().size())));
-                messagingTemplate.convertAndSend("/topic/game/" + roomNo, gameState);
+            if (!playersNotGuessed.isEmpty()) {
+                playersNotGuessed.forEach(player -> gameState.updateScore(player, -1));
+                gameState.getLastCorrectPlayers().clear();
+
+                messagingTemplate.convertAndSend("/topic/game/" + roomNo + "/timeout", playersNotGuessed);
+
+                if (gameState.getPlayers().stream().anyMatch(player -> gameState.getScores().get(player) <= -5)) {
+                    String losingPlayers = gameState.getPlayers().stream()
+                            .filter(player -> gameState.getScores().get(player) <= -5)
+                            .collect(Collectors.joining(", "));
+                    gameState.setLoser(losingPlayers);
+                    gameState.endGame();
+                    gameState.resetScores();
+                    messagingTemplate.convertAndSend("/topic/game/" + roomNo, gameState);
+                } else {
+                    gameState.setTopic(generateChosung());
+                    gameState.setCurrentTurn(gameState.getPlayers().get(random.nextInt(gameState.getPlayers().size())));
+                    gameState.setTimeLeft(20); // 주제가 바뀔 때 타이머 초기화
+                    messagingTemplate.convertAndSend("/topic/game/" + roomNo, gameState);
+                }
             }
         }
     }
