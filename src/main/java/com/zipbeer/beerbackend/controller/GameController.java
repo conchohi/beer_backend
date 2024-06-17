@@ -4,13 +4,16 @@ import com.zipbeer.beerbackend.dto.game.BalanceTopic;
 import com.zipbeer.beerbackend.dto.game.GameMessage;
 import com.zipbeer.beerbackend.dto.game.GameState;
 import com.zipbeer.beerbackend.dto.game.LiarTopic;
+import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 public class GameController {
@@ -22,6 +25,13 @@ public class GameController {
 
     public GameController(SimpMessagingTemplate messagingTemplate) {
         this.messagingTemplate = messagingTemplate;
+    }
+
+    @MessageMapping("/clearCanvas/{roomNo}")
+    @SendTo("/topic/game/{roomNo}/clearCanvas")
+    public void clearCanvas(@DestinationVariable String roomNo) {
+        // 클리어 메시지를 브로드캐스트합니다.
+        messagingTemplate.convertAndSend("/topic/game/" + roomNo + "/clearCanvas", new GameMessage("clear", ""));
     }
 
     @MessageMapping("/start/{roomNo}")
@@ -252,6 +262,91 @@ public class GameController {
         messagingTemplate.convertAndSend("/topic/game/" + roomNo + "/select", gameMessage);
     }
 
+    @MessageMapping("/startChosungGame/{roomNo}")
+    @SendTo("/topic/game/{roomNo}")
+    public GameState startChosungGame(@DestinationVariable String roomNo, GameMessage gameMessage) {
+        GameState gameState = gameRooms.get(roomNo);
+        if (gameState == null) {
+            gameState = new GameState(gameMessage.getPlayers());
+            gameRooms.put(roomNo, gameState);
+        } else {
+            gameState.reset();
+            usedTopicsMap.remove(roomNo);
+        }
+        gameState.getGuessedWords().clear(); // guessedWords 초기화
+        gameState.setCurrentTurn(gameMessage.getPlayers().get(random.nextInt(gameMessage.getPlayers().size())));
+        gameState.setTopic(generateChosung());
+        return gameState;
+    }
+
+    @MessageMapping("/guessChosung/{roomNo}")
+    @SendTo("/topic/game/{roomNo}")
+    public GameState processGuessChosung(@DestinationVariable String roomNo, GameMessage gameMessage) {
+        GameState gameState = gameRooms.get(roomNo);
+        String guess = gameMessage.getGuess();
+        if (gameState != null && !gameState.isWordGuessed(guess)) {
+            gameState.addGuessedWord(guess);
+            gameState.getLastCorrectPlayers().add(gameMessage.getPlayer());
+
+            if (gameState.getLastCorrectPlayers().size() == gameState.getPlayers().size()) {
+                String lastPlayer = gameState.getLastCorrectPlayers().get(gameState.getLastCorrectPlayers().size() - 1);
+                gameState.updateScore(lastPlayer, -1);
+
+                if (gameState.getScores().get(lastPlayer) <= -5) {
+                    gameState.setLoser(lastPlayer);
+                    gameState.endGame();
+                    gameState.resetScores(); // 점수 초기화 추가
+                    gameState.setLoser(null); // 패배자 초기화
+                    messagingTemplate.convertAndSend("/topic/game/" + roomNo, gameState);
+                } else {
+                    gameState.setTopic(generateChosung());
+                    gameState.setCurrentTurn(gameState.getPlayers().get(random.nextInt(gameState.getPlayers().size())));
+                    gameState.getLastCorrectPlayers().clear();
+                    gameState.getGuessedWords().clear(); // guessedWords 초기화
+                }
+                messagingTemplate.convertAndSend("/topic/game/" + roomNo + "/minusScore", lastPlayer);
+            }
+
+            // Correct message with the guessed word
+            messagingTemplate.convertAndSend("/topic/game/" + roomNo + "/correct", gameMessage.getPlayer() + "님이 '" + guess + "' 단어로 통과했습니다.");
+            messagingTemplate.convertAndSend("/topic/game/" + roomNo, gameState);
+        }
+        return gameState;
+    }
+
+    @MessageMapping("/timeoutChosung/{roomNo}")
+    @SendTo("/topic/game/{roomNo}/timeout")
+    public void handleTimeoutChosung(@DestinationVariable String roomNo) {
+        GameState gameState = gameRooms.get(roomNo);
+        if (gameState != null) {
+            List<String> playersNotGuessed = new ArrayList<>(gameState.getPlayers());
+            playersNotGuessed.removeAll(gameState.getLastCorrectPlayers());
+            playersNotGuessed.forEach(player -> gameState.updateScore(player, -1));
+            gameState.getLastCorrectPlayers().clear();
+
+            messagingTemplate.convertAndSend("/topic/game/" + roomNo + "/timeout", playersNotGuessed);
+            if (gameState.getPlayers().stream().anyMatch(player -> gameState.getScores().get(player) <= -5)) {
+                String losingPlayers = gameState.getPlayers().stream()
+                        .filter(player -> gameState.getScores().get(player) <= -5)
+                        .collect(Collectors.joining(", "));
+                gameState.setLoser(losingPlayers);
+                gameState.endGame();
+                gameState.resetScores(); // 점수 초기화j
+                messagingTemplate.convertAndSend("/topic/game/" + roomNo, gameState);
+            } else {
+                gameState.setTopic(generateChosung());
+                gameState.setCurrentTurn(gameState.getPlayers().get(random.nextInt(gameState.getPlayers().size())));
+                messagingTemplate.convertAndSend("/topic/game/" + roomNo, gameState);
+            }
+        }
+    }
+
+    private String generateChosung() {
+        String[] chosung = {"ㄱ", "ㄴ", "ㄷ", "ㄹ", "ㅁ", "ㅂ", "ㅅ", "ㅇ", "ㅈ", "ㅊ", "ㅋ", "ㅌ", "ㅍ", "ㅎ"};
+        return chosung[random.nextInt(chosung.length)] + chosung[random.nextInt(chosung.length)];
+    }
+
+
     private String selectNextTurn(GameState gameState, String previousTurn) {
         List<String> players = gameState.getPlayers();
         String nextTurn = players.get(random.nextInt(players.size()));
@@ -261,6 +356,7 @@ public class GameController {
         gameState.setPreviousTurn(nextTurn); // 이전 출제자 업데이트
         return nextTurn;
     }
+
 
     private LiarTopic generateLiarTopic(String roomNo){
         LiarTopic[] liarGameTopics = {new LiarTopic("장소","바다"),new LiarTopic("장소","도서관"),new LiarTopic("장소","영화관"), new LiarTopic("장소","놀이공원"), new LiarTopic("장소","카페"), new LiarTopic("장소","학교"),
@@ -273,8 +369,9 @@ public class GameController {
     }
     private String generateTopic(String gameType, String roomNo) {
         String[] catchMindTopics = {"원숭이", "기린", "사과", "김", "배", "수박", "참외", "제비", "소방차", "캐리어", "비","돼지","사슴","키보드","사건","경찰","댄서","고드름","케이크","마늘","나비","잠자리"};
-        String[] characterTopics = {"김세정", "설현", "수지", "아이유", "윤소희", "조이", "진세연", "채수빈", "카리나", "크리스탈", "혜리","고마츠나나","고윤정","김태리","다현","로제","류준열","박서준","사쿠라","신민아","아이린","안유진","윤아","은하","이진욱","장원영","전지현","차은우","카즈하","한지민"};String[] shoutInSilenceTopics = {"원숭이", "기린", "사과", "김", "배", "수박", "참외", "제비", "소방차", "캐리어", "비", "돼지", "사슴", "키보드", "사건", "경찰", "댄서", "고드름", "케이크", "마늘", "나비", "잠자리"};
-//        String[] liarGameTopics = {"해변", "도서관", "영화관", "공원", "놀이공원", "카페", "서점", "박물관", "식당", "학교"};
+        String[] characterTopics = {"김세정", "설현", "수지", "아이유", "윤소희", "조이", "진세연", "채수빈", "카리나", "크리스탈", "혜리","고마츠나나","고윤정","김태리","다현","로제","류준열","박서준","사쿠라","신민아","아이린","안유진","윤아","은하","이진욱","장원영","전지현","차은우","카즈하","한지민"};
+        String[] shoutInSilenceTopics = {"원숭이", "코끼리", "펭귄", "고양이", "강아지", "토끼", "기린", "수영", "농구", "오토바이", "비행기", "가위", "겨울왕국", "마라톤", "매트릭스", "비", "돼지","댄서","낚시","헐크","라면","타이타닉"};
+//        String[] shoutInSilenceTopics = {"해변", "도서관", "영화관", "공원", "놀이공원", "카페", "서점", "박물관", "식당", "학교"};
 
         String[] topics;
 
