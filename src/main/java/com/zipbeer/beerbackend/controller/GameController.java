@@ -469,6 +469,7 @@ public class GameController {
         gameState.setBalanceTopic(balanceTopic);  // GameState에 BalanceTopic 설정
         gameState.setChoices(balanceTopic.getChoice0(), balanceTopic.getChoice1());
         gameState.setCurrentRound(1);  // 첫 번째 라운드 시작
+        gameState.setTotalRounds(3);
         gameRooms.put(roomNo, gameState);
         messagingTemplate.convertAndSend("/topic/game/" + roomNo, gameState);
         System.out.println(">>> START BALANCE GAME: " + gameState);  // 로그 추가
@@ -493,8 +494,7 @@ public class GameController {
     @SendTo("/topic/game/{roomNo}")
     public GameState endRoundBalanceGame(@DestinationVariable String roomNo) {
         GameState gameState = gameRooms.get(roomNo);
-        if (gameState != null) {
-            gameState.setCompletedPlayers(new ArrayList<>());  // 완료된 플레이어 목록 초기화
+        if (gameState != null) {// 완료된 플레이어 목록 초기화
             if (gameState.getCurrentRound() >= gameState.getTotalRounds()) {
                 gameState.endGame();
             } else {
@@ -512,18 +512,6 @@ public class GameController {
         return gameState;
     }
 
-    @MessageMapping("/updateGameState/{roomNo}")
-    public void updateGameState(@DestinationVariable String roomNo, GameMessage gameMessage) {
-        GameState gameState = gameRooms.get(roomNo);
-        gameState.setCompletedPlayers(gameMessage.getCompletedPlayers());
-
-        if (gameState.getCompletedPlayers().size() == gameState.getPlayers().size()) {
-            endRoundBalanceGame(roomNo);
-        } else {
-            messagingTemplate.convertAndSend("/topic/game/" + roomNo, gameState);
-        }
-        System.out.println(">>> UPDATE GAME STATE: " + gameState);  // 로그 추가
-    }
     private BalanceTopic generateBalanceTopic(String roomNo) {
         BalanceTopic[] balanceTopics = {
                 new BalanceTopic("카레맛 똥", "똥맛 카레"),
