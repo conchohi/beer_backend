@@ -41,6 +41,8 @@ public class ParticipantService {
         if(room.getParticipantCount() >= room.getMaximumUser()){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message","인원이 가득찼습니다."));
         }
+        //DB에 EXIT 적용 안됐을 경우 기존 방 삭제
+        participantRepository.deleteByUser(user);
 
         ParticipantEntity participant = ParticipantEntity.builder()
                 .user(user)
