@@ -27,7 +27,7 @@ public class GameState {
     private LiarTopic liarTopic; // 라이어의 주제
     private String bomb; // 폭탄
     private Map<String, Integer> votes = new HashMap<>(); // 플레이어별 투표 수
-    private int timeLeft; // 남은 시간 (초)
+    private long timeLeft; // 남은 시간 (초)
     private List<String> moves = new ArrayList<>(); // 이동 기록
     private String losingPlayer = ""; // 패배한 플레이어
     private List<String> guessedWords = new ArrayList<>(); // 추측한 단어 목록
@@ -39,7 +39,8 @@ public class GameState {
     private String[] choices = new String[2]; // 선택지 배열 초기화
     private List<String> completedPlayers = new ArrayList<>(); // 완료된 플레이어 목록 추가
     private List<String> balanceGameVotes = new ArrayList<>();  // 밸런스 게임용 votes 목록
-  
+    private BalanceTopic balanceTopic;
+
     // 생성자: 플레이어 목록을 받아 초기화
     public GameState(List<String> players) {
         this.players = players;
@@ -163,6 +164,7 @@ public class GameState {
             }
         }
         return losingPlayers;
+    }
 
     public void setChoices(String choice0, String choice1) {
         this.choices[0] = choice0;
@@ -170,3 +172,4 @@ public class GameState {
 
     }
 }
+

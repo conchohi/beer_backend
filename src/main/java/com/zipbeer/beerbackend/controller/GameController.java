@@ -4,13 +4,11 @@ import com.zipbeer.beerbackend.dto.game.BalanceTopic;
 import com.zipbeer.beerbackend.dto.game.GameMessage;
 import com.zipbeer.beerbackend.dto.game.GameState;
 import com.zipbeer.beerbackend.dto.game.LiarTopic;
-import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -307,10 +305,13 @@ public class GameController {
         if (gameState == null) {
             gameState = new GameState(gameMessage.getPlayers());
             gameRooms.put(roomNo, gameState);
+        } else if(gameState.getCurrentGame().equals("chosung")) {
+            return gameState;
         } else {
             gameState.reset();
             usedTopicsMap.remove(roomNo);
         }
+        gameState.setCurrentGame("chosung");
         gameState.getGuessedWords().clear(); // guessedWords 초기화
         gameState.setCurrentTurn(gameMessage.getPlayers().get(random.nextInt(gameMessage.getPlayers().size())));
         gameState.setTopic(generateChosung());
@@ -441,6 +442,7 @@ public class GameController {
     @SendTo("/topic/game/{roomNo}")
     public GameState startBaskinRobbins31Game(@DestinationVariable String roomNo, GameMessage gameMessage) {
         GameState gameState = new GameState(gameMessage.getPlayers());
+        gameState.setCurrentGame("baskin");
         gameRooms.put(roomNo, gameState);
         return gameState;
     }
@@ -457,6 +459,7 @@ public class GameController {
     public GameState startBalanceGame(@DestinationVariable String roomNo, GameMessage gameMessage) {
         GameState gameState = new GameState(gameMessage.getPlayers());
         BalanceTopic balanceTopic = generateBalanceTopic(roomNo);  // 생성된 BalanceTopic 객체
+        gameState.setCurrentGame("balance");
         gameState.setBalanceTopic(balanceTopic);  // GameState에 BalanceTopic 설정
         gameState.setChoices(balanceTopic.getChoice0(), balanceTopic.getChoice1());
         gameState.setCurrentRound(1);  // 첫 번째 라운드 시작
