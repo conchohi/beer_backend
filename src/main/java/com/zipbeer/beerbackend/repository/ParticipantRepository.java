@@ -14,5 +14,9 @@ public interface ParticipantRepository extends JpaRepository<ParticipantEntity, 
     @Query("delete from ParticipantEntity p where p.user.userId = :userId and p.room.roomNo = :roomNo")
     void deleteByUserUserIdAndRoomRoomNo(@Param("userId") String userId, @Param("roomNo")Long roomNo);
 
+    @Modifying
+    @Query("delete from ParticipantEntity p where p.user=:user")
+    void deleteByUser(@Param("user") UserEntity user);
+
     List<ParticipantEntity> findByUser(UserEntity user);
 }
