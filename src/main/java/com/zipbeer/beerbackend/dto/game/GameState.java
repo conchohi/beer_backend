@@ -23,11 +23,19 @@ public class GameState {
     private String message;
     private String liar;
     private LiarTopic liarTopic;
+    private BalanceTopic balanceTopic;
     private String bomb;
     private Map<String, Integer> votes = new HashMap<>();
     private int timeLeft; // 타이머 필드 추가
     private List<String> moves = new ArrayList<>();
     private String losingPlayer = "";
+    private int currentRound = 0; // 현재 라운드
+    private int totalRounds = 5; // 총 라운드 수
+    private int choice0 = 0; // 첫 번째 선택지의 투표 수
+    private int choice1 = 0; // 두 번째 선택지의 투표 수
+    private String[] choices = new String[2]; // 선택지 배열 초기화
+    private List<String> completedPlayers = new ArrayList<>(); // 완료된 플레이어 목록 추가
+    private List<String> balanceGameVotes = new ArrayList<>();  // 밸런스 게임용 votes 목록
 
     public GameState(List<String> players) {
         this.players = players;
@@ -41,6 +49,12 @@ public class GameState {
             this.currentTurn = null;
         }
         this.timeLeft = 180; // 초기 타이머 설정
+        this.currentRound = 1; // 게임 시작 시 첫 라운드 설정
+        this.totalRounds = 5; // 총 라운드 수
+        this.choice0 = 0; // 첫 번째 선택지의 초기 투표 수
+        this.choice1 = 0; // 두 번째 선택지의 초기 투표 수
+        this.choices = new String[2]; // 선택지 배열 초기화
+
     }
 
     public void updateScore(String player) {
@@ -49,6 +63,10 @@ public class GameState {
 
     public void addVote(String player) {
         votes.put(player, votes.getOrDefault(player, 0) + 1);
+    }
+
+    public void addBalanceGameVote(String player) {
+        balanceGameVotes.add(player);
     }
 
     public String getMostVoted() {
@@ -77,7 +95,12 @@ public class GameState {
         } else {
             currentTurn = null;
         }
-
+        choices = new String[2];
+        this.currentRound = 1; // 라운드 초기화
+        this.choice0 = 0; // 첫 번째 선택지의 초기화
+        this.choice1 = 0; // 두 번째 선택지의 초기화
+        completedPlayers.clear(); // 완료된 플레이어 목록 초기화
+        balanceGameVotes.clear(); // 밸런스 게임용 votes 초기화
     }
 
     public void resetScores() {
@@ -99,5 +122,10 @@ public class GameState {
             int currentIndex = players.indexOf(currentTurn);
             currentTurn = players.get((currentIndex + 1) % players.size());
         }
+    }
+
+    public void setChoices(String choice0, String choice1) {
+        this.choices[0] = choice0;
+        this.choices[1] = choice1;
     }
 }

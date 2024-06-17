@@ -1,5 +1,6 @@
 package com.zipbeer.beerbackend.controller;
 
+import com.zipbeer.beerbackend.dto.game.BalanceTopic;
 import com.zipbeer.beerbackend.dto.game.GameMessage;
 import com.zipbeer.beerbackend.dto.game.GameState;
 import com.zipbeer.beerbackend.dto.game.LiarTopic;
@@ -316,5 +317,82 @@ public class GameController {
             gameState.processMove(gameMessage);
             messagingTemplate.convertAndSend("/topic/game/" + roomNo, gameState);
         }
+    }
+    @MessageMapping("/startBalanceGame/{roomNo}")
+    @SendTo("/topic/game/{roomNo}")
+    public GameState startBalanceGame(@DestinationVariable String roomNo, GameMessage gameMessage) {
+        GameState gameState = new GameState(gameMessage.getPlayers());
+        BalanceTopic balanceTopic = generateBalanceTopic(roomNo);  // 생성된 BalanceTopic 객체
+        gameState.setBalanceTopic(balanceTopic);  // GameState에 BalanceTopic 설정
+        gameState.setChoices(balanceTopic.getChoice0(), balanceTopic.getChoice1());
+        gameState.setCurrentRound(1);  // 첫 번째 라운드 시작
+        gameRooms.put(roomNo, gameState);
+        messagingTemplate.convertAndSend("/topic/game/" + roomNo, gameState);
+        System.out.println(">>> START BALANCE GAME: " + gameState);  // 로그 추가
+        return gameState;
+    }
+
+    @MessageMapping("/voteBalanceGame/{roomNo}")
+    public void voteBalanceGame(@DestinationVariable String roomNo, GameMessage gameMessage) {
+        GameState gameState = gameRooms.get(roomNo);
+        if ("choice0".equals(gameMessage.getVoteFor())) {
+            gameState.setChoice0(gameState.getChoice0() + 1);
+        } else if ("choice1".equals(gameMessage.getVoteFor())) {
+            gameState.setChoice1(gameState.getChoice1() + 1);
+        }
+        gameState.addBalanceGameVote(gameMessage.getPlayer());  // 투표한 플레이어 추가
+
+        messagingTemplate.convertAndSend("/topic/game/" + roomNo, gameState);
+        System.out.println(">>> VOTE BALANCE GAME: " + gameState);  // 로그 추가
+    }
+
+    @MessageMapping("/endRoundBalanceGame/{roomNo}")
+    @SendTo("/topic/game/{roomNo}")
+    public GameState endRoundBalanceGame(@DestinationVariable String roomNo) {
+        GameState gameState = gameRooms.get(roomNo);
+        if (gameState != null) {
+            gameState.setCompletedPlayers(new ArrayList<>());  // 완료된 플레이어 목록 초기화
+            if (gameState.getCurrentRound() >= gameState.getTotalRounds()) {
+                gameState.endGame();
+            } else {
+                gameState.setCurrentRound(gameState.getCurrentRound() + 1);
+                gameState.setChoice0(0);
+                gameState.setChoice1(0);
+                gameState.getBalanceGameVotes().clear();  // 투표 초기화
+                BalanceTopic balanceTopic = generateBalanceTopic(roomNo);  // 새로운 BalanceTopic 객체 생성
+                gameState.setChoices(balanceTopic.getChoice0(), balanceTopic.getChoice1());
+                gameState.setBalanceTopic(balanceTopic);
+            }
+            messagingTemplate.convertAndSend("/topic/game/" + roomNo, gameState);
+            System.out.println(">>> END ROUND BALANCE GAME: " + gameState);  // 로그 추가
+        }
+        return gameState;
+    }
+
+    @MessageMapping("/updateGameState/{roomNo}")
+    public void updateGameState(@DestinationVariable String roomNo, GameMessage gameMessage) {
+        GameState gameState = gameRooms.get(roomNo);
+        gameState.setCompletedPlayers(gameMessage.getCompletedPlayers());
+
+        if (gameState.getCompletedPlayers().size() == gameState.getPlayers().size()) {
+            endRoundBalanceGame(roomNo);
+        } else {
+            messagingTemplate.convertAndSend("/topic/game/" + roomNo, gameState);
+        }
+        System.out.println(">>> UPDATE GAME STATE: " + gameState);  // 로그 추가
+    }
+    private BalanceTopic generateBalanceTopic(String roomNo) {
+        BalanceTopic[] balanceTopics = {
+                new BalanceTopic("카레맛 똥", "똥맛 카레"),
+                new BalanceTopic("전공으로 완전 성공하기", "다양한 분야에서 활발히 활동하기"),
+                new BalanceTopic("애인의 친구가 내 전애인", "내 전애인이 친구의 애인"),
+                new BalanceTopic("시간을 멈추기", "투명해지기"),
+                new BalanceTopic("100억 받고 해외에서만 살기", "60억상당의 부동산 받고 한국에서만 살기"),
+                new BalanceTopic("과거를 보고 오기", "미래를 보고 오기"),
+                new BalanceTopic("자가 치유", "순간 이동"),
+                new BalanceTopic("무한한 돈", "무한한 시간")
+        };
+
+        return balanceTopics[random.nextInt(balanceTopics.length)];
     }
 }

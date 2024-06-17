@@ -1,6 +1,7 @@
 package com.zipbeer.beerbackend.controller;
 
 import com.zipbeer.beerbackend.dto.ChatMessage;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
