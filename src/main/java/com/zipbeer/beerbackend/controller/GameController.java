@@ -538,6 +538,10 @@ public class GameController {
                 new BalanceTopic("100억 받고 해외에서만 살기", "60억상당의 부동산 받고 한국에서만 살기"),
                 new BalanceTopic("과거를 보고 오기", "미래를 보고 오기"),
                 new BalanceTopic("자가 치유", "순간 이동"),
+                new BalanceTopic("빚이 30억인 이상형", "나만 보는 부자인 비호감"),
+                new BalanceTopic("잠수 이별", "환승 이별"),
+                new BalanceTopic("절친에게 10억 주기", "절친 잃고 100억 받기"),
+                new BalanceTopic("여사친 남사친과 짝수 6박7일 여행하는 애인", "전 애인과 첫차까지 술 마신 애인"),
                 new BalanceTopic("무한한 돈", "무한한 시간")
         };
 
