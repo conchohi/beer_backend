@@ -171,5 +171,6 @@ public class GameState {
         this.choices[1] = choice1;
 
     }
+
 }
 
