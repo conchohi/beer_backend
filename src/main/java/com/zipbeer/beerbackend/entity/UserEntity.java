@@ -13,7 +13,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString(exclude = {"room", "followers", "followings"})
+@ToString(exclude = {"room", "followers", "followings", "boards", "comments", "reportsFiled", "reportsReceived"})
 @Entity
 @Table(name = "user_tbl")
 public class UserEntity {
@@ -34,6 +34,26 @@ public class UserEntity {
     private LocalDate createDate;
 
     @JsonIgnore
+    @OneToMany(mappedBy = "writer", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<BoardEntity> boards;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "writer", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<CommentEntity> comments;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "reporter", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<ReportEntity> reportsFiled;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "reportedUser", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<ReportEntity> reportsReceived;
+
+    @JsonIgnore
+    @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private ParticipantEntity room;
+
+    @JsonIgnore
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<FollowEntity> followers;
 
@@ -42,14 +62,10 @@ public class UserEntity {
     private List<FollowEntity> followings;
 
     @JsonIgnore
-    @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
-    private ParticipantEntity room;
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<FriendEntity> friends;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "friend", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "friend", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<FriendEntity> requestedFriends;
 }

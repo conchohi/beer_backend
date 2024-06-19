@@ -7,6 +7,7 @@ import com.zipbeer.beerbackend.util.FileUtil;
 import com.zipbeer.beerbackend.provider.JWTProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -81,5 +82,32 @@ public class UserController {
     public ResponseEntity<List<UserDto>> searchUsers(@RequestParam String nickname) {
         List<UserDto> users = userService.searchUsersByNickname(nickname);
         return ResponseEntity.ok(users);
+    }
+
+
+    // 패스워드 변경
+    @PostMapping("/pwchange")
+    public ResponseEntity<?> passwordChange(@RequestBody Map<String, String> request) {
+        String userId = SecurityContextHolder.getContext().getAuthentication().getName();
+        String currentPassword = request.get("currentPassword");
+        String newPassword = request.get("newPassword");
+
+        boolean isChanged = userService.changePassword(userId, currentPassword, newPassword);
+
+        if (isChanged) {
+            return ResponseEntity.ok(Map.of("message", "Password changed successfully."));
+        } else {
+            return ResponseEntity.status(400).body(Map.of("message", "Password change failed."));
+        }
+    }
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> deleteUser() {
+        String currentUserId = SecurityContextHolder.getContext().getAuthentication().getName();
+        boolean isDeleted = userService.deleteUser(currentUserId);
+        if (isDeleted) {
+            return ResponseEntity.ok(Map.of("message", "User deleted successfully."));
+        } else {
+            return ResponseEntity.status(500).body(Map.of("message", "User deletion failed."));
+        }
     }
 }
