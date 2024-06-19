@@ -15,8 +15,7 @@ public class EmailService {
 
     @Autowired
     private EmailProvider emailProvider;
-    @Autowired
-    private JavaMailSender emailSender;
+
 
     private Map<String, String> emailVerificationMap = new HashMap<>();
 
