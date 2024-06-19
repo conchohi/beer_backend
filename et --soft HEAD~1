@@ -1,0 +1,594 @@
+[33mcommit 08dff4a774328cb7667ba9211498a384d03f6fbc[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mkys7[m[33m)[m
+Author: YangShin <g56261822@gmail.com>
+Date:   Wed Jun 19 09:41:23 2024 +0900
+
+    google
+
+[33mcommit bc1a212868ab10f416fa99ab0c759f6c1f45ac78[m[33m ([m[1;31morigin/develop[m[33m)[m
+Merge: 11b7f68 6d33239
+Author: concho <156064008+conchohi@users.noreply.github.com>
+Date:   Mon Jun 17 16:37:32 2024 +0900
+
+    Merge pull request #57 from conchohi/kys7
+    
+    kys
+
+[33mcommit 6d33239b6626e1fe0be571413dec0d50963e0cfc[m
+Author: YangShin <g56261822@gmail.com>
+Date:   Mon Jun 17 16:16:31 2024 +0900
+
+    kys
+
+[33mcommit 11b7f68039f32aa12b9f46ae0263479fd463f50f[m
+Author: conchohi <lar3242@gmail.com>
+Date:   Mon Jun 17 15:35:38 2024 +0900
+
+    게임컨트롤러 수정
+
+[33mcommit 03cb9db14242f88a2dcfdd78384f81bfc2079808[m
+Author: conchohi <lar3242@gmail.com>
+Date:   Mon Jun 17 11:59:25 2024 +0900
+
+    게임 시작마다 플레이어 초기화
+
+[33mcommit e752ea878ce499a64ee169be739dcf16189efa9f[m
+Author: conchohi <lar3242@gmail.com>
+Date:   Mon Jun 17 11:51:07 2024 +0900
+
+    폭탄게임 5초에서 30초 사이로 수정
+
+[33mcommit 2c1585244006feb5e029d472ae1b9e745ade00fa[m
+Author: conchohi <lar3242@gmail.com>
+Date:   Mon Jun 17 10:25:36 2024 +0900
+
+    폭탄게임 20 ~ 60초
+
+[33mcommit 97be453e029f20b05a7f300a7b3c90141ea95f0e[m
+Author: conchohi <lar3242@gmail.com>
+Date:   Mon Jun 17 10:20:14 2024 +0900
+
+    merge 오류 수정
+
+[33mcommit 40fbf9a2da9c956eb82fc870754e10684bac8b66[m
+Merge: 40e1f26 c8278e5
+Author: concho <156064008+conchohi@users.noreply.github.com>
+Date:   Mon Jun 17 10:12:18 2024 +0900
+
+    Merge pull request #55 from conchohi/lsh
+    
+    Lsh
+
+[33mcommit c8278e5cf4965a7390dc168b3ae82842eb098d02[m
+Merge: 3620caf 40e1f26
+Author: concho <156064008+conchohi@users.noreply.github.com>
+Date:   Mon Jun 17 10:12:13 2024 +0900
+
+    Merge branch 'develop' into lsh
+
+[33mcommit 40e1f2607652984ddf6c472bb691884fa9c394db[m
+Merge: 8c0e8c9 4929a20
+Author: concho <156064008+conchohi@users.noreply.github.com>
+Date:   Mon Jun 17 10:10:57 2024 +0900
+
+    Merge pull request #54 from conchohi/kys7
+    
+    api
+
+[33mcommit 4929a20b8950f8c0bf8439e5c77fcf8d288c2807[m
+Merge: 981c493 8c0e8c9
+Author: concho <156064008+conchohi@users.noreply.github.com>
+Date:   Mon Jun 17 10:10:52 2024 +0900
+
+    Merge branch 'develop' into kys7
+
+[33mcommit 8c0e8c9d06796beccfbc923f65139ac5b467a4b1[m
+Merge: 2ffdf4a cac1bc2
+Author: concho <156064008+conchohi@users.noreply.github.com>
+Date:   Mon Jun 17 10:08:20 2024 +0900
+
+    Merge pull request #53 from conchohi/jiyeon
+    
+    game controller, game state, game message
+
+[33mcommit 3620caffefe34d4a6689422166bd8454f4bd606c[m
+Author: conchohi <lar3242@gmail.com>
+Date:   Mon Jun 17 09:51:08 2024 +0900
+
+    게임마다 현재 게임 적용
+
+[33mcommit 07253f5a1d7e01afbcb50053bb93148302a4605d[m
+Author: conchohi <lar3242@gmail.com>
+Date:   Mon Jun 17 09:50:58 2024 +0900
+
+    방 참가 시 이전 방 참여 삭제
+
+[33mcommit cac1bc210a8fc1666610dace92f9e82031d9c3f7[m
+Author: yoo yoo <yyaong425@google.com>
+Date:   Mon Jun 17 09:36:52 2024 +0900
+
+    balancegamehelp
+
+[33mcommit 981c493158087be01cf569d9ddbbf8656422d6cc[m
+Author: YangShin <g56261822@gmail.com>
+Date:   Mon Jun 17 09:28:58 2024 +0900
+
+    api
+
+[33mcommit 6020f439a0c72a95b000897826ae26a5a3ee6aa2[m
+Author: conchohi <lar3242@gmail.com>
+Date:   Sat Jun 15 23:40:36 2024 +0900
+
+    현재 게임 진행중일 때 동일한 게임 가져오기
+
+[33mcommit bf1d84749f9ff1f5f916aff31f4c54c6ba47f8ae[m
+Author: conchohi <lar3242@gmail.com>
+Date:   Sat Jun 15 23:40:20 2024 +0900
+
+    수정 시 이미지 뜨도록
+
+[33mcommit f7f3fc8ffc885f695a5f3b9de8037aaef7df83ab[m
+Merge: d478601 2ffdf4a
+Author: yoo yoo <yyaong425@google.com>
+Date:   Fri Jun 14 17:45:21 2024 +0900
+
+    Merge branch 'develop' of https://github.com/conchohi/beer-backend into jiyeon
+    pullwanryo
+
+[33mcommit 2ffdf4a52ef2e05c64d90255cab7e61a422f7ec4[m[33m ([m[1;32mdevelop[m[33m)[m
+Author: conchohi <lar3242@gmail.com>
+Date:   Fri Jun 14 17:42:12 2024 +0900
+
+    폭탄, 라이어 게임 수정
+
+[33mcommit d4786013d96ea8f7c08edfc255500a238fa1e5f6[m
+Merge: 232aa79 d51c71c
+Author: yoo yoo <yyaong425@google.com>
+Date:   Fri Jun 14 17:10:40 2024 +0900
+
+    Merge branch 'develop' of https://github.com/conchohi/beer-backend into jiyeon
+    geeez
+
+[33mcommit d51c71cc75ac71ec2edb856a4def182cf287cb8b[m
+Author: conchohi <lar3242@gmail.com>
+Date:   Fri Jun 14 17:10:11 2024 +0900
+
+    게임 컨트롤러 수정, deploy 수정
+
+[33mcommit 232aa79067fb862922a7309751dc3cc5a6d1a1ce[m
+Merge: bfa0249 7ea3a64
+Author: yoo yoo <yyaong425@google.com>
+Date:   Fri Jun 14 16:47:07 2024 +0900
+
+    merging
+
+[33mcommit 7ea3a640ea4ba846d664cd04c7339424d18329a7[m
+Merge: ddfcff9 8be2b94
+Author: concho <156064008+conchohi@users.noreply.github.com>
+Date:   Fri Jun 14 16:41:40 2024 +0900
+
+    Merge pull request #49 from conchohi/kys6
+    
+    yy1
+
+[33mcommit 8be2b94592a5e811ffded230a5bced114f82b55e[m
+Author: YangShin <g56261822@gmail.com>
+Date:   Fri Jun 14 16:39:10 2024 +0900
+
+    yy1
+
+[33mcommit ddfcff966604da733ab093233b6b124a9de924e9[m
+Merge: 2a84afe 462c4bd
+Author: concho <156064008+conchohi@users.noreply.github.com>
+Date:   Fri Jun 14 16:30:01 2024 +0900
+
+    Merge pull request #48 from conchohi/lsh
+    
+    라이어게임, 폭탄게임 추가
+
+[33mcommit 2a84afe8cf97b3984ce7dd59643c4d83078a0fb0[m
+Merge: 42f130b ad84a01
+Author: concho <156064008+conchohi@users.noreply.github.com>
+Date:   Fri Jun 14 16:29:41 2024 +0900
+
+    Merge pull request #47 from conchohi/choi
+    
+    Choi
+
+[33mcommit 462c4bd2878a5df23c4ec751d876a7997bdd9831[m
+Author: conchohi <lar3242@gmail.com>
+Date:   Fri Jun 14 16:28:23 2024 +0900
+
+    라이어게임, 폭탄게임 추가
+
+[33mcommit ad84a016e8cc9592a43db654db25fcd77ea211e2[m
+Author: csr4180 <csr4180@gmail.com>
+Date:   Fri Jun 14 16:27:58 2024 +0900
+
+    베라31 다시 살렷어요  살려줘요
+
+[33mcommit bfa0249520a26758d795129f1aca4cd705980d31[m
+Merge: d03a030 42f130b
+Author: yoo yoo <yyaong425@google.com>
+Date:   Fri Jun 14 12:47:01 2024 +0900
+
+    Merge branch 'develop' of https://github.com/conchohi/beer-backend into jiyeon
+    good commit for new pull
+
+[33mcommit d03a030005402d29b65c0a707ef997170f7c51f7[m
+Merge: dc6d4c8 e745cdb
+Author: yoo yoo <yyaong425@google.com>
+Date:   Fri Jun 14 12:25:30 2024 +0900
+
+    forpull
+
+[33mcommit 42f130b1ed54b4ba64a23e860c7140db122e79ce[m
+Author: conchohi <lar3242@gmail.com>
+Date:   Fri Jun 14 12:22:32 2024 +0900
+
+    깃액션 수정
+
+[33mcommit 575155de0b5cfa3830644c5e29fc9ef3315089bf[m
+Author: conchohi <lar3242@gmail.com>
+Date:   Fri Jun 14 12:17:03 2024 +0900
+
+    시간대 설정
+
+[33mcommit d8398e279ea36b886827314833ed05b507fdbc3f[m
+Merge: 77a3c78 c984724
+Author: conchohi <lar3242@gmail.com>
+Date:   Fri Jun 14 11:23:00 2024 +0900
+
+    Merge branch 'develop' of https://github.com/conchohi/beer-backend into develop
+
+[33mcommit 77a3c78db273b10a6c968ddc77a4fdbd1fad88bc[m
+Author: conchohi <lar3242@gmail.com>
+Date:   Fri Jun 14 11:22:36 2024 +0900
+
+    시간대 설정
+
+[33mcommit c984724d3e841dbb7f21229a176a1d00e1360ffa[m
+Merge: e745cdb f34c0d4
+Author: concho <156064008+conchohi@users.noreply.github.com>
+Date:   Fri Jun 14 11:20:45 2024 +0900
+
+    Merge pull request #45 from conchohi/kys5
+    
+    game
+
+[33mcommit f34c0d4a47bd6621561f675126e1efd82ec2a5aa[m
+Merge: a892540 e745cdb
+Author: concho <156064008+conchohi@users.noreply.github.com>
+Date:   Fri Jun 14 11:20:39 2024 +0900
+
+    Merge branch 'develop' into kys5
+
+[33mcommit a8925408107507e858da4d94263a56717fee9d26[m
+Author: YangShin <g56261822@gmail.com>
+Date:   Fri Jun 14 10:26:47 2024 +0900
+
+    game
+
+[33mcommit dc6d4c810427b00802d1e806e8d7b41a09823c50[m
+Merge: ac98a2e cc44c98
+Author: yoo yoo <yyaong425@google.com>
+Date:   Fri Jun 14 09:10:38 2024 +0900
+
+    merging
+
+[33mcommit e745cdb867ef666f239f6dd6d14ac727c21fa177[m
+Author: conchohi <lar3242@gmail.com>
+Date:   Thu Jun 13 22:13:47 2024 +0900
+
+    수정 시 이미지 변경
+
+[33mcommit e91695f0fa95b5b4114e20f15de3ed21497560da[m
+Author: conchohi <lar3242@gmail.com>
+Date:   Thu Jun 13 22:11:07 2024 +0900
+
+    불필요한 파일 삭제
+
+[33mcommit eb136d55f9a176d2583b579c7157f1837b01c392[m
+Author: conchohi <lar3242@gmail.com>
+Date:   Thu Jun 13 17:11:51 2024 +0900
+
+    배포 수정
+
+[33mcommit 414afc9a8c854dae3a4c86779e7860c5c4d96489[m
+Author: conchohi <lar3242@gmail.com>
+Date:   Thu Jun 13 16:55:16 2024 +0900
+
+    배포 수정
+
+[33mcommit ac98a2eadbbc627645195b15d6fe9949dc3fc1d1[m
+Author: yoo yoo <yyaong425@google.com>
+Date:   Thu Jun 13 15:37:07 2024 +0900
+
+    for merge
+
+[33mcommit cc44c9894621d0bf9b220812f2c8da9e2f9eda8b[m
+Merge: 9aac773 1bb8122
+Author: concho <156064008+conchohi@users.noreply.github.com>
+Date:   Thu Jun 13 14:27:36 2024 +0900
+
+    Merge pull request #40 from conchohi/kys5
+    
+    ll
+
+[33mcommit 1bb812293397a8d8006cf34ace9d498c20297647[m
+Author: YangShin <g56261822@gmail.com>
+Date:   Thu Jun 13 13:55:14 2024 +0900
+
+    ll
+
+[33mcommit 9aac773a5048770a1c3c444dafc16e5a7d933ba4[m
+Merge: c889c63 a2fb9bb
+Author: concho <156064008+conchohi@users.noreply.github.com>
+Date:   Thu Jun 13 12:14:36 2024 +0900
+
+    Merge pull request #39 from conchohi/choi
+    
+    Choi
+
+[33mcommit a2fb9bb9ba6d707560b6f844ea99a876c178564d[m
+Author: csr4180 <csr4180@gmail.com>
+Date:   Thu Jun 13 12:12:38 2024 +0900
+
+    채팅 다시 돌리기
+
+[33mcommit c889c6315a1fb6692dbdc664e3dae49e6f84b428[m
+Author: conchohi <lar3242@gmail.com>
+Date:   Thu Jun 13 11:09:01 2024 +0900
+
+    friend 관련 수정
+
+[33mcommit 5d5d387d2e1d8a8836780acc0d709d52479f4d92[m
+Merge: 683c557 fbafdb4
+Author: concho <156064008+conchohi@users.noreply.github.com>
+Date:   Thu Jun 13 10:34:03 2024 +0900
+
+    Merge pull request #38 from conchohi/lsh
+    
+    friend 관련 수정
+
+[33mcommit fbafdb4c5269ea1b67fd35b1d1791ab8f9b0f50f[m
+Author: conchohi <lar3242@gmail.com>
+Date:   Thu Jun 13 10:33:29 2024 +0900
+
+    friend 관련 수정
+
+[33mcommit 683c5578493aa0472c4d9cc706b8ba0b160ab497[m
+Merge: a4d6d3d 73d1f7b
+Author: concho <156064008+conchohi@users.noreply.github.com>
+Date:   Wed Jun 12 23:13:52 2024 +0900
+
+    Merge pull request #37 from conchohi/lsh
+    
+    Lsh
+
+[33mcommit a4d6d3da57aa4ee1d18e75202446530ddb655578[m
+Merge: 5a25d33 0e1e7db
+Author: concho <156064008+conchohi@users.noreply.github.com>
+Date:   Wed Jun 12 23:13:41 2024 +0900
+
+    Merge pull request #35 from conchohi/choi
+    
+    베라, 채팅 수정
+
+[33mcommit 73d1f7b6c6f54b1734c357d09e106cda002149dc[m
+Author: conchohi <lar3242@gmail.com>
+Date:   Wed Jun 12 22:58:32 2024 +0900
+
+    게시판 관련, 폴더 정리
+
+[33mcommit 9c6dd74ae10d50bd6217d023971f851ba5ac0dc3[m
+Author: conchohi <lar3242@gmail.com>
+Date:   Wed Jun 12 22:58:10 2024 +0900
+
+    Spring security 정리
+
+[33mcommit 0e1e7db9fea95cc1a3d4c9ea5b79437eeabb3409[m
+Author: csr4180 <csr4180@gmail.com>
+Date:   Wed Jun 12 17:25:58 2024 +0900
+
+    베라, 채팅 수정
+
+[33mcommit 5a25d330080e2b5ee26dde478a6ec8e03a5644ee[m
+Author: conchohi <lar3242@gmail.com>
+Date:   Wed Jun 12 16:03:26 2024 +0900
+
+    개발환경
+
+[33mcommit 4ee8ac70b42d9a921da77e3e83ebb611af3803fc[m
+Author: conchohi <lar3242@gmail.com>
+Date:   Wed Jun 12 15:58:34 2024 +0900
+
+    개발환경
+
+[33mcommit c21e5424952db45e8e5b93beb1c7a56e275ecdb0[m
+Author: conchohi <lar3242@gmail.com>
+Date:   Wed Jun 12 15:52:07 2024 +0900
+
+    필터 url 수정
+
+[33mcommit 18cb329c7254dbc484894a8ecd49ec79f6571fc5[m
+Author: conchohi <lar3242@gmail.com>
+Date:   Wed Jun 12 15:23:07 2024 +0900
+
+    수정, 배포 설정
+
+[33mcommit 78a269d1d7ddea266479ae7db08c837785160158[m
+Author: conchohi <lar3242@gmail.com>
+Date:   Wed Jun 12 11:40:38 2024 +0900
+
+    MERGE 수정
+
+[33mcommit 57d5e22cdd5f04e24fb3e5cde2ff902169eea38d[m
+Merge: 08530c3 a5c7994
+Author: concho <156064008+conchohi@users.noreply.github.com>
+Date:   Wed Jun 12 11:39:08 2024 +0900
+
+    Merge pull request #30 from conchohi/kys3
+    
+    kys22
+
+[33mcommit a5c7994f126daed83232900bfebad1ccbd62ccb0[m
+Merge: bcc0807 08530c3
+Author: concho <156064008+conchohi@users.noreply.github.com>
+Date:   Wed Jun 12 11:39:01 2024 +0900
+
+    Merge branch 'develop' into kys3
+
+[33mcommit bcc0807eca23d88399b2294c62a395efc1d6565f[m
+Author: YangShin <g56261822@gmail.com>
+Date:   Wed Jun 12 11:35:36 2024 +0900
+
+    kys22
+
+[33mcommit 08530c3c26401f9ade7512090afcebb54d0177cc[m
+Author: conchohi <lar3242@gmail.com>
+Date:   Wed Jun 12 11:20:10 2024 +0900
+
+    로그인 필터 수정
+
+[33mcommit 45c186f4b6e4d10d3c00c6f2cbf5cbf4620121df[m
+Merge: 17d0166 0a296a1
+Author: concho <156064008+conchohi@users.noreply.github.com>
+Date:   Wed Jun 12 11:10:36 2024 +0900
+
+    Merge pull request #29 from conchohi/choi
+    
+    Choi
+
+[33mcommit 0a296a1cb4b6075812c8f46eb90f4505feb4a820[m
+Merge: 15505c9 17d0166
+Author: concho <156064008+conchohi@users.noreply.github.com>
+Date:   Wed Jun 12 11:10:30 2024 +0900
+
+    Merge branch 'develop' into choi
+
+[33mcommit 17d01666ed736df632c1a814b833e95baf158cb9[m
+Merge: 0244744 d4a66e2
+Author: concho <156064008+conchohi@users.noreply.github.com>
+Date:   Wed Jun 12 11:09:52 2024 +0900
+
+    Merge pull request #28 from conchohi/jiyeon
+    
+    Jiyeonfollow
+
+[33mcommit 02447448e38a443a07272bbf65c48aa933c3832e[m
+Merge: 6fef39e 533808c
+Author: concho <156064008+conchohi@users.noreply.github.com>
+Date:   Wed Jun 12 11:09:38 2024 +0900
+
+    Merge pull request #27 from conchohi/kys2
+    
+    tt
+
+[33mcommit 15505c9a8e90fd3a989e5de94efda2ea7d8be5dc[m
+Author: csr4180 <csr4180@gmail.com>
+Date:   Wed Jun 12 10:44:55 2024 +0900
+
+    베라
+
+[33mcommit 533808cb1d977ed27a8364e1feeb0cd8e0e597ac[m
+Author: YangShin <g56261822@gmail.com>
+Date:   Wed Jun 12 10:36:48 2024 +0900
+
+    tt
+
+[33mcommit d4a66e29c8dbfb9809032116e822e73a99469a03[m
+Merge: 5c5c0a2 6fef39e
+Author: yoo yoo <yyaong425@google.com>
+Date:   Wed Jun 12 09:44:42 2024 +0900
+
+    followclear
+
+[33mcommit 5c5c0a27b5a1deb7cf74653bc11a9c24a9616d6b[m
+Author: yoo yoo <yyaong425@google.com>
+Date:   Tue Jun 11 20:09:01 2024 +0900
+
+    follow good
+
+[33mcommit 6fef39e782d98cab4e5a9a2ce0d82dcf030c171c[m
+Merge: 3c29a61 c82e012
+Author: concho <156064008+conchohi@users.noreply.github.com>
+Date:   Tue Jun 11 17:23:23 2024 +0900
+
+    Merge pull request #26 from conchohi/choi
+    
+    채팅 db저장 안하는 버전
+
+[33mcommit c82e0123b2c296c70df8fba186687e48c9adeae0[m
+Merge: 67994f7 3c29a61
+Author: concho <156064008+conchohi@users.noreply.github.com>
+Date:   Tue Jun 11 17:23:17 2024 +0900
+
+    Merge branch 'develop' into choi
+
+[33mcommit 67994f798bbe47aac491584f6391ab3fa47bfce8[m
+Author: csr4180 <csr4180@gmail.com>
+Date:   Tue Jun 11 16:41:21 2024 +0900
+
+    채팅 db저장 안하는 버전
+
+[33mcommit ace82af7cbf92996d90e97da8e9a2c0c17fee737[m
+Merge: db84fec 3c29a61
+Author: yoo yoo <yyaong425@google.com>
+Date:   Tue Jun 11 15:29:26 2024 +0900
+
+    Merge branch 'develop' into jiyeon
+
+[33mcommit 3c29a61627b70d93e7614b689707401bd2d32767[m
+Author: conchohi <lar3242@gmail.com>
+Date:   Tue Jun 11 15:26:22 2024 +0900
+
+    닉네임으로 사용자 정보 가져오기
+
+[33mcommit db84fece61fb3b8804835f9f6110b3730e146b1e[m
+Author: yoo yoo <yyaong425@google.com>
+Date:   Tue Jun 11 15:25:07 2024 +0900
+
+    123
+
+[33mcommit 15d7dbe8aea68fa3a865787170f5521e984f10ae[m
+Merge: 16f1827 096a91a
+Author: concho <156064008+conchohi@users.noreply.github.com>
+Date:   Tue Jun 11 15:16:04 2024 +0900
+
+    Merge pull request #24 from conchohi/kys2
+    
+    Kys2
+
+[33mcommit 096a91ab3a4e881b75afdd34690e0fcfc81a7154[m
+Merge: a7cff4c 16f1827
+Author: concho <156064008+conchohi@users.noreply.github.com>
+Date:   Tue Jun 11 15:15:56 2024 +0900
+
+    Merge branch 'develop' into kys2
+
+[33mcommit 16f18275fcfb276e78fd4e89c98323d06dea78c6[m
+Merge: b4e5b15 439cb5f
+Author: concho <156064008+conchohi@users.noreply.github.com>
+Date:   Tue Jun 11 15:08:02 2024 +0900
+
+    Merge pull request #25 from conchohi/lsh
+    
+    Lsh
+
+[33mcommit a7cff4cf9c0f98fd0908492bc7e841f4ba75b264[m
+Author: YangShin <g56261822@gmail.com>
+Date:   Tue Jun 11 15:05:28 2024 +0900
+
+    ll
+
+[33mcommit 439cb5f91d325132821e378e3014a320e531a3f9[m
+Author: conchohi <lar3242@gmail.com>
+Date:   Tue Jun 11 15:05:12 2024 +0900
+
+    닉네임으로 사용자 정보 가져오기
+
+[33mcommit 88795570e96ff0d6d445341ad3d196cea52e0f4d[m
+Author: conchohi <lar3242@gmail.com>
+Date:   Tue Jun 11 15:04:35 2024 +0900
+
+    신고 기능 구현
