@@ -266,6 +266,8 @@ public class GameController {
         return gameState;
     }
 
+    
+
     @MessageMapping("/guessCatchMind/{roomNo}")
     @SendTo("/topic/game/{roomNo}")
     public GameState processGuessCatchMind(@DestinationVariable String roomNo, GameMessage gameMessage) {
@@ -320,7 +322,7 @@ public class GameController {
         gameState.getGuessedWords().clear(); // guessedWords 초기화
         gameState.setCurrentTurn(gameMessage.getPlayers().get(random.nextInt(gameMessage.getPlayers().size())));
         gameState.setTopic(generateChosung());
-        gameState.setTimeLeft(20); // 주제가 바뀔 때 타이머 초기화
+        gameState.setTimeLeft(15); // 주제가 바뀔 때 타이머 초기화
         return gameState;
     }
 
@@ -361,7 +363,7 @@ public class GameController {
                     gameState.setCurrentTurn(gameState.getPlayers().get(random.nextInt(gameState.getPlayers().size())));
                     gameState.getLastCorrectPlayers().clear();
                     gameState.getGuessedWords().clear();
-                    gameState.setTimeLeft(20); // 주제가 바뀔 때 타이머 초기화
+                    gameState.setTimeLeft(15); // 주제가 바뀔 때 타이머 초기화
                     messagingTemplate.convertAndSend("/topic/game/" + roomNo, gameState);
                 }
             } else {
@@ -396,7 +398,7 @@ public class GameController {
                 } else {
                     gameState.setTopic(generateChosung());
                     gameState.setCurrentTurn(gameState.getPlayers().get(random.nextInt(gameState.getPlayers().size())));
-                    gameState.setTimeLeft(20); // 주제가 바뀔 때 타이머 초기화
+                    gameState.setTimeLeft(15); // 주제가 바뀔 때 타이머 초기화
                     messagingTemplate.convertAndSend("/topic/game/" + roomNo, gameState);
                 }
             }
@@ -431,7 +433,7 @@ public class GameController {
     }
     private String generateTopic(String gameType, String roomNo) {
         String[] catchMindTopics = {"원숭이", "기린", "사과", "김", "배", "수박", "참외", "제비", "소방차", "캐리어", "비","돼지","사슴","키보드","사건","경찰","댄서","고드름","케이크","마늘","나비","잠자리"};
-        String[] characterTopics = {"김세정", "설현", "수지", "아이유", "윤소희", "조이", "진세연", "채수빈", "카리나", "크리스탈", "혜리","고마츠나나","고윤정","김태리","다현","로제","류준열","박서준","사쿠라","신민아","아이린","안유진","윤아","은하","이진욱","장원영","전지현","차은우","카즈하","한지민"};
+        String[] characterTopics = {"김세정", "설현", "수지", "아이유", "윤소희", "조이", "진세연", "채수빈", "카리나", "크리스탈", "혜리","고마츠나나","고윤정","김태리","다현","로제","류준열","박서준","사쿠라","신민아","아이린","안유진","윤아","은하","이진욱","장원영","전지현","차은우","카즈하","한지민", "윈터", "김태희","한가인", "이민정", "강동원", "고수"};
         String[] shoutInSilenceTopics = {"원숭이", "코끼리", "펭귄", "고양이", "강아지", "토끼", "기린", "수영", "농구", "오토바이", "비행기", "가위", "겨울왕국", "마라톤", "매트릭스", "비", "돼지","댄서","낚시","헐크","라면","타이타닉"};
 
         String[] topics;
