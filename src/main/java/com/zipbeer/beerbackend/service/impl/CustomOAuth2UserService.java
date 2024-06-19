@@ -2,6 +2,7 @@ package com.zipbeer.beerbackend.service.impl;
 
 import com.zipbeer.beerbackend.dto.UserDto;
 import com.zipbeer.beerbackend.dto.oauth.CustomOAuth2User;
+import com.zipbeer.beerbackend.dto.oauth.GoogleResponse;
 import com.zipbeer.beerbackend.dto.oauth.KakaoResponse;
 import com.zipbeer.beerbackend.dto.oauth.NaverResponse;
 import com.zipbeer.beerbackend.dto.oauth.OAuthResponse;
@@ -34,6 +35,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             oAuthResponse = new NaverResponse(oAuth2User.getAttributes());
         } else if (registrationId.equals("kakao")) {
             oAuthResponse = new KakaoResponse(oAuth2User.getAttributes());
+        } else if (registrationId.equals("google")) {
+            oAuthResponse = new GoogleResponse(oAuth2User.getAttributes());
         } else {
             return null;
         }
