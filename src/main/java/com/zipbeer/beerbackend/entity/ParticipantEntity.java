@@ -20,7 +20,7 @@ public class ParticipantEntity {
     @JoinColumn(name = "room_no")
     private RoomEntity room;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private UserEntity user;
 }
