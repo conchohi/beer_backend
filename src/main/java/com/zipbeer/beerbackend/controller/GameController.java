@@ -164,6 +164,8 @@ public class GameController {
     public GameState sendBomb(@DestinationVariable String roomNo, GameMessage gameMessage) {
         GameState gameState = gameRooms.get(roomNo);
         String bomb = gameMessage.getPlayer();
+        long timeLeft = Duration.between(LocalDateTime.now(),endTime.get(roomNo)).toSeconds();
+        gameState.setTimeLeft(timeLeft);
         //전송한 폭탄
         gameState.setBomb(bomb);
 
