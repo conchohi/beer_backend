@@ -48,7 +48,7 @@ jobs:
           TAG: ${{ env.TAG }}
         run: |
           echo "Pushing Docker image to Docker Hub"
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/beer_back:${TAG}}
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/beer_back:${TAG}
 
       - name: Deploy on EC2
         env:
@@ -74,3 +74,4 @@ jobs:
             -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
             ${{ secrets.DOCKERHUB_USERNAME }}/beer_back:${{ env.TAG }}
           EOF
+
