@@ -150,7 +150,7 @@ public class GameController {
             gameRooms.put(roomNo, gameState);
         }
         gameState.setCurrentGame("bomb");
-        endTime.put(roomNo, LocalDateTime.now().plusSeconds(random.nextInt(25)+5));
+        endTime.put(roomNo, LocalDateTime.now().plusSeconds(random.nextInt(15)+5));
         // 폭탄 시작 설정
         String bomb = gameState.getPlayers().get(random.nextInt(gameState.getPlayers().size()));
         gameState.setBomb(bomb);
