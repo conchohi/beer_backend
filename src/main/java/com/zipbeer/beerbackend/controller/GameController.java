@@ -150,7 +150,7 @@ public class GameController {
             gameRooms.put(roomNo, gameState);
         }
         gameState.setCurrentGame("bomb");
-        endTime.put(roomNo, LocalDateTime.now().plusSeconds(random.nextInt(25)+5));
+        endTime.put(roomNo, LocalDateTime.now().plusSeconds(random.nextInt(15)+5));
         // 폭탄 시작 설정
         String bomb = gameState.getPlayers().get(random.nextInt(gameState.getPlayers().size()));
         gameState.setBomb(bomb);
@@ -348,25 +348,28 @@ public class GameController {
             gameState.addGuessedWord(guess);
             gameState.getLastCorrectPlayers().add(player);
 
-            if (gameState.getLastCorrectPlayers().size() == gameState.getPlayers().size()) {
-                String lastPlayer = gameState.getLastCorrectPlayers().get(gameState.getLastCorrectPlayers().size() - 1);
-                gameState.updateScore(lastPlayer, -1);
+            if (gameState.getLastCorrectPlayers().size() == gameState.getPlayers().size() - 1) {
+                List<String> playersNotGuessed = new ArrayList<>(gameState.getPlayers());
+                playersNotGuessed.removeAll(gameState.getLastCorrectPlayers());
 
-                messagingTemplate.convertAndSend("/topic/game/" + roomNo + "/correct", lastPlayer + "님이 '" + guess + "' 단어로 통과했습니다.");
-                messagingTemplate.convertAndSend("/topic/game/" + roomNo + "/minusScore", lastPlayer + "님이 -1점 받았습니다.");
-
-                if (gameState.getScores().get(lastPlayer) <= -5) {
-                    gameState.setLoser(lastPlayer);
-                    gameState.endGame();
-                    gameState.resetScores();
-                    messagingTemplate.convertAndSend("/topic/game/" + roomNo, gameState);
-                } else {
-                    gameState.setTopic(generateChosung());
-                    gameState.setCurrentTurn(gameState.getPlayers().get(random.nextInt(gameState.getPlayers().size())));
-                    gameState.getLastCorrectPlayers().clear();
-                    gameState.getGuessedWords().clear();
-                    gameState.setTimeLeft(15); // 주제가 바뀔 때 타이머 초기화
-                    messagingTemplate.convertAndSend("/topic/game/" + roomNo, gameState);
+                if (!playersNotGuessed.isEmpty()) {
+                    String lastPlayer = playersNotGuessed.get(0);
+                    gameState.updateScore(lastPlayer, -1);
+                    messagingTemplate.convertAndSend("/topic/game/" + roomNo + "/correct", lastPlayer + "님이 '" + guess + "' 단어로 통과했습니다.");
+                    messagingTemplate.convertAndSend("/topic/game/" + roomNo + "/minusScore", lastPlayer + "님이 -1점 받았습니다.");
+                    if (gameState.getScores().get(lastPlayer) <= -5) {
+                        gameState.setLoser(lastPlayer);
+                        gameState.endGame();
+                        gameState.resetScores();
+                        messagingTemplate.convertAndSend("/topic/game/" + roomNo, gameState);
+                    } else {
+                        gameState.setTopic(generateChosung());
+                        gameState.setCurrentTurn(gameState.getPlayers().get(random.nextInt(gameState.getPlayers().size())));
+                        gameState.getLastCorrectPlayers().clear();
+                        gameState.getGuessedWords().clear();
+                        gameState.setTimeLeft(15); // 주제가 바뀔 때 타이머 초기화
+                        messagingTemplate.convertAndSend("/topic/game/" + roomNo, gameState);
+                    }
                 }
             } else {
                 messagingTemplate.convertAndSend("/topic/game/" + roomNo + "/correct", player + "님이 '" + guess + "' 단어로 통과했습니다.");
@@ -411,6 +414,7 @@ public class GameController {
         String[] chosung = {"ㄱ", "ㄴ", "ㄷ", "ㄹ", "ㅁ", "ㅂ", "ㅅ", "ㅇ", "ㅈ", "ㅊ", "ㅋ", "ㅌ", "ㅍ", "ㅎ"};
         return chosung[random.nextInt(chosung.length)] + chosung[random.nextInt(chosung.length)];
     }
+
 
 
     private String selectNextTurn(GameState gameState, String previousTurn) {
