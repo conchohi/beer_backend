@@ -355,6 +355,7 @@ public class GameController {
                 if (!playersNotGuessed.isEmpty()) {
                     String lastPlayer = playersNotGuessed.get(0);
                     gameState.updateScore(lastPlayer, -1);
+                    messagingTemplate.convertAndSend("/topic/game/" + roomNo + "/correct", lastPlayer + "님이 '" + guess + "' 단어로 통과했습니다.");
                     messagingTemplate.convertAndSend("/topic/game/" + roomNo + "/minusScore", lastPlayer + "님이 -1점 받았습니다.");
                     if (gameState.getScores().get(lastPlayer) <= -5) {
                         gameState.setLoser(lastPlayer);
