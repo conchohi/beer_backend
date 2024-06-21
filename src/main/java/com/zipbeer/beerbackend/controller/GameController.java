@@ -268,7 +268,7 @@ public class GameController {
         return gameState;
     }
 
-    
+
 
     @MessageMapping("/guessCatchMind/{roomNo}")
     @SendTo("/topic/game/{roomNo}")
@@ -355,7 +355,7 @@ public class GameController {
                 if (!playersNotGuessed.isEmpty()) {
                     String lastPlayer = playersNotGuessed.get(0);
                     gameState.updateScore(lastPlayer, -1);
-                    messagingTemplate.convertAndSend("/topic/game/" + roomNo + "/correct", lastPlayer + "님이 '" + guess + "' 단어로 통과했습니다.");
+                    messagingTemplate.convertAndSend("/topic/game/" + roomNo + "/correct", player + "님이 '" + guess + "' 단어로 통과했습니다.");
                     messagingTemplate.convertAndSend("/topic/game/" + roomNo + "/minusScore", lastPlayer + "님이 -1점 받았습니다.");
                     if (gameState.getScores().get(lastPlayer) <= -5) {
                         gameState.setLoser(lastPlayer);
@@ -377,6 +377,7 @@ public class GameController {
             messagingTemplate.convertAndSend("/topic/game/" + roomNo, gameState);
         }
     }
+
 
     @MessageMapping("/timeoutChosung/{roomNo}")
     @SendTo("/topic/game/{roomNo}/timeout")
@@ -438,9 +439,37 @@ public class GameController {
         return liarGameTopics[random.nextInt(liarGameTopics.length)];
     }
     private String generateTopic(String gameType, String roomNo) {
-        String[] catchMindTopics = {"원숭이", "기린", "사과", "김", "배", "수박", "참외", "제비", "소방차", "캐리어", "비","돼지","사슴","키보드","사건","경찰","댄서","고드름","케이크","마늘","나비","잠자리"};
-        String[] characterTopics = {"김세정", "설현", "수지", "아이유", "윤소희", "조이", "진세연", "채수빈", "카리나", "크리스탈", "혜리","고마츠나나","고윤정","김태리","다현","로제","류준열","박서준","사쿠라","신민아","아이린","안유진","윤아","은하","이진욱","장원영","전지현","차은우","카즈하","한지민", "윈터", "김태희","한가인", "이민정", "강동원", "고수"};
-        String[] shoutInSilenceTopics = {"원숭이", "코끼리", "펭귄", "고양이", "강아지", "토끼", "기린", "수영", "농구", "오토바이", "비행기", "가위", "겨울왕국", "마라톤", "매트릭스", "비", "돼지","댄서","낚시","헐크","라면","타이타닉"};
+        String[] catchMindTopics = {
+                "원숭이", "기린", "사과", "김", "배", "수박", "참외", "제비", "소방차", "캐리어", "비",
+                "돼지", "사슴", "키보드", "사건", "경찰", "댄서", "고드름", "케이크", "마늘", "나비", "잠자리",
+                "꽃", "태양", "달", "별", "자동차", "비행기", "기차", "연필", "책", "나무", "집", "우산",
+                "모자", "토끼", "강아지", "고양이", "햄버거", "피자", "아이스크림", "물고기", "텔레비전",
+                "시계", "컴퓨터", "전화기", "우체통", "신발", "양말", "안경", "컵", "빵", "자전거", "바나나",
+                "바다", "산", "구름", "도넛", "새", "치즈", "호랑이", "침대", "의자", "책상",
+                "버스", "트럭", "쥐", "코끼리", "지갑", "가방", "바지", "셔츠", "드레스", "악어"
+        };
+
+        String[] characterTopics = {
+                "김세정", "설현", "수지", "아이유", "조이", "진세연", "채수빈", "카리나", "크리스탈", "혜리",
+                "고마츠나나", "고윤정", "김태리", "다현", "로제", "류준열", "박서준", "사쿠라", "신민아", "아이린",
+                "안유진", "윤아", "은하", "이진욱", "장원영", "전지현", "차은우", "카즈하", "한지민", "윈터",
+                "김태희", "한가인", "이민정", "강동원", "고수", "공유", "송혜교", "박보검", "정해인", "김우빈",
+                "송중기", "전도연", "김소현", "이종석", "이제훈", "손예진", "강하늘", "현빈", "마동석", "이민호",
+                "박신혜", "김지원", "김수현", "주원", "박보영", "김유정", "남주혁", "도경수", "미연", "권은비",
+                "김소연", "지수", "윤계상", "송지효", "류승룡", "조정석", "나연", "해원", "설윤", "말왕",
+                "김혜수", "김고은", "정우성", "황정민", "유승호", "해린", "김채원", "침착맨", "김민주"
+        };
+
+        String[] shoutInSilenceTopics = {
+                "원숭이", "코끼리", "펭귄", "고양이", "강아지", "토끼", "기린", "수영", "농구", "오토바이",
+                "비행기", "가위", "겨울왕국", "마라톤", "매트릭스", "비", "돼지", "댄서", "낚시", "헐크",
+                "라면", "타이타닉", "축구", "발레", "치타", "잠수", "연날리기", "볼링", "스키", "하이킹",
+                "요가", "스파이더맨", "용", "슈퍼마켓", "카우보이", "해적", "우주비행사", "마법사", "카페",
+                "피자", "로봇", "유령", "디스코", "서핑", "무지개", "달리기", "야구", "아이언맨", "자전거", "드럼", "테니스",
+                "미용사", "농부", "요리사", "무술", "사자", "경찰", "우주",
+                "꽃", "피아노", "산타", "골프", "박수"
+        };
+
 
         String[] topics;
 
@@ -550,7 +579,12 @@ public class GameController {
                 new BalanceTopic("잠수 이별", "환승 이별"),
                 new BalanceTopic("절친에게 10억 주기", "절친 잃고 100억 받기"),
                 new BalanceTopic("여사친 남사친과 짝수 6박7일 여행하는 애인", "전 애인과 첫차까지 술 마신 애인"),
-                new BalanceTopic("무한한 돈", "무한한 시간")
+                new BalanceTopic("무한한 돈", "무한한 시간"),
+                new BalanceTopic("맞춤법 지적하는 애인", "맞춤법 틀리는 애인"),
+                new BalanceTopic("부랄친구와 키스하기", "친구 부랄에 키스하기"),
+                new BalanceTopic("싫어하는 친구가 로또 당첨되고 1억받기", "그냥 살기"),
+                new BalanceTopic("대머리 애인", "털복숭이 애인"),
+                new BalanceTopic("팔만대장경 다 읽기", "대장내시경 팔만번 하기")
         };
 
         return balanceTopics[random.nextInt(balanceTopics.length)];
