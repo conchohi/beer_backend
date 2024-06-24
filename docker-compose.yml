@@ -21,6 +21,8 @@ services:
       - API_CERTKEY_NO=${API_CERTKEY_NO}
       - WORD_API_KEY=${WORD_API_KEY}
       - SERVER_IP=${SERVER_IP}
+      - SERVER_PORT=${SERVER_PORT}
+      - MAIL_PORT=${MAIL_PORT}
     ports:
       - "8080:8080"
     volumes:

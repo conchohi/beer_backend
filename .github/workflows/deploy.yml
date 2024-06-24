@@ -37,6 +37,8 @@ jobs:
           echo "API_CERTKEY_NO=${{ secrets.API_CERTKEY_NO }}" >> $GITHUB_ENV
           echo "WORD_API_KEY=${{ secrets.WORD_API_KEY }}" >> $GITHUB_ENV
           echo "SERVER_IP=${{ secrets.SERVER_IP }}" >> $GITHUB_ENV
+          echo "SERVER_PORT=${{ secrets.SERVER_PORT }}" >> $GITHUB_ENV
+          echo "MAIL_PORT=${{ secrets.MAIL_PORT }}" >> $GITHUB_ENV
 
       - name: Log in to Docker Hub
         run: |
@@ -84,5 +86,7 @@ jobs:
             -e API_CERTKEY_NO=${{ secrets.API_CERTKEY_NO }} \
             -e WORD_API_KEY=${{ secrets.WORD_API_KEY }} \
             -e SERVER_IP=${{ secrets.SERVER_IP }} \
+            -e SERVER_PORT=${{ secrets.SERVER_PORT }} \
+            -e MAIL_PORT=${{ secrets.MAIL_PORT }} \
             ${{ secrets.DOCKERHUB_USERNAME }}/beer_back:${{ env.TAG }}
           EOF
