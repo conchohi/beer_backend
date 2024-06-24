@@ -268,7 +268,17 @@ public class GameController {
         return gameState;
     }
 
-
+    @MessageMapping("/timeExpired/{roomNo}")
+    @SendTo("/topic/game/{roomNo}")
+    public GameState handleTimeExpired(@DestinationVariable String roomNo) {
+        GameState gameState = gameRooms.get(roomNo);
+        if (gameState != null) {
+            gameState.setTopic(generateTopic("character", roomNo));
+            gameState.setCurrentTurn(gameState.getPlayers().get(random.nextInt(gameState.getPlayers().size()))); // 새로운 출제자 랜덤 선택
+            messagingTemplate.convertAndSend("/topic/game/" + roomNo, gameState);
+        }
+        return gameState;
+    }
 
     @MessageMapping("/guessCatchMind/{roomNo}")
     @SendTo("/topic/game/{roomNo}")
