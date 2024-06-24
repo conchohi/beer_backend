@@ -93,5 +93,5 @@ spring:
       max-request-size: 10MB
 
 
-uploadPath : upload
+uploadPath: upload
 
