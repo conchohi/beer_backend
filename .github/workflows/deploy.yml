@@ -30,13 +30,7 @@ jobs:
           echo "GOOGLE_MAIL_PASSWORD=${{ secrets.GOOGLE_MAIL_PASSWORD }}" >> $GITHUB_ENV
           echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> $GITHUB_ENV
           echo "DB_NAME=${{ secrets.DB_NAME }}" >> $GITHUB_ENV
-          echo "DB_USER=${{ secrets.DB_USER }}" >> $GITHUB_ENV
           echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> $GITHUB_ENV
-          echo "DB_HOST=${{ secrets.DB_HOST }}" >> $GITHUB_ENV
-          echo "DB_PORT=${{ secrets.DB_PORT }}" >> $GITHUB_ENV
-          echo "API_CERTKEY_NO=${{ secrets.API_CERTKEY_NO }}" >> $GITHUB_ENV
-          echo "WORD_API_KEY=${{ secrets.WORD_API_KEY }}" >> $GITHUB_ENV
-          echo "SERVER_IP=${{ secrets.SERVER_IP }}" >> $GITHUB_ENV
 
       - name: Log in to Docker Hub
         run: |
@@ -77,12 +71,7 @@ jobs:
             -e GOOGLE_MAIL_PASSWORD=${{ secrets.GOOGLE_MAIL_PASSWORD }} \
             -e JWT_SECRET=${{ secrets.JWT_SECRET }} \
             -e DB_NAME=${{ secrets.DB_NAME }} \
-            -e DB_USER=${{ secrets.DB_USER }} \
             -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
-            -e DB_HOST=${{ secrets.DB_HOST }} \
-            -e DB_PORT=${{ secrets.DB_PORT }} \
-            -e API_CERTKEY_NO=${{ secrets.API_CERTKEY_NO }} \
-            -e WORD_API_KEY=${{ secrets.WORD_API_KEY }} \
-            -e SERVER_IP=${{ secrets.SERVER_IP }} \
             ${{ secrets.DOCKERHUB_USERNAME }}/beer_back:${{ env.TAG }}
           EOF
+
