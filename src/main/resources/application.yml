@@ -1,7 +1,8 @@
 secret-key: ${JWT_SECRET}
-server_ip: https://js1.jsflux.co.kr
-work_api_key: 0696CD0E737BF6F7578668C552022C42
-api_certkey_no: 6651
+server_ip: ${SERVER_IP}
+word_api_key: ${WORK_API_KEY}
+api_certkey_no: ${API_CERTKEY_NO}
+
 
 server:
   port: 8080
