@@ -3,7 +3,7 @@ name: Deploy to EC2
 on:
   push:
     branches:
-      - secret3
+      - main
 
 jobs:
   deploy:
