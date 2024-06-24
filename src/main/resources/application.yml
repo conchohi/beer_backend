@@ -3,6 +3,7 @@ server_ip: ${SERVER_IP}
 word_api_key: ${WORK_API_KEY}
 api_certkey_no: ${API_CERTKEY_NO}
 
+
 server:
   port: 8080
 
@@ -90,4 +91,6 @@ spring:
       enabled: true
       max-file-size: 10MB
       max-request-size: 10MB
+
 uploadPath: upload
+
