@@ -63,7 +63,7 @@ public class GameController {
         if (gameState == null) {
             gameState = new GameState(gameMessage.getPlayers());
             gameRooms.put(roomNo, gameState);
-        } else if(gameState.getCurrentGame().equals("character")) {
+        } else if (gameState.getCurrentGame().equals("character")) {
             return gameState;
         } else {
             gameState = new GameState(gameMessage.getPlayers());
@@ -71,8 +71,8 @@ public class GameController {
             usedTopicsMap.remove(roomNo); // 게임 재시작 시 사용된 주제 초기화
         }
         gameState.setCurrentGame("character");
-        gameState.setCurrentTurn(gameMessage.getPlayers().get(random.nextInt(gameMessage.getPlayers().size())));
         gameState.setTopic(generateTopic("character", roomNo));
+        gameState.setTimeLeft(10);
         return gameState;
     }
 
@@ -268,17 +268,18 @@ public class GameController {
         return gameState;
     }
 
-    @MessageMapping("/timeExpired/{roomNo}")
+    @MessageMapping("/charactergamehandleTimeExpired/{roomNo}")
     @SendTo("/topic/game/{roomNo}")
     public GameState handleTimeExpired(@DestinationVariable String roomNo) {
         GameState gameState = gameRooms.get(roomNo);
         if (gameState != null) {
             gameState.setTopic(generateTopic("character", roomNo));
-            gameState.setCurrentTurn(gameState.getPlayers().get(random.nextInt(gameState.getPlayers().size()))); // 새로운 출제자 랜덤 선택
+            gameState.setTimeLeft(10);
             messagingTemplate.convertAndSend("/topic/game/" + roomNo, gameState);
         }
         return gameState;
     }
+
 
     @MessageMapping("/guessCatchMind/{roomNo}")
     @SendTo("/topic/game/{roomNo}")
