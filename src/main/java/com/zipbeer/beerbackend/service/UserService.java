@@ -12,4 +12,8 @@ public interface UserService {
     boolean isIdAvailable(String userid);
     boolean isNicknameAvailable(String nickname);
     List<UserDto> searchUsersByNickname(String nickname);
+
+    boolean changePassword(String userId, String currentPassword, String newPassword);
+
+    boolean deleteUser(String userId);
 }

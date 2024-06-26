@@ -23,6 +23,4 @@ public class ParticipantEntity {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private UserEntity user;
-
-
 }

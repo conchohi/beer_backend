@@ -81,4 +81,6 @@ public class EmailVerificationController {
         String newPassword = request.get("newPassword");
         return authService.updatePassword(userId, email, newPassword);
     }
+
+
 }

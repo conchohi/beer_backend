@@ -1,6 +1,5 @@
 package com.zipbeer.beerbackend.entity;
 
-
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -43,7 +42,6 @@ public class BoardEntity {
     @Column
     private int count;
 
-    @OneToMany(mappedBy = "board",orphanRemoval = true,
-    cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "board", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<CommentEntity> commentEntityList;
 }

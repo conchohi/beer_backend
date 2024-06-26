@@ -21,7 +21,7 @@ public class RoomDto {
     private String category;
     private int currentUser;
     private int maximumUser;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime createDate;
     private List<UserDto> participantList;
     private String master;

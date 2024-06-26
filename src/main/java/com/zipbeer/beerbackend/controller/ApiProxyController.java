@@ -21,7 +21,7 @@ public class ApiProxyController {
 
     private static final Logger logger = LoggerFactory.getLogger(ApiProxyController.class);
 
-    @Value("${work_api_key}")
+    @Value("${word_api_key}")
     private String apiKey;
 
     @Value("${api_certkey_no}")

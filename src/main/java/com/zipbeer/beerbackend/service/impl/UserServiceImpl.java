@@ -103,13 +103,30 @@ public class UserServiceImpl implements UserService {
 
 
 
+    @Override
+    public boolean changePassword(String userId, String currentPassword, String newPassword) {
+        UserEntity user = userRepository.findByUserId(userId);
+        if (user == null) {
+            return false;
+        }
+        if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
+            return false;
+        }
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+        return true;
+    }
 
-
-
-
-
-
-
-
+    @Transactional
+    @Override
+    public boolean deleteUser(String userId) {
+        try {
+            userRepository.deleteById(userId);
+            return true;
+        } catch (Exception e) {
+            // Log the error message
+            return false;
+        }
+    }
 
 }

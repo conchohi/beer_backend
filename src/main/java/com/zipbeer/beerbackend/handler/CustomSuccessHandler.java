@@ -42,12 +42,13 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         //쿠키로 전달한 것 프론트에서 "Bearer token"으로 처리해서 요청 헤더에 저장해서 넘겨야 할듯
         response.addCookie(createCookie("refresh", token));
         response.sendRedirect(serverip + "/getAccess");
+
     }
 
     private Cookie createCookie(String key, String value) {
         Cookie cookie = new Cookie(key, value);
         cookie.setMaxAge(24*60*60);
-//        cookie.setSecure(true);
+        cookie.setSecure(true);
         //보일 위치 - 전역
         cookie.setPath("/");
         //HttpOnly 를 해두면 프론트에서 js로 쿠키를 사용할 수 없음
