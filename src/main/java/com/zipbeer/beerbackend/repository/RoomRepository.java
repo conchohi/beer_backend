@@ -1,13 +1,17 @@
 package com.zipbeer.beerbackend.repository;
 
 import com.zipbeer.beerbackend.entity.RoomEntity;
+import jakarta.persistence.LockModeType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+
+import java.util.Optional;
 
 public interface RoomRepository extends JpaRepository<RoomEntity, Long> {
     boolean existsByRoomNo(Long roomNo);
@@ -25,5 +29,7 @@ public interface RoomRepository extends JpaRepository<RoomEntity, Long> {
     @Query("select r from RoomEntity r  where (:category is null or r.category like concat('%',:category,'%')) and (:searchTerm is null or r.master like concat('%',:searchTerm,'%'))")
     Page<RoomEntity> findAllByNickname(Pageable pageable, @Param("searchTerm") String searchTerm, @Param("category") String category);
 
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    Optional<RoomEntity> findByRoomNo(Long roomNo);
 
 }

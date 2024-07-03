@@ -18,5 +18,7 @@ public interface ParticipantRepository extends JpaRepository<ParticipantEntity, 
     @Query("delete from ParticipantEntity p where p.user=:user")
     void deleteByUser(@Param("user") UserEntity user);
 
+    boolean existsByUserUserId(String userId);
+
     List<ParticipantEntity> findByUser(UserEntity user);
 }
