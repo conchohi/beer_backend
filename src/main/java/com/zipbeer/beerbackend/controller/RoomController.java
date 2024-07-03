@@ -42,8 +42,9 @@ public class RoomController {
     }
 
     @PostMapping
-    public Long createRoom(@RequestBody RoomDto roomDto){
-        return roomService.createRoom(roomDto);
+    public ResponseEntity<?> createRoom(@RequestBody RoomDto roomDto){
+        long roomNo =  roomService.createRoom(roomDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(roomNo);
     }
 
     @DeleteMapping("/{roomNo}")
