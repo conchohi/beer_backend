@@ -45,6 +45,17 @@ public class RoomEntity {
     //방장의 닉네임
     private String master;
 
+    @PostLoad
+    @PostPersist
+    @PostUpdate
+    private void getParticipantCountAndMaster() {
+        if (participantList != null && !participantList.isEmpty()) {
+            //List의 가장 첫번쨰 사람이 방장 => 입장한 지 오래된 순
+            this.master = participantList.get(0).getUser().getNickname();
+        } else {
+            this.master = null;
+        }
+    }
     //참여중인 사용자의 리스트 얻는 법
     public List<UserEntity> getUsers() {
         return participantList.stream()
