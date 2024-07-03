@@ -29,7 +29,7 @@ public class ParticipantService {
         UserEntity user = userRepository.findByUserId(userId);
         RoomEntity room;
         try {
-            room = roomRepository.findById(roomNo).orElseThrow(EntityNotFoundException::new);
+            room = roomRepository.findByRoomNo(roomNo).orElseThrow(EntityNotFoundException::new);
         }catch (EntityNotFoundException e){
             //방이 존재하지 않음
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message","방이 존재하지 않습니다."));
@@ -42,7 +42,9 @@ public class ParticipantService {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message","인원이 가득찼습니다."));
         }
         //DB에 EXIT 적용 안됐을 경우 기존 방 삭제
-        participantRepository.deleteByUser(user);
+        if(participantRepository.existsByUserUserId(userId)){
+            participantRepository.deleteByUser(user);
+        }
 
         ParticipantEntity participant = ParticipantEntity.builder()
                 .user(user)
@@ -50,6 +52,10 @@ public class ParticipantService {
                 .build();
 
         participantRepository.save(participant);
+        room.setParticipantCount(room.getParticipantCount() + 1);
+        if(room.getMaster() == null){
+            room.setMaster(user.getNickname());
+        }
         return ResponseDto.success();
     }
 
@@ -57,7 +63,7 @@ public class ParticipantService {
     public ResponseEntity<?> exit(String userId, Long roomNo){
         RoomEntity room;
         try {
-            room = roomRepository.findById(roomNo).orElseThrow(EntityNotFoundException::new);
+            room = roomRepository.findByRoomNo(roomNo).orElseThrow(EntityNotFoundException::new);
         }catch (EntityNotFoundException e){
             //방이 존재하지 않음
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message","Not exist room."));
@@ -67,11 +73,12 @@ public class ParticipantService {
         }
 
         //만약 내가 나간 후 방이 비면 해당 방 삭제
-        if(roomRepository.isEmptyRoomWhenExit(roomNo)){
+        if(room.getParticipantCount() == 1){
             roomRepository.delete(room);
         //방이 비지 않으면 방 나가기
         } else{
             participantRepository.deleteByUserUserIdAndRoomRoomNo(userId,roomNo);
+            room.setParticipantCount(room.getParticipantCount()-1);
         }
 
         return ResponseDto.success();
